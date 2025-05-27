@@ -4,6 +4,7 @@ import img1 from '../../assets/contactImg1.jpg'
 import Footer from '../../Components/Footer/Footer'
 import ContactForm from '../../Components/ContactUs/ContactForm'
 import Navbar from '../../Components/Navbar/Navbar'
+import QandA from '../../Components/ContactUs/QandA'
 function Contact() {
   return (
     <>
@@ -16,6 +17,7 @@ function Contact() {
     overlayOpacity="20"
     />
     <ContactForm/>
+    <QandA/>
     <Footer/>
  </>
   )
