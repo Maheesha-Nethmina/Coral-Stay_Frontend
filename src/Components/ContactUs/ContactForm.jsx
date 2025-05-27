@@ -3,7 +3,7 @@ import { MapPin, Mail, Phone, MessageSquare, Facebook, Twitter, Instagram, Linke
 
 const ContactForm = () => {
   return (
-    <div className="bg-blue-50 -mt-15">
+    <div className="bg-[#EAF4F6] -mt-15">
     <div className="max-w-7xl mx-auto p-8 font-sans ">
 
       <div className="flex flex-col lg:flex-row gap-8   overflow-hidden ">	

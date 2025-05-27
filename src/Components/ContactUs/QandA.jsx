@@ -36,7 +36,7 @@ const QandA = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#d5f8f4] py-12 px-4 md:px-8">
+    <div className="min-h-screen bg-[#EAF4F6] py-12 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">
