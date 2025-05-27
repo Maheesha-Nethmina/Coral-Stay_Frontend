@@ -1,13 +1,23 @@
 import React from 'react'
+import Hero from '../../Components/Common/Hero'
+import img1 from '../../assets/contactImg1.jpg'
+import Footer from '../../Components/Footer/Footer'
+import ContactForm from '../../Components/ContactUs/ContactForm'
 import Navbar from '../../Components/Navbar/Navbar'
-
 function Contact() {
   return (
-    <div>
-        <Navbar />
-        <br /><br /><br /><br />
-        <h1>Contact Page</h1>
-    </div>
+    <>
+    <Navbar/>
+    <Hero 
+    cName="hero"
+    heroImg={img1}
+    title="Contact with our team"
+    text="have questions or need assistance? We are here to help!Reach out to us anytime and we will get back to you as soon as possible."
+    overlayOpacity="20"
+    />
+    <ContactForm/>
+    <Footer/>
+ </>
   )
 }
 
