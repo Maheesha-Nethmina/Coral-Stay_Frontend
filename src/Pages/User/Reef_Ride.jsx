@@ -5,6 +5,7 @@ import Hero from '../../Components/Common/Hero'
 import img1 from '../../assets/reefHero.jpg'
 import AboutReef from '../../Components/ReefRide/AboutReef'
 import Footer from '../../Components/Footer/Footer'
+import BookBoat from '../../Components/ReefRide/BookBoat'
 
 function Reef_Ride() {
   return (
@@ -23,6 +24,7 @@ function Reef_Ride() {
           overlayOpacity="20"
         />
         <AboutReef/>
+        <BookBoat />
         <Footer />
       </motion.div>
     </div>
