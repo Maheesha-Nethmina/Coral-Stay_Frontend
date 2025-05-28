@@ -5,7 +5,7 @@ import Hero from '../../Components/Common/Hero'
 import img1 from '../../assets/reefHero.jpg'
 import AboutReef from '../../Components/ReefRide/AboutReef'
 import Footer from '../../Components/Footer/Footer'
-import BookBoat from '../../Components/ReefRide/BookBoat'
+import BookBoat from '../../Components/ReefRide/BoatBooking/BookBoat'
 
 function Reef_Ride() {
   return (
