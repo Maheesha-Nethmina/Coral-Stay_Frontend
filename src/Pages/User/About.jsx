@@ -26,6 +26,7 @@ function About() {
         />
 
         <AboutUs />
+        
         <Footer />
       </motion.div>
     </>
