@@ -107,7 +107,7 @@ const BookBoat = () => {
             
             <button 
               onClick={handleConfirmBooking}
-              className="mt-8 w-full py-4 bg-[#023545] hover:bg-teal-900 text-white font-bold rounded-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+              className="mt-8 mb-15 w-full py-4 bg-[#023545] hover:bg-teal-900 text-white font-bold rounded-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
             >
               Confirm Booking
             </button>

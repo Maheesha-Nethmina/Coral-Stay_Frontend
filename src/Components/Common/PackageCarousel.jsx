@@ -43,7 +43,7 @@ const PackageCarousel = ({
   return (
     <div className="w-full pt-3 px-30">
       <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">{title}</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-15">{title}</h2>
       </div>
       
       <div className="relative">
