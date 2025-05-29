@@ -18,7 +18,7 @@ const Navbar = () => {
 const navLinks = [
   { name: "Home", path: "/", icon: <Home size={18} /> },
   { name: "Reef Ride", path: "/reef_ride", icon: <Sailboat size={18} /> },
-  { name: "Reef Dive", path: "/reef_dive", icon: <LifeBuoy  size={18} /> },
+  { name: "Stays", path: "/Stays", icon: <LifeBuoy  size={18} /> },
   { name: "About Us", path: "/about", icon: <Info size={18} /> },
   { name: "Contact Us", path: "/contact", icon: <Phone size={18} /> },
 ];

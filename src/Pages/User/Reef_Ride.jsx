@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '../../Components/Navbar/Navbar'
 import { motion } from 'framer-motion'
 import Hero from '../../Components/Common/Hero'
-import img1 from '../../assets/reefHero.jpg'
+import img1 from '../../assets/reef.jpeg'
 import AboutReef from '../../Components/ReefRide/AboutReef'
 import Footer from '../../Components/Footer/Footer'
 import BookBoat from '../../Components/ReefRide/BoatBooking/BookBoat'
@@ -21,8 +21,8 @@ function Reef_Ride() {
         <Hero 
           cName="hero"
           heroImg={img1}
-          title="Contact with our team"
-          text="Have questions or need assistance? We're here to help! Reach out to us anytime and we'll get back to you as soon as possible."
+          title="Discover the Hidden Wonders beneath the Waves"
+          text="Explore nature's most colourful coral reefs with our exclusive boat tours."
           overlayOpacity="20"
         />
         <AboutReef/>
