@@ -44,7 +44,7 @@ const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate }) => {
   };
 
   return (
-    <div className="bg-blue-200/50 p-8 rounded-xl shadow-md">
+    <div className="bg-[#d9d9d9] p-8 rounded-xl shadow-md">
       {/* Top row */}
       <div className="grid grid-cols-9 gap-2 mb-8 justify-center">
         {topSeats.map(seat => renderSeat(seat))}
@@ -57,10 +57,10 @@ const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate }) => {
         </div>
 
         {/* Boat area */}
-        <div className="mx-8 flex-grow bg-white/50 rounded-xl border-2 border-dashed border-blue-300 flex items-center justify-center">
-          <div className="text-blue-400 font-medium text-center">
+        <div className="mx-8 flex-grow bg-white/50 rounded-xl border-2 border-dashed border-[#023545] flex items-center justify-center">
+          <div className="text-[#023545] font-medium text-center">
             <div className="text-4xl mb-2">⛵</div>
-            <div>Reef Explorer</div>
+            <div>CoralStay</div>
           </div>
         </div>
 

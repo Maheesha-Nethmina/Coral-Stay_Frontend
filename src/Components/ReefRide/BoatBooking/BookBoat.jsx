@@ -57,7 +57,7 @@ const BookBoat = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 p-4 md:p-8">
+    <div className="min-h-screen bg-[#EAF4F6] p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-center text-slate-800 mb-8">
           Choose Your Dates and Let the Reef Welcome You!
@@ -100,14 +100,14 @@ const BookBoat = () => {
                 <span className="text-sm text-slate-700">Partially Available</span>
               </div>
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-teal-900 border border-gray-300 mr-2"></div>
+                <div className="w-6 h-6 bg-[#023545] border border-gray-300 mr-2"></div>
                 <span className="text-sm text-slate-700">Booked</span>
               </div>
             </div>
             
             <button 
               onClick={handleConfirmBooking}
-              className="mt-8 w-full py-4 bg-teal-800 hover:bg-teal-900 text-white font-bold rounded-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+              className="mt-8 w-full py-4 bg-[#023545] hover:bg-teal-900 text-white font-bold rounded-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
             >
               Confirm Booking
             </button>
