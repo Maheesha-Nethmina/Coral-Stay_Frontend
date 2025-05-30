@@ -12,7 +12,7 @@ const AboutSection = () => {
                 className="w-full h-auto max-h-[500px] object-cover"
                 controls
                 muted
-                autoPlay={false}
+                autoPlay
                 loop
                 playsInline
                 

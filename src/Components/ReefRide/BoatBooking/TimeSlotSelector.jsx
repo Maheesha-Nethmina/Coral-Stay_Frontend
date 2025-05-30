@@ -12,7 +12,7 @@ const TimeSlotSelector = ({ timeSlots, selectedTimeSlot, onSelectTimeSlot }) => 
             className={`
               flex items-center justify-center p-4 rounded-lg border transition-all duration-200
               ${selectedTimeSlot?.id === slot.id 
-                ? 'bg-teal-700 text-white border-teal-800' 
+                ? 'bg-[#023545] text-white border-teal-800' 
                 : 'bg-white text-slate-700 border-gray-200 hover:border-teal-500'}
             `}
             onClick={() => onSelectTimeSlot(slot)}

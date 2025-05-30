@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from '../../Components/Navbar/Navbar'
 
-function Reef_Dive() {
+function Stays() {
   return (
     <div>
       <Navbar />
@@ -11,4 +11,4 @@ function Reef_Dive() {
   )
 }
 
-export default Reef_Dive
+export default Stays

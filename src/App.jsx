@@ -5,9 +5,10 @@ import Home from './Pages/User/Home';
 import About from './Pages/User/About';
 import Contact from './Pages/User/Contact';
 import Reef_Ride from './Pages/User/Reef_Ride';
-import Reef_Dive from './Pages/User/Reef_Dive';
+import Stays from './Pages/User/Stays';
 import AdminDash from './Pages/Admin/AdminDash';
 import ResetPassword from './Components/Auth/ResetPassword';
+import { ImageOff } from 'lucide-react';
 
 function App() {
   const { user, loading } = useAuth();
@@ -30,7 +31,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/reef_ride" element={<Reef_Ride />} />
-          <Route path="/reef_dive" element={<Reef_Dive />} />
+          <Route path="/Stays" element={<Stays />} />
          
           
           {/* Protected Admin Route */}
