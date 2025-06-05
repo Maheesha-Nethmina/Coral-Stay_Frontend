@@ -5,7 +5,7 @@ import Login from "../Auth/Login";
 import Register from "../Auth/Register";
 import ForgotPassword from "../Auth/ForgotPassword";
 import { useAuth } from "../../contexts/AuthContext";
-
+import img1 from '../../assets/footerLogo.png'
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState("Home");
@@ -82,7 +82,7 @@ useEffect(() => {
               className="text-3xl font-extrabold text-indigo-600 tracking-wide"
               onClick={() => setActive("Home")}
             >
-              NeMa
+            {  <img src={img1} alt="Logo" className="h-30 w-auto inline-block mr-2" />}
             </Link>
 
             {/* Desktop Nav Links */}
@@ -92,7 +92,7 @@ useEffect(() => {
                   key={link.name}
                   to={link.path}
                   onClick={() => setActive(link.name)}
-                  className={`relative text-gray-800 font-medium transition-all duration-200 ${
+                  className={`relative text-white font-medium transition-all duration-200 ${
                     active === link.name ? "text-indigo-600" : ""
                   } after:content-[''] after:block after:h-[2px] after:bg-indigo-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${
                     active === link.name ? "after:scale-x-100" : ""

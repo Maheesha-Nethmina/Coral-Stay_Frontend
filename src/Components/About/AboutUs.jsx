@@ -72,7 +72,7 @@ const About = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-teal-800 font-serif mb-6">What We Do</h2>
             
             <div className="mb-6">
-              <h3 className="text-xl font-semibold text-rose-600 mb-2">🛥️ Coral Reef Boat Tours</h3>
+              <h3 className="text-xl font-semibold text-[#023545] mb-2">🛥️ Coral Reef Boat Tours</h3>
               <ul className="text-gray-700 text-lg space-y-2">
                 <li className="flex items-start"><span className="mr-2">•</span>Guided daily tours with friendly, experienced crew</li>
                 <li className="flex items-start"><span className="mr-2">•</span>Glass-bottom boats to view coral without getting wet</li>
@@ -82,7 +82,7 @@ const About = () => {
             </div>
             
             <div>
-              <h3 className="text-xl font-semibold text-rose-600 mb-2">🏨 Hotel – CoralStay</h3>
+              <h3 className="text-xl font-semibold text-#023545 mb-2">🏨 Hotel – CoralStay</h3>
               <ul className="text-gray-700 text-lg space-y-2">
                 <li className="flex items-start"><span className="mr-2">•</span>Comfortable rooms with garden or ocean views</li>
                 <li className="flex items-start"><span className="mr-2">•</span>Free breakfast and personalized hospitality</li>
