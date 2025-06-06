@@ -1,12 +1,13 @@
 import React from 'react'
 import Navbar from '../../Components/Navbar/Navbar'
-import DeluxeRoom from '../../Components/Stays/DeluxeRoom'
+import Footer from '../../Components/Footer/Footer'
 
 function Stays() {
   return (
     <div>
       <Navbar />
-     <DeluxeRoom />
+
+      <Footer/ >
       </div>
       
   )

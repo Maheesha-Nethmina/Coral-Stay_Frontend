@@ -4,6 +4,7 @@ import Hero from '../Common/Hero'
 import Footer from '../Footer/Footer'
 import img1 from '../../assets/Room2.jpg'
 import RoomShowcase from '../Common/RoomShowcase'
+import RoomCard from '../Common/RoomCard'
 import image1 from '../../assets/Room2.jpg'
 import image2 from '../../assets/Room1.jpg'
 function DeluxeRoom() {
@@ -43,6 +44,30 @@ function DeluxeRoom() {
           "View"
         ]}
 />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+      <RoomCard
+        title="Ocean View Suite"
+        description="Enjoy a stunning view of the ocean from your private balcony."
+        image={image1}
+      />
+      <RoomCard
+        title="Ocean View Suite"
+        description="Enjoy a stunning view of the ocean from your private balcony."
+        image={image2}
+      />
+      <RoomCard
+        title="Ocean View Suite"
+        description="Enjoy a stunning view of the ocean from your private balcony."
+        image={image1}
+      />
+
+       <RoomCard
+        title="Ocean View Suite"
+        description="Enjoy a stunning view of the ocean from your private balcony."
+        image={image1}
+      />
+      </div>
 
       <Footer/>
     </div>
