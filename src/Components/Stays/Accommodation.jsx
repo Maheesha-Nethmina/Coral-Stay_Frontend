@@ -26,32 +26,38 @@ function Accommodation() {
       <Navbar />
 
       {/* Hero Section */}
-      <div>
-      <Hero
-        cName="hero"
-        heroImg={accommodationImg}
-        title="Stay Your Way - Comfort Meets Style"
-        text="Find your perfect place to stay - stylish, simple, and stress-free."
-        overlayOpacity="20"
- />
-        {/* Booking Bar */}
-      <div className="flex justify-center items-center gap-4 py-6 bg-white shadow-md -mt-12 mb-6 z-10 relative max-w-4xl mx-auto rounded-lg px-6">
-        <input
-          type="date"
-          className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
+      <div className="relative">
+        <Hero
+          cName="hero"
+          heroImg={accommodationImg}
+          title="Stay Your Way - Comfort Meets Style"
+          text="Find your perfect place to stay - stylish, simple, and stress-free."
+          overlayOpacity="20"
         />
-        <input
-          type="date"
-          className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
-        />
-        <button className="bg-teal-900 hover:bg-teal-800 text-white font-medium py-2 px-6 rounded-md transition-all duration-300 shadow-md hover:shadow-lg">
-          Book Now
-        </button>
+        {/* Booking Bar inside Hero */}
+        <div className="absolute top-[60%] left-1/2 transform -translate-x-1/2 z-10 w-full px-4">
+          <div className="flex flex-wrap justify-center items-end gap-6 bg-white/90 shadow-lg max-w-4xl mx-auto rounded-lg px-8 py-5">
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">Check-In Date</label>
+              <input
+                type="date"
+                className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">Check-Out Date</label>
+              <input
+                type="date"
+                className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
+              />
+            </div>
+            <button className="bg-teal-900 hover:bg-teal-800 text-white font-medium py-2 px-6 rounded-md transition-all duration-300 shadow-md hover:shadow-lg">
+              Book Now
+            </button>
+          </div>
+        </div>
       </div>
-     
 
-      
-      </div>
 
       {/* Resort Description */}
       <section className="max-w-5xl mx-auto px-4 py-16 text-center">
