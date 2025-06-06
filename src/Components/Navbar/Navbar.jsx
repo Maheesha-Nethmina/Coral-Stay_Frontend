@@ -5,6 +5,9 @@ import Login from "../Auth/Login";
 import Register from "../Auth/Register";
 import ForgotPassword from "../Auth/ForgotPassword";
 import { useAuth } from "../../contexts/AuthContext";
+
+// import img1 from '../../assets/footerLogo.png'
+
 import navLogo from "../../assets/navLogo.png";
 
 const Navbar = () => {
@@ -82,6 +85,7 @@ const Navbar = () => {
               onClick={() => setActive("Home")}
             >
               <img src={navLogo} alt="NeMa Logo" className="h-40 w-auto" />
+
             </Link>
 
             <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-10">
@@ -90,7 +94,13 @@ const Navbar = () => {
                   key={link.name}
                   to={link.path}
                   onClick={() => setActive(link.name)}
-                  className={`relative font-medium transition-all duration-200 text-[#023545] after:content-[''] after:block after:h-[2px] after:bg-[#023545] after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${
+
+                  className={`relative text-white font-medium transition-all duration-200 ${
+                    active === link.name ? "text-indigo-600" : ""
+                  } after:content-[''] after:block after:h-[2px] after:bg-indigo-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${
+
+//                   className={`relative font-medium transition-all duration-200 text-[#023545] after:content-[''] after:block after:h-[2px] after:bg-[#023545] after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${
+
                     active === link.name ? "after:scale-x-100" : ""
                   }`}
                 >
