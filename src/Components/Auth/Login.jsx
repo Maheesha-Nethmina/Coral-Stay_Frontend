@@ -33,10 +33,8 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
     }
 
     try {
-      await login(email, password); // No alert set on success
+      await login(email, password);
       resetForm();
-
-      // Close modal after short delay
       setTimeout(() => {
         onClose();
       }, 500);
@@ -72,7 +70,7 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 w-full px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg"
-              placeholder="example@email.com"
+              placeholder="coralstay@gmail.com"
             />
           </div>
           <div>
@@ -85,7 +83,7 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
               placeholder="********"
             />
           </div>
-          <button type="submit" className="w-full bg-indigo-500 text-white py-2 rounded-xl hover:bg-indigo-600">
+          <button type="submit" className="w-full bg-[#023545] text-white py-2 rounded-xl hover:opacity-90">
             Login
           </button>
           <button
@@ -101,7 +99,7 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
             Sign in with Google
           </button>
           <div className="text-sm text-center mt-2">
-            <button type="button" onClick={onForgotPassword} className="text-indigo-600 font-medium hover:underline">
+            <button type="button" onClick={onForgotPassword} className="text-[#023545] font-medium hover:underline">
               Forgot password?
             </button>
           </div>
@@ -109,7 +107,7 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
 
         <p className="mt-4 text-center text-sm text-gray-700">
           Don't have an account?{" "}
-          <button onClick={onRegister} className="text-indigo-600 font-medium hover:underline">
+          <button onClick={onRegister} className="text-[#023545] font-medium hover:underline">
             Register
           </button>
         </p>
