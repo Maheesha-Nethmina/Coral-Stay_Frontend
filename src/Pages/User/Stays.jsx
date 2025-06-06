@@ -1,14 +1,14 @@
 import React from 'react'
 import Navbar from '../../Components/Navbar/Navbar'
-import DeluxeRoom from '../../Components/Stays/DeluxeRoom'
+import Accommodation from '../../Components/Stays/Accommodation'
 
 function Stays() {
   return (
     <div>
       <Navbar />
-     <DeluxeRoom />
-      </div>
-      
+      <Accommodation />
+    </div>
+
   )
 }
 
