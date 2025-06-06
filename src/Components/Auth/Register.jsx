@@ -1,19 +1,20 @@
 import { useState } from "react";
 import axios from "axios";
 import { X } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Register = ({ onClose, onLogin }) => {
   const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [retypePassword, setConfirmPassword] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("success");
 
+  const { login } = useAuth();
+
   const resetForm = () => {
     setFullName("");
-    setPhone("");
     setEmail("");
     setPassword("");
     setConfirmPassword("");
@@ -31,7 +32,6 @@ const Register = ({ onClose, onLogin }) => {
     try {
       const response = await axios.post("http://localhost:3000/authentication/register", {
         name: fullName,
-        phone,
         email,
         password,
         retypePassword,
@@ -40,12 +40,10 @@ const Register = ({ onClose, onLogin }) => {
       console.log("Registration successful:", response.data);
       setAlertMessage("Registration successful");
       setAlertType("success");
+
+      await login(email, password); // auto login after registration
       resetForm();
-
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 500);
-
+      onClose();
     } catch (error) {
       console.error("Registration failed:", error.response?.data || error.message);
       setAlertMessage("Registration failed. Please try again.");
@@ -81,19 +79,9 @@ const Register = ({ onClose, onLogin }) => {
             <label className="block font-medium">Full Name</label>
             <input
               type="text"
-              placeholder="Mahinda Rajapaksha"
+              placeholder="Coral Stay_Hikkaduwa"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="mt-1 w-full px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
-            />
-          </div>
-          <div>
-            <label className="block font-medium">Phone Number</label>
-            <input
-              type="tel"
-              placeholder="+94 712918347"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
               className="mt-1 w-full px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
             />
           </div>
@@ -101,7 +89,7 @@ const Register = ({ onClose, onLogin }) => {
             <label className="block font-medium">Email</label>
             <input
               type="email"
-              placeholder="rajapaksha@gmail.com"
+              placeholder="coralstay@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 w-full px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
@@ -130,7 +118,7 @@ const Register = ({ onClose, onLogin }) => {
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 rounded-xl hover:from-indigo-600 hover:to-purple-700 transition shadow-md"
+            className="w-full bg-[#023545] text-white py-2 rounded-xl hover:opacity-90 transition shadow-md"
           >
             Register
           </button>
@@ -140,7 +128,7 @@ const Register = ({ onClose, onLogin }) => {
           Already have an account?{" "}
           <button
             onClick={onLogin}
-            className="text-indigo-600 font-medium hover:underline"
+            className="text-[#023545] font-medium hover:underline"
           >
             Login
           </button>
