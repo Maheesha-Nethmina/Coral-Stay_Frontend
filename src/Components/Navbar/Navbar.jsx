@@ -81,7 +81,7 @@ const Navbar = () => {
               className="flex items-center gap-2"
               onClick={() => setActive("Home")}
             >
-              <img src={navLogo} alt="NeMa Logo" className="h-40 w-auto" />
+              <img src={navLogo} alt="Coral Stay Logo" className="h-30 w-auto" />
             </Link>
 
             <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-10">
