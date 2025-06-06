@@ -166,7 +166,7 @@ const ImageCarousel = () => {
       </div>
       
       {/* Description and Button */}
-      <div className="max-w-4xl mx-auto text-left flex">
+      <div className="max-w-7xl mx-auto text-left flex">
         <p className="text-slate-700 text-lg mb-6 leading-relaxed w-4/5">
           Discover the underwater beauty of Hikkaduwa through real moments from our
           reef tours. See what makes every dive unforgettable.

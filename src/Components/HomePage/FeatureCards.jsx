@@ -1,7 +1,8 @@
 import React from 'react';
-import image01 from '../../assets/carousel02.jpg'
-import image03 from '../../assets/image03.jpg'
-import image04 from '../../assets/image04.jpg'
+import image01 from '../../assets/carousel02.jpg';
+import image03 from '../../assets/image03.jpg';
+import image04 from '../../assets/image04.jpg';
+
 function FeatureCards() {
   const cards = [
     {
@@ -32,27 +33,25 @@ function FeatureCards() {
 
   return (
     <div className="bg-[#e7f8fe]">
-      {/* FULL WIDTH CONTAINER */}
-      <section className="w-full px-4 py-12 mx-auto max-w-screen-xl"> {/* Max width 1536px */}
+      <section className="w-full px-4 py-12 mx-auto max-w-screen-xl">
         
-        {/* GRID LAYOUT */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[800px]"> {/* Fixed container height */}
+        {/* Custom Grid with 3:2 ratio */}
+        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 h-[800px]">
           
           {/* LARGE CARD (Left) */}
-          <div className="lg:col-span-2 h-full relative rounded-xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10"/>
+          <div className="h-full relative rounded-xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
             <img 
               src={cards[0].image} 
               alt={cards[0].title}
               className="w-full h-full object-cover"
             />
             <div className="absolute bottom-0 left-0 p-8 z-20 w-full">
-             
-              <div className="  pt-4 mb-6">
+              <div className="pt-4 mb-6">
                 <p className="text-white font-semibold text-4xl mb-2">{cards[0].highlight}</p>
                 <p className="text-white/90 text-base whitespace-pre-line">{cards[0].subtext}</p>
               </div>
-              <button className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-3 px-8 rounded-lg text-lg">
+              <button className="bg-[#023545] hover:bg-teal-700 text-white font-medium py-3 px-8 rounded-lg text-lg w-[300px]">
                 Book Now
               </button>
             </div>
@@ -62,25 +61,25 @@ function FeatureCards() {
           <div className="flex flex-col gap-6 h-full">
             {cards.slice(1).map((card) => (
               <div key={card.id} className="relative flex-1 rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"/>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10" />
                 <img 
                   src={card.image} 
                   alt={card.title}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute bottom-0 left-0 p-6 z-20 w-full">
-                  
-                  <div className=" pt-3 mb-4">
+                  <div className="pt-3 mb-4">
                     <p className="text-white font-semibold text-4xl mb-1">{card.highlight}</p>
                     <p className="text-white/80 text-sm whitespace-pre-line">{card.subtext}</p>
                   </div>
-                  <button className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-6 rounded-lg">
+                  <button className="bg-[#023545] hover:bg-teal-700 text-white font-medium py-2 px-6 rounded-lg w-[300px]">
                     Book Now
                   </button>
                 </div>
               </div>
             ))}
           </div>
+
         </div>
       </section>
     </div>
