@@ -4,10 +4,8 @@ import { Link, useLocation } from "react-router-dom";
 import Login from "../Auth/Login";
 import Register from "../Auth/Register";
 import ForgotPassword from "../Auth/ForgotPassword";
+
 import { useAuth } from "../../contexts/AuthContext";
-
-// import img1 from '../../assets/footerLogo.png'
-
 import navLogo from "../../assets/navLogo.png";
 
 const Navbar = () => {
@@ -84,10 +82,7 @@ const Navbar = () => {
               className="flex items-center gap-2"
               onClick={() => setActive("Home")}
             >
-
               <img src={navLogo} alt="Coral Stay Logo" className="h-30 w-auto" />
-
-
             </Link>
 
             <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-10">
@@ -96,13 +91,9 @@ const Navbar = () => {
                   key={link.name}
                   to={link.path}
                   onClick={() => setActive(link.name)}
-
-                  className={`relative text-white font-medium transition-all duration-200 ${
+                  className={`relative text-[023545] font-medium transition-all duration-200 ${
                     active === link.name ? "text-indigo-600" : ""
                   } after:content-[''] after:block after:h-[2px] after:bg-indigo-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${
-
-//                   className={`relative font-medium transition-all duration-200 text-[#023545] after:content-[''] after:block after:h-[2px] after:bg-[#023545] after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${
-
                     active === link.name ? "after:scale-x-100" : ""
                   }`}
                 >
@@ -114,13 +105,16 @@ const Navbar = () => {
             <div className="hidden md:flex items-center gap-4">
               {user ? (
                 <>
+                  {/* ✅ Show user role or first name */}
                   <Link
                     to={user.role === "admin" ? "/admin" : "/profile"}
                     className="text-[#023545] font-medium hover:underline flex items-center gap-1"
                   >
                     <UserRound size={18} />
-                    {user.role === "admin" ? "Admin" : user.name?.slice(0, 5)}
+                    {user.role === "admin" ? "Admin" : user.name?.split(" ")[0] || "User"}
                   </Link>
+
+                  {/* ✅ Logout button */}
                   <button
                     onClick={handleLogout}
                     className="bg-[#023545] text-white px-4 py-2 rounded-2xl hover:opacity-90 transition shadow-md"
@@ -129,6 +123,7 @@ const Navbar = () => {
                   </button>
                 </>
               ) : (
+                // ✅ Login button
                 <button
                   onClick={() => {
                     setAuthView("login");
@@ -173,13 +168,16 @@ const Navbar = () => {
             ))}
             {user ? (
               <>
+                {/* ✅ Mobile view: user name */}
                 <Link
                   to={user.role === "admin" ? "/admin" : "/profile"}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium hover:bg-white/60 transition text-[#023545]"
                 >
                   <UserRound size={18} />
-                  {user.role === "admin" ? "Admin" : user.name?.slice(0, 5)}
+                  {user.role === "admin" ? "Admin" : user.name?.split(" ")[0] || "User"}
                 </Link>
+
+                {/* ✅ Mobile view: logout */}
                 <button
                   onClick={handleLogout}
                   className="flex items-center justify-center gap-2 w-full bg-[#023545] text-white px-5 py-2.5 rounded-2xl hover:opacity-90 transition-all duration-200 shadow-md"
@@ -188,6 +186,7 @@ const Navbar = () => {
                 </button>
               </>
             ) : (
+              // ✅ Mobile view: login
               <button
                 onClick={() => {
                   setIsOpen(false);

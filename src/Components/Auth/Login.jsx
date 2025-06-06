@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { GoogleLogin } from "@react-oauth/google";   //   switched import
+import { GoogleLogin } from "@react-oauth/google"; // ✅ Already correct import
 import { X } from "lucide-react";
 
 const Login = ({ onClose, onRegister, onForgotPassword }) => {
-  const [email, setEmail]       = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  const [alertType, setAlertType]       = useState("success");
+  const [alertType, setAlertType] = useState("success");
 
   const { login } = useAuth();
 
@@ -22,7 +22,6 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
     setPassword("");
   };
 
-  /* --------------------  EMAIL / PW  ---------------- */
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -43,26 +42,26 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
     }
   };
 
-  /* --------------------  GOOGLE  -------------------- */
+  /* --------------------  ✅ GOOGLE LOGIN HANDLER  -------------------- */
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const res = await fetch(
-        "http://localhost:3000/authentication/google-signin",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ tokenId: credentialResponse.credential }), //  ID token (JWT)
-        }
-      );
+      // ✅ Make sure your backend URL and route are correctly defined here
+      const res = await fetch("http://localhost:3000/authentication/google-signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ tokenId: credentialResponse.credential }), // ✅ Send JWT from Google
+      });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
 
+      // ✅ Handle success (token accepted)
       setAlertMessage("Login successful");
       setAlertType("success");
       setTimeout(onClose, 500);
     } catch (error) {
+      // ✅ Handle failure
       setAlertMessage(error.message);
       setAlertType("error");
     }
@@ -70,7 +69,7 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      {/* floating alert */}
+      {/* ✅ Floating alert */}
       {alertMessage && (
         <div
           className={`fixed top-4 right-4 px-4 py-2 rounded-lg shadow-md z-50 ${
@@ -83,7 +82,7 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
         </div>
       )}
 
-      {/* modal card */}
+      {/* ✅ Modal card */}
       <div className="bg-white/40 backdrop-blur-2xl border border-white/50 shadow-lg rounded-3xl w-full max-w-md p-5 mx-4 relative text-gray-900">
         <button
           onClick={onClose}
@@ -94,7 +93,7 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
 
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 
-        {/* ------------------  FORM  ------------------ */}
+        {/* ✅ Login form */}
         <form className="space-y-4" onSubmit={handleLogin}>
           <div>
             <label className="block font-medium">Email</label>
@@ -125,30 +124,31 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
             Login
           </button>
 
-          {/* divider */}
+          {/* ✅ Divider */}
           <div className="flex items-center gap-4 my-4">
             <div className="h-px flex-1 bg-gray-300" />
             <span className="text-sm text-gray-600">or</span>
             <div className="h-px flex-1 bg-gray-300" />
           </div>
 
-          {/* -----------  GOOGLE LOGIN  ----------- */}
-          <div className="flex justify-center">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => {
-                setAlertMessage("Google Sign-In failed.");
-                setAlertType("error");
-              }}
-              useOneTap
-              shape="pill"
-              theme="filled_blue"
-              width="100%"
-              
-            />
+          {/* ✅ GOOGLE LOGIN BUTTON */}
+          <div className="w-full max-w-[500px]">
+            <div className="bg-[#023545] rounded-full overflow-hidden p-[2px]">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => {
+                  setAlertMessage("Google Sign-In failed.");
+                  setAlertType("error");
+                }}
+                useOneTap
+                shape="pill"
+                theme="outline"
+                width="100%" // ✅ Fix from "150%" to "100%" for layout
+              />
+            </div>
           </div>
 
-          {/* forgot-password link */}
+          {/* Forgot password */}
           <div className="text-sm text-center mt-2">
             <button
               type="button"
@@ -160,7 +160,7 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
           </div>
         </form>
 
-        {/* register link */}
+        {/* Register link */}
         <p className="mt-4 text-center text-sm text-gray-700">
           Don&apos;t have an account?{" "}
           <button
