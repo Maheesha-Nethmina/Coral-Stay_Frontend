@@ -1,23 +1,22 @@
 import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext';  // To access the user's authentication state
+import { useAuth } from './contexts/AuthContext';
 import Home from './Pages/User/Home';
 import About from './Pages/User/About';
 import Contact from './Pages/User/Contact';
 import Reef_Ride from './Pages/User/Reef_Ride';
 import Stays from './Pages/User/Stays';
+import RoomBooking from './Components/Stays/RoomBooking';
 import AdminDash from './Pages/Admin/AdminDash';
 import ResetPassword from './Components/Auth/ResetPassword';
-import { ImageOff } from 'lucide-react';
 
 function App() {
   const { user, loading } = useAuth();
 
-  // Protected Route for Admin
   const ProtectedAdminRoute = ({ element }) => {
-    if (loading) return <div>Loading...</div>;  // Wait until loading is complete
+    if (loading) return <div>Loading...</div>;
     if (!user || user.role !== 'admin') {
-      return <Navigate to="/" />; // Redirect to home if not an admin
+      return <Navigate to="/" />;
     }
     return element;
   };
@@ -31,16 +30,16 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/reef_ride" element={<Reef_Ride />} />
-          <Route path="/Stays" element={<Stays />} />
-         
-          
+          <Route path="/stays" element={<Stays />} />
+          <Route path="/room-booking" element={<RoomBooking />} />
+
           {/* Protected Admin Route */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
-          
+
           {/* Reset Password Route */}
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-          {/* Catch-all Route for unknown pages */}
+          {/* Catch-all Route */}
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </BrowserRouter>
