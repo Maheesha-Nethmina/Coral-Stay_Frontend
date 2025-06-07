@@ -19,7 +19,7 @@ function DeluxeRoom() {
           overlayOpacity="20"
         />
      
-        <RoomShowcase 
+        <RoomShowcase
    title="Affordable Beachfront Luxury in Hikkaduwa"
         description="Experience the perfect blend of comfort and elegance with our Deluxe Rooms at Coral Stay in Hikkaduwa. These rooms are thoughtfully designed to offer luxury at an affordable price. Each Deluxe Room features modern amenities and exclusive facilities, wrapped in a compact yet stylish space. Wake up to breathtaking ocean views and unwind in interiors crafted with refined taste."
   images={[image1, image2]}

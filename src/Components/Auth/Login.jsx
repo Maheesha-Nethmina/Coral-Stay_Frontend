@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../../contexts/AuthContext";
-import { GoogleLogin } from "@react-oauth/google"; // ✅ Already correct import
+import { useAuth } from "../../contexts/AuthContext";  // Ensure this is correct import path
+import { GoogleLogin } from "@react-oauth/google";
 import { X } from "lucide-react";
 
 const Login = ({ onClose, onRegister, onForgotPassword }) => {
@@ -9,7 +9,8 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("success");
 
-  const { login } = useAuth();
+  // Destructure refreshUser from AuthContext
+  const { login, refreshUser } = useAuth();
 
   useEffect(() => {
     if (!alertMessage) return;
@@ -42,26 +43,26 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
     }
   };
 
-  /* --------------------  ✅ GOOGLE LOGIN HANDLER  -------------------- */
+  /* -------------------- GOOGLE LOGIN HANDLER  -------------------- */
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      // ✅ Make sure your backend URL and route are correctly defined here
       const res = await fetch("http://localhost:3000/authentication/google-signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ tokenId: credentialResponse.credential }), // ✅ Send JWT from Google
+        body: JSON.stringify({ tokenId: credentialResponse.credential }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
 
-      // ✅ Handle success (token accepted)
+      // Refresh user context state to update navbar immediately
+      await refreshUser();
+
       setAlertMessage("Login successful");
       setAlertType("success");
       setTimeout(onClose, 500);
     } catch (error) {
-      // ✅ Handle failure
       setAlertMessage(error.message);
       setAlertType("error");
     }
@@ -69,7 +70,6 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      {/* ✅ Floating alert */}
       {alertMessage && (
         <div
           className={`fixed top-4 right-4 px-4 py-2 rounded-lg shadow-md z-50 ${
@@ -82,7 +82,6 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
         </div>
       )}
 
-      {/* ✅ Modal card */}
       <div className="bg-white/40 backdrop-blur-2xl border border-white/50 shadow-lg rounded-3xl w-full max-w-md p-5 mx-4 relative text-gray-900">
         <button
           onClick={onClose}
@@ -93,7 +92,6 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
 
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 
-        {/* ✅ Login form */}
         <form className="space-y-4" onSubmit={handleLogin}>
           <div>
             <label className="block font-medium">Email</label>
@@ -124,14 +122,12 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
             Login
           </button>
 
-          {/* ✅ Divider */}
           <div className="flex items-center gap-4 my-4">
             <div className="h-px flex-1 bg-gray-300" />
             <span className="text-sm text-gray-600">or</span>
             <div className="h-px flex-1 bg-gray-300" />
           </div>
 
-          {/* ✅ GOOGLE LOGIN BUTTON */}
           <div className="w-full max-w-[500px]">
             <div className="bg-[#023545] rounded-full overflow-hidden p-[2px]">
               <GoogleLogin
@@ -143,12 +139,11 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
                 useOneTap
                 shape="pill"
                 theme="outline"
-                width="100%" // ✅ Fix from "150%" to "100%" for layout
+                width="100%"
               />
             </div>
           </div>
 
-          {/* Forgot password */}
           <div className="text-sm text-center mt-2">
             <button
               type="button"
@@ -160,7 +155,6 @@ const Login = ({ onClose, onRegister, onForgotPassword }) => {
           </div>
         </form>
 
-        {/* Register link */}
         <p className="mt-4 text-center text-sm text-gray-700">
           Don&apos;t have an account?{" "}
           <button

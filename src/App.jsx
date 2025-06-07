@@ -8,6 +8,8 @@ import Reef_Ride from './Pages/User/Reef_Ride';
 import Stays from './Pages/User/Stays';
 import AdminDash from './Pages/Admin/AdminDash';
 import ResetPassword from './Components/Auth/ResetPassword';
+// import Profile from './Pages/User/Profile';
+
 import { ImageOff } from 'lucide-react';
 
 function App() {
@@ -32,7 +34,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/reef_ride" element={<Reef_Ride />} />
           <Route path="/Stays" element={<Stays />} />
-         
+         {/* <Route path="/profile" element={<Profile />} /> */}
           
           {/* Protected Admin Route */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
@@ -42,6 +44,7 @@ function App() {
 
           {/* Catch-all Route for unknown pages */}
           <Route path="*" element={<div>Page Not Found</div>} />
+
         </Routes>
       </BrowserRouter>
     </div>
