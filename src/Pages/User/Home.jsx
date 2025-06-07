@@ -151,29 +151,32 @@ function Home() {
       </motion.div>
 
      {/* event section */}
-      <div className="relative w-full h-screen overflow-hidden ">
-           <div
-             className="fixed top-0 left-0 w-full h-screen bg-cover bg-center -z-5 "
-             style={{ backgroundImage: `url(${img2})` }}
-           />
-           <div className="w-full h-screen flex items-center justify-center ">
-             <div className="w-full max-w-8xl bg-black/20 text-white text-center px-4 py-22 ">
-               <h1 className="text-3xl font-semibold mb-4">Events/Activities around Hikkaduwa</h1>
-               <p className="text-lg leading-relaxed max-w-5xl mx-auto">
-                Discover the latest events and fun activities happening around Hikkaduwa—from beach festivals and cultural shows to thrilling diving adventures
-                Whether you're looking for live music, or special holiday events, there's always something happening nearby. Click the button below to explore more and stay updated with what’s going on! 
-               </p>
-                <div className="mt-8">
-                  <button
-                  onClick={handleRedirect}
-                  className="bg-[#023545] text-xl text-white px-3 py-3 rounded-lg hover:bg-[#06445f] transition-colors duration-300 rounded-[10px] w-[350px]">
-                    See All Events
-                  </button>
-                  </div>
-             </div>
-           </div>
-         </div>
-
+      <div className="relative w-full h-screen overflow-hidden">
+  <div className="w-full h-screen flex items-center justify-center relative">
+    {/* Background image div inside the content section */}
+    <div
+      className="absolute top-0 left-0 w-full h-full bg-cover bg-center -z-10"
+      style={{ backgroundImage: `url(${img2})` }}
+    />
+    
+    <div className="w-full max-w-8xl bg-black/20 text-white text-center px-4 py-22 z-10">
+      <h1 className="text-3xl font-semibold mb-4">Events/Activities around Hikkaduwa</h1>
+      <p className="text-lg leading-relaxed max-w-5xl mx-auto">
+        Discover the latest events and fun activities happening around Hikkaduwa—from beach festivals and cultural shows to thrilling diving adventures.
+        Whether you're looking for live music or special holiday events, there's always something happening nearby.
+        Click the button below to explore more and stay updated with what’s going on!
+      </p>
+      <div className="mt-8">
+        <button
+          onClick={handleRedirect}
+          className="bg-[#023545] text-xl text-white px-3 py-3 rounded-lg hover:bg-[#06445f] transition-colors duration-300 w-[350px]"
+        >
+          See All Events
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
       {/* Carousel Section */}
       <motion.div
