@@ -33,7 +33,6 @@ const AboutSection = () => {
 
               Our mission is simple: to help you experience the magic of Hikkaduwa’s coral reefs in a fun, safe, and eco-friendly way. Whether you're lounging in one of our sea-view rooms, sipping a drink under a palm tree, or heading out on a boat to explore the underwater world, we’re here to make it all easy and unforgettable.
 
-              Our friendly local team knows these waters like the back of their hand, and they love sharing the rich marine life, colorful corals, and clear blue waters with guests from around the world. First time snorkeling? No problem. Just want to relax and enjoy the view? We’ve got you covered.
               So come stay with us, hop on the boat, and discover what makes Hikkaduwa so special — both above and below the surface.
               </p>
             <div className="border-t border-gray-200 pt-4">
