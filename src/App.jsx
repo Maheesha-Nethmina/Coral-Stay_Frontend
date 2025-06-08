@@ -8,9 +8,13 @@ import Reef_Ride from './Pages/User/Reef_Ride';
 import Stays from './Pages/User/Stays';
 import AdminDash from './Pages/Admin/AdminDash';
 import ResetPassword from './Components/Auth/ResetPassword';
+
 // import Profile from './Pages/User/Profile';
 
 import { ImageOff } from 'lucide-react';
+
+// import Events from './Pages/User/Events';
+
 
 function App() {
   const { user, loading } = useAuth();
@@ -34,7 +38,12 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/reef_ride" element={<Reef_Ride />} />
           <Route path="/Stays" element={<Stays />} />
+
          {/* <Route path="/profile" element={<Profile />} /> */}
+
+          // <Route path="/Events" element={<Events />} />
+
+
           
           {/* Protected Admin Route */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
