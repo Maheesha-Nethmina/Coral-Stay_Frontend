@@ -72,7 +72,7 @@ const About = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-teal-800 font-serif mb-6">What We Do</h2>
             
             <div className="mb-6">
-              <h3 className="text-xl font-semibold text-[#023545] mb-2">🛥️ Coral Reef Boat Tours</h3>
+              <h3 className="text-xl font-semibold text-[#023545] mb-2">Coral Reef Boat Tours</h3>
               <ul className="text-gray-700 text-lg space-y-2">
                 <li className="flex items-start"><span className="mr-2">•</span>Guided daily tours with friendly, experienced crew</li>
                 <li className="flex items-start"><span className="mr-2">•</span>Glass-bottom boats to view coral without getting wet</li>
@@ -82,7 +82,7 @@ const About = () => {
             </div>
             
             <div>
-              <h3 className="text-xl font-semibold text-#023545 mb-2">🏨 Hotel – CoralStay</h3>
+              <h3 className="text-xl font-semibold text-#023545 mb-2">Hotel – CoralStay</h3>
               <ul className="text-gray-700 text-lg space-y-2">
                 <li className="flex items-start"><span className="mr-2">•</span>Comfortable rooms with garden or ocean views</li>
                 <li className="flex items-start"><span className="mr-2">•</span>Free breakfast and personalized hospitality</li>
@@ -134,11 +134,11 @@ const About = () => {
           <div className="w-full md:w-1/2 order-1 md:order-2">
             <h2 className="text-3xl md:text-4xl font-bold text-teal-800 font-serif mb-6">Why Choose CoralStay</h2>
             <ul className="text-gray-700 text-lg space-y-4">
-              <li className="flex items-start"><span className="text-teal-600 mr-2">✓</span>Stay and explore in one place – no separate bookings needed</li>
-              <li className="flex items-start"><span className="text-teal-600 mr-2">✓</span>Locally owned and operated with personal care</li>
-              <li className="flex items-start"><span className="text-teal-600 mr-2">✓</span>Clean, safe boats and peaceful rooms</li>
-              <li className="flex items-start"><span className="text-teal-600 mr-2">✓</span>Steps away from the Hikkaduwa Marine Sanctuary</li>
-              <li className="flex items-start"><span className="text-teal-600 mr-2">✓</span>Friendly team with deep knowledge of the reef</li>
+              <li className="flex items-start"><span className="mr-2">•</span>Stay and explore in one place – no separate bookings needed</li>
+              <li className="flex items-start"><span className="mr-2">•</span>Locally owned and operated with personal care</li>
+              <li className="flex items-start"><span className="mr-2">•</span>Clean, safe boats and peaceful rooms</li>
+              <li className="flex items-start"><span className="mr-2">•</span>Steps away from the Hikkaduwa Marine Sanctuary</li>
+              <li className="flex items-start"><span className="mr-2">•</span>Friendly team with deep knowledge of the reef</li>
             </ul>
           </div>
         </div>
