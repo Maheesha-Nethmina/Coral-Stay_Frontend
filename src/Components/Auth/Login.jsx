@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../../contexts/AuthContext";  // Ensure this is correct import path
+import { useAuth } from "../../contexts/AuthContext";
 import { GoogleLogin } from "@react-oauth/google";
 import { X } from "lucide-react";
 

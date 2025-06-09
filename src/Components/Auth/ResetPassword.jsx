@@ -30,7 +30,7 @@ const ResetPassword = ({ onClose, onLogin }) => {
     try {
       setLoading(true);
       await axios.post("http://localhost:3000/authentication/reset-password", {
-        token, // ✅ Use raw token, no encoding
+        token, // Use raw token, no encoding
         newPassword: password,
       });
 
@@ -88,7 +88,7 @@ const ResetPassword = ({ onClose, onLogin }) => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 rounded-xl hover:from-indigo-600 hover:to-purple-700 transition shadow-md ${
+              className={`w-full bg-[#023545] text-white py-2 rounded-xl hover:from-indigo-600 hover:to-purple-700 transition shadow-md ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
@@ -100,7 +100,7 @@ const ResetPassword = ({ onClose, onLogin }) => {
             Back to{" "}
             <button
               onClick={onLogin}
-              className="text-indigo-600 font-medium hover:underline"
+              className="text-[#023545] font-medium hover:underline"
             >
               Login
             </button>

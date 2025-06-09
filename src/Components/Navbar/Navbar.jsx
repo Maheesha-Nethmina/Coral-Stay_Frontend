@@ -17,6 +17,8 @@ const Navbar = () => {
   const { user, logout, loading } = useAuth();
   const location = useLocation();
 
+
+  //Links and icons in navbar
   const navLinks = [
     { name: "Home", path: "/", icon: <Home size={18} /> },
     { name: "Reef Ride", path: "/reef_ride", icon: <Sailboat size={18} /> },
@@ -105,7 +107,7 @@ const Navbar = () => {
             <div className="hidden md:flex items-center gap-4">
               {user ? (
                 <>
-                  {/* ✅ Show user role or first name */}
+                  {/* display user role or username */}
                   <Link
                     to={user.role === "admin" ? "/admin" : "/profile"}
                     className="text-[#023545] font-medium hover:underline flex items-center gap-1"
@@ -114,7 +116,7 @@ const Navbar = () => {
                     {user.role === "admin" ? "Admin" : user.name?.split(" ")[0] || "User"}
                   </Link>
 
-                  {/* ✅ Logout button */}
+                  {/*logout button*/}
                   <button
                     onClick={handleLogout}
                     className="bg-[#023545] text-white px-4 py-2 rounded-2xl hover:opacity-90 transition shadow-md"
@@ -123,7 +125,7 @@ const Navbar = () => {
                   </button>
                 </>
               ) : (
-                // ✅ Login button
+                // Login button
                 <button
                   onClick={() => {
                     setAuthView("login");
@@ -168,7 +170,7 @@ const Navbar = () => {
             ))}
             {user ? (
               <>
-                {/* ✅ Mobile view: user name */}
+                {/*Mobile view: user name */}
                 <Link
                   to={user.role === "admin" ? "/admin" : "/profile"}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium hover:bg-white/60 transition text-[#023545]"
@@ -177,7 +179,7 @@ const Navbar = () => {
                   {user.role === "admin" ? "Admin" : user.name?.split(" ")[0] || "User"}
                 </Link>
 
-                {/* ✅ Mobile view: logout */}
+                {/*Mobile view: logout */}
                 <button
                   onClick={handleLogout}
                   className="flex items-center justify-center gap-2 w-full bg-[#023545] text-white px-5 py-2.5 rounded-2xl hover:opacity-90 transition-all duration-200 shadow-md"
@@ -186,7 +188,7 @@ const Navbar = () => {
                 </button>
               </>
             ) : (
-              // ✅ Mobile view: login
+              // Mobile view: login
               <button
                 onClick={() => {
                   setIsOpen(false);
