@@ -9,7 +9,9 @@ import Stays from './Pages/User/Stays';
 import AdminDash from './Pages/Admin/AdminDash';
 import ResetPassword from './Components/Auth/ResetPassword';
 import Events from './Pages/User/Events';
-
+import AddEvents from './Pages/Admin/AddEvents';
+import EventDetails from './Pages/Admin/EventDetails'
+import UpdateEvent from './Pages/Admin/UpdateEvents'
 function App() {
   const { user, loading } = useAuth();
 
@@ -33,8 +35,10 @@ function App() {
           <Route path="/reef_ride" element={<Reef_Ride />} />  
           <Route path="/Stays" element={<Stays />} />
           <Route path="/Events" element={<Events />} />
+          <Route path="/addEvents" element={<AddEvents/>}/>
+          <Route path="/eventDetails" element={<EventDetails/>}/>
+        <Route path="/eventDetails/:id" element={<UpdateEvent/>} />
 
-         
           
           {/* Protected Admin Route */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
