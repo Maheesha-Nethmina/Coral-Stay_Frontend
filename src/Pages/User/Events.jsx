@@ -4,9 +4,24 @@ import Footer from '../../Components/Footer/Footer'
 import Hero from '../../Components/Common/Hero'
 import img1 from '../../assets/event02.jpg'
 import { motion } from 'framer-motion'
+import  { useEffect, useState } from 'react';
+import axios from 'axios';
 function Events() {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/events");
+        setEvents(res.data.events || []);
+      } catch (err) {
+        console.error("Failed to fetch events:", err);
+      }
+    };
+    fetchEvents();
+  }, []);
   return (
-    <div>
+    <div >
         <Navbar />
       
       {/* Animate the Hero section */}
@@ -23,6 +38,34 @@ function Events() {
           overlayOpacity="20"
         />
       </motion.div>
+      
+     <div className="p-6 grid gap-10 md:grid-cols-2 mx-20 ">
+      {events.map((event, index) => (
+        <div key={index} className="flex bg-[#D9D9D9] rounded-2xl shadow-lg overflow-hidden">
+          <img
+            src={event.imageUrl}
+            alt={event.title}
+            className="w-48 h-70 object-cover"
+          />
+          <div className="p-5 flex flex-col justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-gray-800 mb-1">{event.title}</h2>
+              <p className="text-sm text-gray-600 mb-2 line-clamp-3">{event.description}</p>
+              <p className="text-sm text-gray-500 mb-1">Date: {event.date.slice(0, 10)}</p>
+              <a
+                href={event.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-[#023545] hover:underline"
+              >
+                View on Map
+              </a>
+            </div>
+            
+          </div>
+        </div>
+      ))}
+    </div>
 
       <Footer/>
     </div>
