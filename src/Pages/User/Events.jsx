@@ -41,15 +41,15 @@ function Events() {
       
      <div className="p-6 grid gap-10 md:grid-cols-2 mx-20 ">
       {events.map((event, index) => (
-        <div key={index} className="flex bg-[#D9D9D9] rounded-2xl shadow-lg overflow-hidden">
+        <div key={index} className="flex bg-gradient-to-b from-[#ecd7af] to-white rounded-2xl shadow-lg overflow-hidden">
           <img
             src={event.imageUrl}
             alt={event.title}
-            className="w-48 h-70 object-cover"
+            className="w-60 h-80 object-cover m-3"
           />
           <div className="p-5 flex flex-col justify-between">
             <div>
-              <h2 className="text-xl font-bold text-gray-800 mb-1">{event.title}</h2>
+              <h2 className="text-3xl font-bold  text-black mb-1">{event.title}</h2>
               <p className="text-sm text-gray-600 mb-2 line-clamp-3">{event.description}</p>
               <p className="text-sm text-gray-500 mb-1">Date: {event.date.slice(0, 10)}</p>
               <a

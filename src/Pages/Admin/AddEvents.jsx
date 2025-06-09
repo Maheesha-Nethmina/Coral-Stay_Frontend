@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import img1 from '../../assets/event03.jpeg'
 function addEvents() {
-   const history = useNavigate();
+  const history = useNavigate();
   const [inputs, setInputs] = useState({ title: "", description: "", date: "", mapUrl: "" });
   const [image, setImage] = useState(null);
 
@@ -21,28 +22,80 @@ function addEvents() {
   };
 
   return (
-    <div>
-      <h1>Add Event</h1>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <label>title:</label><br />
-        <input type="text" name="title" value={inputs.title} onChange={handleChange} required /><br /><br />
+    <div className="min-h-screen flex bg-[#EAF4F6]">
+      {/* Left Side Image */}
+      <div className="w-1/2  bg-[#023545] flex items-center justify-center p-20">
+        <div className="">
+          <img src={img1} alt="Add Events" />
+          </div>
+      </div>
 
-       <label>description:</label><br />
-        <textarea name="description" rows="4" value={inputs.description} onChange={handleChange} required></textarea><br /><br />
+      {/* Right Side Form */}
+      <div className="w-1/2 flex items-center justify-center">
+        <form
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+          className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg"
+        >
+          <h1 className="text-2xl font-bold text-[#023545] mb-6">Add Event</h1>
 
-        <label>date:</label><br />
-        <input type="date" name="date" value={inputs.date} onChange={handleChange} required /><br /><br />
+          <label className="block text-sm font-medium text-gray-700">Title</label>
+          <input
+            type="text"
+            name="title"
+            value={inputs.title}
+            onChange={handleChange}
+            required
+            className="mt-1 mb-4 w-full border rounded-md p-2"
+          />
 
-        <label>map Url:</label><br />
-        <input type="url" name="mapUrl" value={inputs.mapUrl} onChange={handleChange} required /><br /><br />
+          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <textarea
+            name="description"
+            rows="4"
+            value={inputs.description}
+            onChange={handleChange}
+            required
+            className="mt-1 mb-4 w-full border rounded-md p-2"
+          ></textarea>
 
-        <label>Image:</label><br />
-        <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} /><br /><br />
+          <label className="block text-sm font-medium text-gray-700">Date</label>
+          <input
+            type="date"
+            name="date"
+            value={inputs.date}
+            onChange={handleChange}
+            required
+            className="mt-1 mb-4 w-full border rounded-md p-2"
+          />
 
-        <input type="submit" value="Submit" />
-      </form>
+          <label className="block text-sm font-medium text-gray-700">Map URL</label>
+          <input
+            type="url"
+            name="mapUrl"
+            value={inputs.mapUrl}
+            onChange={handleChange}
+            required
+            className="mt-1 mb-4 w-full border rounded-md p-2"
+          />
+
+          <label className="block text-sm font-medium text-gray-700">Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
+            className="mt-1 mb-6 w-full"
+          />
+
+          <input
+            type="submit"
+            value="Submit"
+            className="bg-[#023545] text-white px-4 py-2 rounded-md hover:bg-teal-700 w-full"
+          />
+        </form>
+      </div>
     </div>
-  )
+  );
 }
 
-export default addEvents
+export default addEvents;
