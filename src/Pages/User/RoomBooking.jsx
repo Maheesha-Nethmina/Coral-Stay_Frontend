@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Navbar from '../Navbar/Navbar';
-import Hero from '../Common/Hero';
-import Footer from '../Footer/Footer';
+import Navbar from '../../Components/Navbar/Navbar';
+import Hero from '../../Components/Common/Hero';
+import Footer from '../../Components/Footer/Footer';
 
 import room1 from '../../assets/Accomodation-Room1.png';
 import room2 from '../../assets/Accomodation-Room2.png';

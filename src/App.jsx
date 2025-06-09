@@ -2,14 +2,19 @@ import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 
+// User Pages
 import Home from './Pages/User/Home';
 import About from './Pages/User/About';
 import Contact from './Pages/User/Contact';
 import Reef_Ride from './Pages/User/Reef_Ride';
 import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
-import RoomBooking from './Components/Stays/RoomBooking';
+import RoomBooking from './Pages/User/RoomBooking';
+
+// Admin Page
 import AdminDash from './Pages/Admin/AdminDash';
+
+// Auth Components
 import ResetPassword from './Components/Auth/ResetPassword';
 
 function App() {
