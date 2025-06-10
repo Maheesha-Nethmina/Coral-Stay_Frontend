@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import img1 from '../../assets/event03.jpeg'
+import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
 function addEvents() {
   const history = useNavigate();
   const [inputs, setInputs] = useState({ title: "", description: "", date: "", mapUrl: "" });
@@ -22,16 +24,12 @@ function addEvents() {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#EAF4F6]">
-      {/* Left Side Image */}
-      <div className="w-1/2  bg-[#023545] flex items-center justify-center p-20">
-        <div className="">
-          <img src={img1} alt="Add Events" />
-          </div>
-      </div>
+    <div>
+      <Navbar/>
+    <div className="min-h-screen flex bg-[#EAF4F6] mt-15">
 
       {/* Right Side Form */}
-      <div className="w-1/2 flex items-center justify-center">
+      <div className="mx-130 flex items-center justify-center">
         <form
           onSubmit={handleSubmit}
           encType="multipart/form-data"
@@ -94,6 +92,8 @@ function addEvents() {
           />
         </form>
       </div>
+    </div>
+    <Footer/>
     </div>
   );
 }

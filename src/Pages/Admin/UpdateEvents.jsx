@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import img1 from '../../assets/event04.jpeg';
+import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
 
 function UpdateUser() {
   const [inputs, setInputs] = useState({ title: '', description: '', date: '', mapUrl: '' });
@@ -40,14 +42,13 @@ function UpdateUser() {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#EAF4F6]">
-      {/* Left Side Image */}
-      <div className="w-1/2 bg-[#023545] flex items-center justify-center p-20">
-        <img src={img1} alt="Update Event" />
-      </div>
+    <div>
+      <Navbar/>
+    <div className="min-h-screen flex bg-[#EAF4F6] mt-15">
+      
 
       {/* Right Side Form */}
-      <div className="w-1/2 flex items-center justify-center">
+      <div className="mx-130 flex items-center justify-center">
         <form
           onSubmit={handleSubmit}
           encType="multipart/form-data"
@@ -111,6 +112,8 @@ function UpdateUser() {
         </form>
       </div>
     </div>
+    <Footer/>
+  </div>
   );
 }
 
