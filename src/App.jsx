@@ -44,6 +44,7 @@ function App() {
           <Route path="/Stays" element={<Stays />} />
           <Route path="/Events" element={<Events />} />
           <Route path="/room-booking" element={<RoomBooking />} />
+          {/* <Route path="/admin_" element={<RoomBooking />} /> */}
 
 
           {/* Admin panel routes */}
