@@ -16,6 +16,7 @@ import AdminDash from './Pages/Admin/AdminDash';
 
 // Auth Components
 import ResetPassword from './Components/Auth/ResetPassword';
+import Events from './Pages/User/Events';
 
 function App() {
   const { user, loading } = useAuth();
@@ -36,11 +37,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/reef_ride" element={<Reef_Ride />} />
-          <Route path="/stays" element={<Stays />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/room-booking" element={<RoomBooking />} />
+          <Route path="/reef_ride" element={<Reef_Ride />} />  
+          <Route path="/Stays" element={<Stays />} />
+          <Route path="/Events" element={<Events />} />
 
+         
+          
           {/* Protected Admin Route */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
 
