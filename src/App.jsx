@@ -10,6 +10,9 @@ import Reef_Ride from './Pages/User/Reef_Ride';
 import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
+// Admin Pages
+import AddEvents from './Pages/Admin/AddEvents';
+
 
 // Admin Page
 import AdminDash from './Pages/Admin/AdminDash';
@@ -40,6 +43,13 @@ function App() {
           <Route path="/reef_ride" element={<Reef_Ride />} />  
           <Route path="/Stays" element={<Stays />} />
           <Route path="/Events" element={<Events />} />
+          <Route path="/room-booking" element={<RoomBooking />} />
+
+
+          {/* Admin panel routes */}
+          <Route path="/addEvents" element={<AddEvents/>} />
+
+          {/* Redirect to Home if no user is logged in */}
 
          
           

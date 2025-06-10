@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../../Components/Navbar/Navbar';
 
 
   
@@ -11,6 +12,8 @@ function AdminDash() {
     navigate('/addEvents');
   };
   return (
+    <>
+    <Navbar />
     <div>
         <br /><br /><br /><br />
         <h1>Admin Dash Board</h1>
@@ -20,6 +23,7 @@ function AdminDash() {
       Go to Add Events
     </button>
     </div>
+    </>
   )
 }
 
