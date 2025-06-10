@@ -16,7 +16,7 @@ import AdminDash from './Pages/Admin/AdminDash';
 
 // Auth Components
 import ResetPassword from './Components/Auth/ResetPassword';
-import Events from './Pages/User/Events';
+// import Events from './Pages/User/Events';
 
 function App() {
   const { user, loading } = useAuth();
