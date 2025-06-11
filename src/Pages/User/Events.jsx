@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '../../Components/Navbar/Navbar'
 import Footer from '../../Components/Footer/Footer'
 import Hero from '../../Components/Common/Hero'
-import img1 from '../../assets/event02.jpg'
+import img1 from '../../assets/event05.jpeg'
 import { motion } from 'framer-motion'
 import  { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -41,7 +41,7 @@ function Events() {
       
      <div className="p-6 grid gap-10 md:grid-cols-2 mx-20 ">
       {events.map((event, index) => (
-        <div key={index} className="flex bg-gradient-to-b from-[#ecd7af] to-white rounded-2xl shadow-lg overflow-hidden">
+        <div key={index} className="flex bg-gradient-to-b from-[#EAF4F6] to-white rounded-2xl shadow-lg overflow-hidden">
           <img
             src={event.imageUrl}
             alt={event.title}
