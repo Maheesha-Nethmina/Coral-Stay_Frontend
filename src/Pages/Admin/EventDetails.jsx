@@ -27,6 +27,7 @@ function EventDetails() {
 
    const navigate = useNavigate();
 
+   
   return (
     <div>
       <Navbar/>
