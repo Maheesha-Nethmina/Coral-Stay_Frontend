@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Event from './Event';
-import { useNavigate } from "react-router-dom";
-import Navbar from '../../Components/Navbar/Navbar';
-import Footer from '../../Components/Footer/Footer';
-
 
 const URL = "http://localhost:3000/events";
 
@@ -25,20 +21,11 @@ function EventDetails() {
     setEvents((prevEvents) => prevEvents.filter((event) => event._id !== id));
   };
 
-   const navigate = useNavigate();
+ 
 
   return (
     <div>
-      <Navbar/>
-      <div class="flex items-center justify-center mt-24">
-      <h1 className='font-bold text-black text-lg'>User Details Display Page</h1>
-      </div>
-       <button
-      onClick={() => navigate("/addEvents")}
-      className="px-20 py-2 bg-[#023545] text-white rounded-md font-semibold hover:bg-[#014459] transition"
-    >
-      Add Event
-    </button>
+      <h1>User Details Display Page</h1>
      <div className="overflow-x-auto w-full p-4">
       <div className="grid grid-cols-[100px_200px_150px_1.5fr_120px_200px_100px] gap-4 bg-gray-100 text-gray-700 uppercase text-sm font-semibold mb-2 p-2 rounded">
         <div>Image</div>
@@ -62,7 +49,6 @@ function EventDetails() {
       )}
 
       <br />
-      <Footer/>
     </div>
   );
 }
