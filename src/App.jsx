@@ -6,12 +6,17 @@ import About from './Pages/User/About';
 import Contact from './Pages/User/Contact';
 import Reef_Ride from './Pages/User/Reef_Ride';
 import Stays from './Pages/User/Stays';
+
+import Events from './Pages/User/Events';
+
+// Admin Page
+
 import AdminDash from './Pages/Admin/AdminDash';
 import ResetPassword from './Components/Auth/ResetPassword';
-import Events from './Pages/User/Events';
 import AddEvents from './Pages/Admin/AddEvents';
 import EventDetails from './Pages/Admin/EventDetails'
 import UpdateEvent from './Pages/Admin/UpdateEvents'
+
 function App() {
   const { user, loading } = useAuth();
 
@@ -39,6 +44,17 @@ function App() {
           <Route path="/eventDetails" element={<EventDetails/>}/>
         <Route path="/eventDetails/:id" element={<UpdateEvent/>} />
 
+
+
+
+          {/* Admin panel routes */}
+          <Route path="/addEvents" element={<AddEvents/>} />
+          <Route path="/eventDetails" element={<EventDetails/>}/>
+
+
+          {/* Redirect to Home if no user is logged in */}
+
+         
           
           {/* Protected Admin Route */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
