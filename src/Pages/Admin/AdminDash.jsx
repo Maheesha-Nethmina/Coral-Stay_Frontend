@@ -23,8 +23,8 @@ function AdminDash() {
 
           {/* Main Content */}
           <div className="flex-1 p-8 mt-8 bg-[#eaf4f6] ">
-            <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
-            <p className="mb-2">Welcome to the CoralStay Admin Dashboard!</p>
+            <h1 className="text-3xl font-bold mb-4">Welcome to the CoralStay Admin Dashboard!</h1>
+            
             <p className="mb-4 text-justify max-w-6xl">Here you can efficiently manage bookings, oversee guest interactions, update property listings, 
               monitor reef ride activities, and handle user messages and events. Use this panel to ensure a seamless experience 
               for both our guests and partners, and to maintain the high-quality standards CoralStay is known for.</p>
