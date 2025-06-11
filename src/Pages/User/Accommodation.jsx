@@ -48,11 +48,11 @@ function Accommodation() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white/90 shadow-lg max-w-4xl mx-auto rounded-lg px-8 py-5 items-end">
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-700 mb-1">Check-In Date</label>
-              <input type="date" className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600" />
+              <input type="date" min={new Date().toISOString().split('T')[0]} className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600" />
             </div>
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-700 mb-1">Check-Out Date</label>
-              <input type="date" className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600" />
+              <input type="date" min={new Date().toISOString().split('T')[0]} className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600" />
             </div>
             <button
               onClick={() => navigate('/room-booking')}
