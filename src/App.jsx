@@ -12,6 +12,8 @@ import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
+import EventDetails from './Pages/Admin/EventDetails'
+import UpdateEvent from './Pages/Admin/UpdateEvents'
 
 
 // Admin Page
@@ -45,11 +47,13 @@ function App() {
           <Route path="/Events" element={<Events />} />
           <Route path="/room-booking" element={<RoomBooking />} />
           {/* <Route path="/admin_" element={<RoomBooking />} /> */}
+          
 
 
           {/* Admin panel routes */}
           <Route path="/addEvents" element={<AddEvents/>} />
-
+          <Route path="/eventDetails" element={<EventDetails/>}/>
+          <Route path="/eventDetails/:id" element={<UpdateEvent/>} />
           {/* Redirect to Home if no user is logged in */}
 
          
