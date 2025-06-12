@@ -18,7 +18,6 @@ function UserDetails() {
     day: 'numeric',
   });
 
-  // Clear authentication and redirect
   const logoutAndRedirect = () => {
     localStorage.removeItem('userToken');
     sessionStorage.clear();
@@ -26,7 +25,6 @@ function UserDetails() {
     navigate('/');
   };
 
-  // Response handler to detect deactivation and logout
   const handleResponse = async (res) => {
     if (res.status === 403) {
       const data = await res.json();
@@ -82,11 +80,20 @@ function UserDetails() {
       })
       .catch(err => {
         if (err.message !== 'Account deactivated') {
-          setMessage('User role updated successfully.');
-          window.location.reload();
+          setError(err.message);
           setTimeout(() => setError(''), 3000);
         }
       });
+  };
+
+  const handleEditUser = (user) => {
+    alert(`Edit user: ${user.name}`);
+    // Optional: Navigate to edit user page or open modal
+  };
+
+  const handleSendEmail = (user) => {
+    alert(`Send email to: ${user.email}`);
+    // Optional: Trigger email modal or compose email action
   };
 
   return (
@@ -145,11 +152,18 @@ function UserDetails() {
                         </select>
                       </td>
                       <td className="p-3 flex gap-3">
-                        <button title="Edit User" className="text-blue-600 hover:text-blue-800">
-                          
+                        <button
+                          title="Edit User"
+                          onClick={() => handleEditUser(user)}
+                          className="text-blue-600 hover:text-blue-800"
+                        >
                           <Pencil size={18} />
                         </button>
-                        <button title="Send Email" className="text-green-600 hover:text-green-800">
+                        <button
+                          title="Send Email"
+                          onClick={() => handleSendEmail(user)}
+                          className="text-green-600 hover:text-green-800"
+                        >
                           <Mail size={18} />
                         </button>
                       </td>
