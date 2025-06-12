@@ -87,8 +87,7 @@ function UserDetails() {
   };
 
   const handleEditUser = (user) => {
-    alert(`Edit user: ${user.name}`);
-    // Optional: Navigate to edit user page or open modal
+    navigate(`/editUser/${user._id}`);
   };
 
   const handleSendEmail = (user) => {
