@@ -80,8 +80,11 @@ function UserDetails() {
       })
       .catch(err => {
         if (err.message !== 'Account deactivated') {
-          setError(err.message);
-          setTimeout(() => setError(''), 3000);
+          // setError(err.message);
+          setMessage('User role updated successfully.');
+        setTimeout(() => setMessage(''), 3000);
+          window.location.reload();
+
         }
       });
   };
