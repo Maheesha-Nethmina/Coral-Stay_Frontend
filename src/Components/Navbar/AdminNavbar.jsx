@@ -4,9 +4,9 @@ const Sidebar = () => {
   const location = useLocation();
 
   const navItems = [
-    { name: 'Users', path: '/admin/users' },
-    { name: 'Reef Tours', path: '/admin/reef-tours' },
-    { name: 'Hotel Bookings', path: '/admin/hotel-bookings' },
+    { name: 'Users', path: '/userDetails' },
+    { name: 'Reef Tours', path: '/reeftourdetails' },
+    { name: 'Hotel Bookings', path: '/hotelbookingdetails' },
     { name: 'Messages', path: '/admin/messages' },
    { name: 'Events', path: '/eventDetails'},
   ];

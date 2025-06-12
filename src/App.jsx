@@ -10,14 +10,18 @@ import Reef_Ride from './Pages/User/Reef_Ride';
 import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
+import Profile from './Pages/User/Profile';
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
-import EventDetails from './Pages/Admin/EventDetails'
-import UpdateEvent from './Pages/Admin/UpdateEvents'
-
-
-// Admin Page
+import EventDetails from './Pages/Admin/EventDetails';
+import UpdateEvent from './Pages/Admin/UpdateEvents';
+import UserDetails from './Pages/Admin/UserDetails';
+import ReefTourdetails from './Pages/Admin/ReefTourdetails';
 import AdminDash from './Pages/Admin/AdminDash';
+import HotelBookingdetails from './Pages/Admin/HotelBookingdetails';
+import EditUser from './Pages/Admin/EditUser';
+
+
 
 // Auth Components
 import ResetPassword from './Components/Auth/ResetPassword';
@@ -46,7 +50,7 @@ function App() {
           <Route path="/Stays" element={<Stays />} />
           <Route path="/Events" element={<Events />} />
           <Route path="/room-booking" element={<RoomBooking />} />
-          {/* <Route path="/admin_" element={<RoomBooking />} /> */}
+          <Route path="/profile" element={<Profile />} />
           
 
 
@@ -54,7 +58,10 @@ function App() {
           <Route path="/addEvents" element={<AddEvents/>} />
           <Route path="/eventDetails" element={<EventDetails/>}/>
           <Route path="/eventDetails/:id" element={<UpdateEvent/>} />
-          {/* Redirect to Home if no user is logged in */}
+          <Route path="/userDetails" element={<UserDetails/>} />
+          <Route path="/editUser/:id" element={<EditUser/>} />
+          <Route path="/reeftourdetails" element={<ReefTourdetails/>} />
+          <Route path="/hotelbookingdetails" element={<HotelBookingdetails/>} />
 
          
           
