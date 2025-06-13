@@ -26,10 +26,10 @@ function Accommodation() {
 
   const rooms = [
     { title: 'Deluxe Room', img: room1, desc: 'Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast.',link: '/DeluxeRoom' },
-    { title: 'Premier Room', img: room2, desc: 'The perfect rest stop in-between adventures out in Sri Lanka’s beautiful South Coast.',link:'/DeluxeRoom' },
-    { title: 'Royal Suite', img: room3, desc: 'Seaside accommodation that comes with a touch of exclusivity!',link: '/DeluxeRoom' },
-    { title: 'Premier Ocean Room', img: room4, desc: 'Wake up to ocean vistas in a room that echoes nature, with soft hues and native design details.',link: '/DeluxeRoom' },
-    { title: 'Presidential Suite', img: room5, desc: 'Luxurious comforts, space and gorgeous views are all part of the Presidential Suite.' ,link: '/DeluxeRoom'}
+    { title: 'Premier Room', img: room2, desc: 'The perfect rest stop in-between adventures out in Sri Lanka’s beautiful South Coast.',link:'/PremierRoom' },
+    { title: 'Royal Suite', img: room3, desc: 'Seaside accommodation that comes with a touch of exclusivity!',link: '/RoyalSuiteRoom' },
+    { title: 'Premier Ocean Room', img: room4, desc: 'Wake up to ocean vistas in a room that echoes nature, with soft hues and native design details.',link: '/PremieOceanRoom' },
+    { title: 'Presidential Suite', img: room5, desc: 'Luxurious comforts, space and gorgeous views are all part of the Presidential Suite.' ,link: '/PresidentialSuiteRoom'}
   ];
 
   return (
