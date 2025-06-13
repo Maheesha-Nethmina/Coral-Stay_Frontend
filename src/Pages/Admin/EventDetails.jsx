@@ -38,7 +38,7 @@ function EventDetails() {
      <div className="overflow-x-auto w-full p-4">
       <div className="grid grid-cols-[100px_200px_150px_1.5fr_120px_200px_100px] gap-4 bg-gray-100 text-gray-700 uppercase text-sm font-semibold mb-2 p-2 rounded">
         <div>Image</div>
-        <div>ID</div>
+        
         <div>Title</div>
         <div>Description</div>
         <div>Date</div>

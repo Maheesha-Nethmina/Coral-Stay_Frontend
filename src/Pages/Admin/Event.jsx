@@ -30,7 +30,6 @@ function Event({ event, onDelete }) {
             <span className="text-gray-400 italic">No Image</span>
           )}
         </div>
-        <div className="break-words text-gray-600">{_id}</div>
         <div className="break-words font-medium">{title}</div>
         <div className="break-words ">{description}</div>
         <div className="break-words text-gray-500">{date ? date.slice(0, 10) : ''}</div>
