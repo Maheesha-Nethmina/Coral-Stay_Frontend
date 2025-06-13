@@ -45,7 +45,7 @@ function DeluxeRoom() {
         ]}
 />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mx-15">
       <RoomCard
         title="Ocean View Suite"
         description="Enjoy a stunning view of the ocean from your private balcony."

@@ -11,6 +11,7 @@ import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
 import Profile from './Pages/User/Profile';
+import DeluxeRoom from './Pages/User/DeluxeRoom'
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
 import EventDetails from './Pages/Admin/EventDetails';
@@ -51,7 +52,7 @@ function App() {
           <Route path="/Events" element={<Events />} />
           <Route path="/room-booking" element={<RoomBooking />} />
           <Route path="/profile" element={<Profile />} />
-          
+          <Route path="/DeluxeRoom" element={<DeluxeRoom/>}/>
 
 
           {/* Admin panel routes */}
