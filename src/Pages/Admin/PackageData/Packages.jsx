@@ -29,7 +29,7 @@ function Packages({ pack, onDelete }) {
         </div>
         <div className="break-words font-medium">{title}</div>
         <div className="break-words">{description}</div>
-        <div className="break-words">${price}</div>
+        <div className="break-words">Rs.{price}</div>
         <div className="break-words">{days} days</div>
         <div className="break-words">{offers || 'N/A'}</div>
         <div className="break-words font-semibold text-gray-600">{type}</div>
