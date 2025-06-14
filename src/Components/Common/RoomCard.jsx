@@ -4,7 +4,8 @@ const RoomCard = (props) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className='ml-7 mr-7 my-10'>
+   
+    <div className=' my-10 mx-3'>
     <div
         className="relative rounded-xl overflow-hidden h-[250px] md:h-[300px] group cursor-pointer "
       onMouseEnter={() => setIsHovered(true)}
@@ -37,6 +38,7 @@ const RoomCard = (props) => {
       </div>
     </div>
     </div>
+   
   );
 };
 

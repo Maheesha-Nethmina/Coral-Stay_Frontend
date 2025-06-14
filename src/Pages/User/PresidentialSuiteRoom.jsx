@@ -7,7 +7,7 @@ import RoomShowcase from '../../Components/Common/RoomShowcase'
 import RoomCard from '../../Components/Common/RoomCard'
 import image1 from '../../assets/Room2.jpg'
 import image2 from '../../assets/Room1.jpg'
-function DeluxeRoom() {
+function PresidentialSuiteRoom() {
   return (
     <div>
       <Navbar />
@@ -15,14 +15,14 @@ function DeluxeRoom() {
         <Hero 
           cName="hero"
           heroImg={img1}
-          title="Deluxe Room"
-          text="Experience luxury and comfort in our Deluxe Room, designed for the discerning traveler."
+          title="Presidential Suite "
+          text="Experience luxury and comfort in our Presidential Suite, designed for the discerning traveler."
           overlayOpacity="20"
         />
      
         <RoomShowcase
    title="Affordable Beachfront Luxury in Hikkaduwa"
-        description="Experience the perfect blend of comfort and elegance with our Deluxe Rooms at Coral Stay in Hikkaduwa. These rooms are thoughtfully designed to offer luxury at an affordable price. Each Deluxe Room features modern amenities and exclusive facilities, wrapped in a compact yet stylish space. Wake up to breathtaking ocean views and unwind in interiors crafted with refined taste.When it comes to beachfront stays in Hikkaduwa, our Deluxe Rooms offer unmatched value for your money."
+        description="Indulge in luxury at the Presidential Suite of Coral Stay Hikkaduwa. With two elegant bedrooms, en-suite bathrooms, a stylish living area, full kitchenette, and a private maid's room, it’s your own coastal haven. Artistic décor and exclusive amenities make it perfect for a truly unforgettable stay."
   images={[image1, image2]}
   tagline="A compact and cosy abode that lets you indulge in a host of luxurious comforts!"
         ctaText="Book Now"
@@ -50,11 +50,7 @@ function DeluxeRoom() {
 />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mx-15">
-      <RoomCard
-        title="Presidential Suite"
-        description="Luxurious comforts,space and gorgeous views are all part of the presidential Suite."
-        image={image1}
-      />
+      
       <RoomCard
         title="Premier Room"
         description="The perfect rest stop in between adventures out in Sri Lanka's beautiful South Coast."
@@ -64,6 +60,11 @@ function DeluxeRoom() {
         title="Royal Suite"
         description="Seaside accommodation that comes with a touch of exclusivity!"
         image={image1}
+      />
+     <RoomCard
+        title="Deluxe Room"
+        description="Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast."
+        image={image2}
       />
 
        <RoomCard
@@ -78,4 +79,4 @@ function DeluxeRoom() {
   )
 }
 
-export default DeluxeRoom
+export default PresidentialSuiteRoom

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Event from './Event';
 import { useNavigate } from "react-router-dom";
+import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
 
 const URL = "http://localhost:3000/events";
 
@@ -27,6 +29,8 @@ function EventDetails() {
 
   return (
     <div>
+      <Navbar/>
+      
       <div class="flex items-center justify-center mt-24">
       <h1 className='font-bold text-black text-lg'>User Details Display Page</h1>
       </div>
@@ -58,6 +62,7 @@ function EventDetails() {
       )}
 
       <br />
+      <Footer/>
     </div>
   );
 }

@@ -7,7 +7,7 @@ import RoomShowcase from '../../Components/Common/RoomShowcase'
 import RoomCard from '../../Components/Common/RoomCard'
 import image1 from '../../assets/Room2.jpg'
 import image2 from '../../assets/Room1.jpg'
-function DeluxeRoom() {
+function PremierRoom() {
   return (
     <div>
       <Navbar />
@@ -15,14 +15,14 @@ function DeluxeRoom() {
         <Hero 
           cName="hero"
           heroImg={img1}
-          title="Deluxe Room"
-          text="Experience luxury and comfort in our Deluxe Room, designed for the discerning traveler."
+          title="Premier Room"
+          text="Experience luxury and comfort in our premier Room, designed for the discerning traveler."
           overlayOpacity="20"
         />
      
         <RoomShowcase
    title="Affordable Beachfront Luxury in Hikkaduwa"
-        description="Experience the perfect blend of comfort and elegance with our Deluxe Rooms at Coral Stay in Hikkaduwa. These rooms are thoughtfully designed to offer luxury at an affordable price. Each Deluxe Room features modern amenities and exclusive facilities, wrapped in a compact yet stylish space. Wake up to breathtaking ocean views and unwind in interiors crafted with refined taste.When it comes to beachfront stays in Hikkaduwa, our Deluxe Rooms offer unmatched value for your money."
+        description="Solitude and serenity with a touch of luxury are what you can expect during your stay at one of our Studio Rooms with a pantry, here at Coral Stay Hikkaduwa ~ one of the finest beachside hotels in Hikkaduwa. If you're looking to spend some quality time on Sri Lanka's southern coastline by yourself or with your partner, this is the perfect accommodation option for you. Each one of our studio rooms is a spacious retreat that is outfitted with all the expected modern amenities and facilities. You can also enjoy an unparalleled view of the pristine shoreline right from the comfort of your room ~ the vistas of the azure blue waves and white sandy beaches never get old."
   images={[image1, image2]}
   tagline="A compact and cosy abode that lets you indulge in a host of luxurious comforts!"
         ctaText="Book Now"
@@ -56,8 +56,8 @@ function DeluxeRoom() {
         image={image1}
       />
       <RoomCard
-        title="Premier Room"
-        description="The perfect rest stop in between adventures out in Sri Lanka's beautiful South Coast."
+        title="Deluxe Room"
+        description="Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast."
         image={image2}
       />
       <RoomCard
@@ -78,4 +78,4 @@ function DeluxeRoom() {
   )
 }
 
-export default DeluxeRoom
+export default PremierRoom

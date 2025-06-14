@@ -7,7 +7,7 @@ import RoomShowcase from '../../Components/Common/RoomShowcase'
 import RoomCard from '../../Components/Common/RoomCard'
 import image1 from '../../assets/Room2.jpg'
 import image2 from '../../assets/Room1.jpg'
-function DeluxeRoom() {
+function RoyalSuiteRoom() {
   return (
     <div>
       <Navbar />
@@ -15,14 +15,14 @@ function DeluxeRoom() {
         <Hero 
           cName="hero"
           heroImg={img1}
-          title="Deluxe Room"
-          text="Experience luxury and comfort in our Deluxe Room, designed for the discerning traveler."
+          title="Royal Suite"
+          text="Experience luxury and comfort in our Royal Suite, designed for the discerning traveler."
           overlayOpacity="20"
         />
      
         <RoomShowcase
    title="Affordable Beachfront Luxury in Hikkaduwa"
-        description="Experience the perfect blend of comfort and elegance with our Deluxe Rooms at Coral Stay in Hikkaduwa. These rooms are thoughtfully designed to offer luxury at an affordable price. Each Deluxe Room features modern amenities and exclusive facilities, wrapped in a compact yet stylish space. Wake up to breathtaking ocean views and unwind in interiors crafted with refined taste.When it comes to beachfront stays in Hikkaduwa, our Deluxe Rooms offer unmatched value for your money."
+        description="Create lasting memories with your loved ones at Coral Stay Hikkaduwa - one of the top family hotels in Hikkaduwa. Our spacious One and Two Bedroom units accommodate up to six guests, featuring interconnected rooms, kitchenettes, and modern amenities. Enjoy free Wi-Fi, cozy bathrobes, and optional child-friendly services like babysitting and kids’ menus. End your day with stunning ocean views and unforgettable sunsets by the beach."
   images={[image1, image2]}
   tagline="A compact and cosy abode that lets you indulge in a host of luxurious comforts!"
         ctaText="Book Now"
@@ -61,9 +61,9 @@ function DeluxeRoom() {
         image={image2}
       />
       <RoomCard
-        title="Royal Suite"
-        description="Seaside accommodation that comes with a touch of exclusivity!"
-        image={image1}
+        title="Deluxe Room"
+        description="Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast."
+        image={image2}
       />
 
        <RoomCard
@@ -78,4 +78,4 @@ function DeluxeRoom() {
   )
 }
 
-export default DeluxeRoom
+export default RoyalSuiteRoom

@@ -11,6 +11,11 @@ import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
 import Profile from './Pages/User/Profile';
+import DeluxeRoom from './Pages/User/DeluxeRoom'
+import PremierRoom from './Pages/User/PremierRoom';
+import RoyalSuiteRoom from './Pages/User/RoyalSuiteRoom';
+import PremierOceanRoom from './Pages/User/PremierOceanRoom';
+import PresidentialSuiteRoom from './Pages/User/PresidentialSuiteRoom';
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
 import EventDetails from './Pages/Admin/EventDetails';
@@ -51,6 +56,13 @@ function App() {
           <Route path="/Events" element={<Events />} />
           <Route path="/room-booking" element={<RoomBooking />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/DeluxeRoom" element={<DeluxeRoom/>}/>
+          <Route path ="/PremierRoom" element={<PremierRoom/>}/>
+          <Route path ="/RoyalSuiteRoom" element={<RoyalSuiteRoom/>}/>
+          <Route path ="/PresidentialSuiteRoom" element={<PresidentialSuiteRoom/>}/>
+          <Route path ="/PremieOceanRoom" element={<PremierOceanRoom/>}/>
+          
+          
           
 
 
