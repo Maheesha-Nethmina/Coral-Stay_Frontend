@@ -20,7 +20,9 @@ import ReefTourdetails from './Pages/Admin/ReefTourdetails';
 import AdminDash from './Pages/Admin/AdminDash';
 import HotelBookingdetails from './Pages/Admin/HotelBookingdetails';
 import EditUser from './Pages/Admin/EditUser';
-
+import AddPackages from './Pages/Admin/PackageData/AddPackages'
+import PackageDetails from './Pages/Admin/PackageData/PackageDetails'
+import UpdatePackages from './Pages/Admin/PackageData/UpdatePackages'
 
 
 // Auth Components
@@ -62,6 +64,9 @@ function App() {
           <Route path="/editUser/:id" element={<EditUser/>} />
           <Route path="/reeftourdetails" element={<ReefTourdetails/>} />
           <Route path="/hotelbookingdetails" element={<HotelBookingdetails/>} />
+          <Route path="/addPackages" element={<AddPackages/>} />
+          <Route path="/packageDetails" element={<PackageDetails/>} />
+          <Route path="/packageDetails/:id" element={<UpdatePackages/>} />
 
          
           
