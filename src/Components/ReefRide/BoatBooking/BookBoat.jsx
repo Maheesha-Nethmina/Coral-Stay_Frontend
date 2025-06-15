@@ -57,7 +57,7 @@ const BookBoat = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#EAF4F6] p-4 md:p-8 -mb-52">
+    <div className="min-h-screen bg-[#EAF4F6] p-4 md:p-8 ">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-center text-slate-800 mb-8">
           Choose Your Dates and Let the Reef Welcome You!

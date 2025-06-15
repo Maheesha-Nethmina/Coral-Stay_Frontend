@@ -11,6 +11,7 @@ import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
 import Profile from './Pages/User/Profile';
+import Packages from './Pages/User/Packages'
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
 import EventDetails from './Pages/Admin/EventDetails';
@@ -67,6 +68,7 @@ function App() {
           <Route path="/addPackages" element={<AddPackages/>} />
           <Route path="/packageDetails" element={<PackageDetails/>} />
           <Route path="/packageDetails/:id" element={<UpdatePackages/>} />
+          <Route path="/packages" element={<Packages/>} />
 
          
           

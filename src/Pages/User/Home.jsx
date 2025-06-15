@@ -155,7 +155,7 @@ function Home() {
       </motion.div>
 
      {/* event section */}
-      <div className="relative w-full h-screen overflow-hidden">
+  <div className="relative w-full h-screen overflow-hidden">
   <div className="w-full h-screen flex items-center justify-center relative">
     {/* Background image div inside the content section */}
     <div
