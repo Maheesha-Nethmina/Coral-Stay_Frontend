@@ -7,7 +7,7 @@ import RoomShowcase from '../../Components/Common/RoomShowcase'
 import RoomCard from '../../Components/Common/RoomCard'
 import image1 from '../../assets/Room2.jpg'
 import image2 from '../../assets/Room1.jpg'
-function DeluxeRoom() {
+function PremierOceanRoom() {
   return (
     <div>
       <Navbar />
@@ -15,14 +15,14 @@ function DeluxeRoom() {
         <Hero 
           cName="hero"
           heroImg={img1}
-          title="Deluxe Room"
-          text="Experience luxury and comfort in our Deluxe Room, designed for the discerning traveler."
+          title="Premier Ocean Room"
+          text="Experience luxury and comfort in our Premier Ocean Room, designed for the discerning traveler."
           overlayOpacity="20"
         />
      
         <RoomShowcase
    title="Affordable Beachfront Luxury in Hikkaduwa"
-        description="Experience the perfect blend of comfort and elegance with our Deluxe Rooms at Coral Stay in Hikkaduwa. These rooms are thoughtfully designed to offer luxury at an affordable price. Each Deluxe Room features modern amenities and exclusive facilities, wrapped in a compact yet stylish space. Wake up to breathtaking ocean views and unwind in interiors crafted with refined taste.When it comes to beachfront stays in Hikkaduwa, our Deluxe Rooms offer unmatched value for your money."
+        description="Create unforgettable moments in the Premier Ocean Room at Coral Stay Hikkaduwa — where coastal elegance meets modern comfort. Perfect for couples or solo travelers, this serene retreat features panoramic ocean views, plush bedding, a private balcony, and a fully equipped ensuite bathroom. Indulge in complimentary Wi-Fi, premium bath amenities, and personalized services. Wake up to the sound of waves and unwind with mesmerizing sunsets right from your room."
   images={[image1, image2]}
   tagline="A compact and cosy abode that lets you indulge in a host of luxurious comforts!"
         ctaText="Book Now"
@@ -67,9 +67,9 @@ function DeluxeRoom() {
       />
 
        <RoomCard
-        title="Premier Ocean Room"
-        description="Elegant coastal comfort with stunning ocean views and refined amenities."
-        image={image1}
+        title="Deluxe Room"
+        description="Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast."
+        image={image2}
       />
       </div>
 
@@ -78,4 +78,4 @@ function DeluxeRoom() {
   )
 }
 
-export default DeluxeRoom
+export default PremierOceanRoom

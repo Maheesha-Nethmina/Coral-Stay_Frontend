@@ -18,15 +18,18 @@ import service from '../../assets/room-service 1.png';
 
 import dining from '../../assets/Dining.png';
 
+import { Link } from 'react-router-dom';
+
+
 function Accommodation() {
   const navigate = useNavigate();
 
   const rooms = [
-    { title: 'Deluxe Room', img: room1, desc: 'Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast.' },
-    { title: 'Premier Room', img: room2, desc: 'The perfect rest stop in-between adventures out in Sri Lanka’s beautiful South Coast.' },
-    { title: 'Royal Suite', img: room3, desc: 'Seaside accommodation that comes with a touch of exclusivity!' },
-    { title: 'Premier Ocean Room', img: room4, desc: 'Wake up to ocean vistas in a room that echoes nature, with soft hues and native design details.' },
-    { title: 'Presidential Suite', img: room5, desc: 'Luxurious comforts, space and gorgeous views are all part of the Presidential Suite.' }
+    { title: 'Deluxe Room', img: room1, desc: 'Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast.',link: '/DeluxeRoom' },
+    { title: 'Premier Room', img: room2, desc: 'The perfect rest stop in-between adventures out in Sri Lanka’s beautiful South Coast.',link:'/PremierRoom' },
+    { title: 'Royal Suite', img: room3, desc: 'Seaside accommodation that comes with a touch of exclusivity!',link: '/RoyalSuiteRoom' },
+    { title: 'Premier Ocean Room', img: room4, desc: 'Wake up to ocean vistas in a room that echoes nature, with soft hues and native design details.',link: '/PremieOceanRoom' },
+    { title: 'Presidential Suite', img: room5, desc: 'Luxurious comforts, space and gorgeous views are all part of the Presidential Suite.' ,link: '/PresidentialSuiteRoom'}
   ];
 
   return (
@@ -94,8 +97,9 @@ function Accommodation() {
             Whether you prefer to gaze out at lush coastal greenery and vibrant tropical gardens or fall asleep to the soothing rhythm of the Indian Ocean, you'll find sanctuary in every one of our rooms and suites at Coral Stay Hikkaduwa—each thoughtfully designed to reflect the charm and vibrant spirit of Sri Lanka’s southern coast.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" >
             {rooms.map((room, index) => (
+               <Link to={room.link} key={index}>
               <div key={index} className="relative rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-transform duration-300 hover:scale-105">
                 <img src={room.img} alt={room.title} className="w-full h-72 object-cover opacity-95" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent flex flex-col justify-end p-4 text-white">
@@ -103,6 +107,7 @@ function Accommodation() {
                   <p className="text-sm">{room.desc}</p>
                 </div>
               </div>
+              </Link>
             ))}
           </div>
         </div>
