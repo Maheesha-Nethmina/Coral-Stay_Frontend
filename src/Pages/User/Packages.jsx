@@ -5,6 +5,7 @@ import Navbar from '../../Components/Navbar/Navbar'
 import Footer from '../../Components/Footer/Footer'
 import BoatPackages from '../../Components/PackagesPage/BoatPackages'
 import BoatHotelPackages from '../../Components/PackagesPage/BoatHotelPackages'
+import HotelPackages from '../../Components/PackagesPage/HotelPackages'
 function Packages() {
   return (
     <div>
@@ -18,6 +19,7 @@ function Packages() {
         />
         <BoatPackages/>
         <BoatHotelPackages/>
+        <HotelPackages/>
         <Footer/>
     </div>
   )

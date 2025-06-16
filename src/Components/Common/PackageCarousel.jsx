@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 const PackageCarousel = ({ 
   title, 
+  description,
   items, 
-  buttonText = "Explore More", 
-  onButtonClick,
   itemsToShow = { mobile: 1, tablet: 2, desktop: 4 }
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -42,8 +41,9 @@ const PackageCarousel = ({
   
   return (
     <div className="w-full pt-3 px-30">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-15">{title}</h2>
+      <div className="mb-8">
+        <h2 className=" text-center text-2xl md:text-3xl font-bold text-gray-800 mb-15">{title}</h2>
+        <p className='text-left text-xl md:text-xl font-semibold text-[#023545] mb-15'>{description}</p>
       </div>
       
       <div className="relative">
@@ -131,14 +131,7 @@ const PackageCarousel = ({
         ))}
       </div>
       
-      <div className="text-center mt-4">
-        <button 
-          onClick={onButtonClick}
-          className="bg-teal-800 hover:bg-teal-700 text-white font-medium py-3 px-8 rounded-md transition-all shadow-md hover:shadow-lg"
-        >
-          {buttonText}
-        </button>
-      </div>
+      
     </div>
   );
 };

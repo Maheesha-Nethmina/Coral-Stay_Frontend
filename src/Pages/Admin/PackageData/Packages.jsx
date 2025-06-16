@@ -6,7 +6,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 function Packages({ pack, onDelete }) {
   if (!pack) return null;
 
-  const { _id, title, description, price, days, offers, type, imageUrl } = pack;
+  const { _id, title, description, includes, price, days, offers, type, imageUrl } = pack;
 
   const deleteHandler = async () => {
     try {
@@ -18,22 +18,23 @@ function Packages({ pack, onDelete }) {
   };
 
   return (
-    <div className="overflow-x-auto w-full p-4">
-      <div className="grid grid-cols-[100px_200px_150px_150px_80px_80px_120px_150px] gap-4 items-start border border-gray-200 rounded p-2 hover:bg-gray-50 text-sm text-left">
-        <div className="break-words">
+    <div className="w-full p-2">
+      <div className="flex items-center text-sm text-left border border-gray-200 rounded p-2 hover:bg-gray-50">
+        <div className="w-1/12">
           {imageUrl ? (
-            <img src={imageUrl} alt={title} className="w-16 h-16 object-cover rounded" />
+            <img src={imageUrl} alt={title} className="w-12 h-12 object-cover rounded" />
           ) : (
             <span className="text-gray-400 italic">No Image</span>
           )}
         </div>
-        <div className="break-words font-medium">{title}</div>
-        <div className="break-words">{description}</div>
-        <div className="break-words">Rs.{price}</div>
-        <div className="break-words">{days} days</div>
-        <div className="break-words">{offers || 'N/A'}</div>
-        <div className="break-words font-semibold text-gray-600">{type}</div>
-        <div className="flex gap-2">
+        <div className="w-2/12 font-medium break-words">{title}</div>
+        <div className="w-3/12 break-words">{description}</div>
+        <div className="w-2/12 break-words">{includes}</div>
+        <div className="w-1/12 break-words">Rs.{price}</div>
+        <div className="w-1/12 break-words">{days}d</div>
+        <div className="w-1/12 break-words">{offers || 'N/A'}</div>
+        <div className="w-1/12 font-semibold text-gray-600">{type}</div>
+        <div className="w-1/12 flex gap-2 items-center justify-center">
           <Link
             to={`/packageDetails/${_id}`}
             className="text-blue-600 hover:text-blue-800"

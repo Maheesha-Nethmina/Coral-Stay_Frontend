@@ -1,9 +1,9 @@
-// BoatPackages.jsx
+// HotelPackages.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PackageCarousel from '../Common/PackageCarousel';
 
-const BoatPackages = () => {
+const HotelPackages = () => {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,8 +12,8 @@ const BoatPackages = () => {
     const fetchPackages = async () => {
       try {
         const res = await axios.get('http://localhost:3000/package');
-        const boatPackages = (res.data?.packages || []).filter(pkg => pkg.type === 'boatTour');
-        const transformed = boatPackages.map(pkg => ({
+        const hotelPackages = (res.data?.packages || []).filter(pkg => pkg.type === 'hotel');
+        const transformed = hotelPackages.map(pkg => ({
           image: pkg.imageUrl,
           title: pkg.title,
           description: pkg.includes,
@@ -44,8 +44,8 @@ const BoatPackages = () => {
         <p className="text-center text-red-500 font-semibold">{error}</p>
       ) : (
         <PackageCarousel
-          title="Coral Escape Package"
-          description="Discover vibrant corals and marine life on a relaxing glass-bottom boat tour in Hikkaduwa. Click a card if you want more details about our Coral Escape Packages."
+          title="Hotel Packages"
+          description="Relax and unwind at CoralStay, your beachfront getaway in Hikkaduwa. Click a card to explore our hotel package options and find your perfect stay."
           items={packages}
           buttonText="Explore Packages"
           onButtonClick={handleExploreClick}
@@ -56,4 +56,4 @@ const BoatPackages = () => {
   );
 };
 
-export default BoatPackages;
+export default HotelPackages;
