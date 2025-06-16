@@ -55,7 +55,7 @@ function Home() {
       viewport={{ once: true }}
       transition={{ duration: 0.8 }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-[#c8a668] to-white bg-cover bg-center opacity-30"></div>
+      <div className="absolute inset-0 bg-[#D9D9D9] to-white bg-cover bg-center opacity-30"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto w-full px-4 md:px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-10 py-10">
@@ -117,7 +117,7 @@ function Home() {
 
       {/* Stats Section */}
     <motion.div
-  className="bg-gradient-to-b from-[#ecd7af] to-white py-6 sm:py-10"
+  className="bg-[#D9D9D9] py-6 sm:py-10"
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
   viewport={{ once: true }}
