@@ -34,15 +34,17 @@ function PackageDetails() {
         <h1 className="font-bold text-black text-lg">Package Details Display Page</h1>
       </div>
 
-      <button
-        onClick={() => navigate('/addPackages')}
-        className="px-20 py-2 bg-[#023545] text-white rounded-md font-semibold hover:bg-[#014459] transition"
-      >
-        Add Package
-      </button>
+      <div className="flex justify-center mt-4 mb-2">
+        <button
+          onClick={() => navigate('/addPackages')}
+          className="px-20 py-2 bg-[#023545] text-white rounded-md font-semibold hover:bg-[#014459] transition"
+        >
+          Add Package
+        </button>
+      </div>
 
       <div className="overflow-x-auto w-full p-4">
-        <div className="grid grid-cols-[100px_200px_150px_150px_80px_80px_120px_150px] gap-4 bg-gray-100 text-gray-700 uppercase text-sm font-semibold mb-2 p-2 rounded">
+        <div className="grid grid-cols-[100px_200px_400px_150px_80px_80px_120px_150px] gap-4 bg-gray-100 text-gray-700 uppercase text-sm font-semibold mb-2 p-2 rounded">
           <div>Image</div>
           <div>Title</div>
           <div>Description</div>
@@ -56,7 +58,9 @@ function PackageDetails() {
       </div>
 
       {noResults ? (
-        <div><h2>No packages found</h2></div>
+        <div className="text-center text-red-600 font-semibold mt-4">
+          <h2>No packages found</h2>
+        </div>
       ) : (
         <div>
           {packages.map((pack) => (
