@@ -9,6 +9,7 @@ function AddPackages() {
   const [inputs, setInputs] = useState({
     title: '',
     description: '',
+    includes:'',
     price: '',
     days: '',
     offers: '',
@@ -61,6 +62,16 @@ function AddPackages() {
               required
               className="mt-1 mb-4 w-full border rounded-md p-2"
             ></textarea>
+
+            <label className="block text-sm font-medium text-gray-700">Includes</label>
+            <input
+              type="text"
+              name="includes"
+              value={inputs.includes}
+              onChange={handleChange}
+              required
+              className="mt-1 mb-4 w-full border rounded-md p-2"
+            />
 
             <label className="block text-sm font-medium text-gray-700">Price</label>
             <input

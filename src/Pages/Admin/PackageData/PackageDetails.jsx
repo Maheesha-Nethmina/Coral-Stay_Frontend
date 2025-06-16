@@ -46,6 +46,7 @@ function PackageDetails() {
           <div>Image</div>
           <div>Title</div>
           <div>Description</div>
+          <div>Includes</div>
           <div>Price</div>
           <div>Days</div>
           <div>Offers</div>

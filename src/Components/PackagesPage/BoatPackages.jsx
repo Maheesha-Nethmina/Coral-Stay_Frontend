@@ -71,9 +71,10 @@ const BoatPackages = () => {
     <div className="max-w-[1600px] mx-auto px-4 py-12 bg-[#EAF4F6] -mt-20">
       <PackageCarousel
         title="Coral Escape Package"
+        description="Discover vibrant corals and marine life on a relaxing glass-bottom boat tour in Hikkaduwa. Click a card if you want more details about our Coral Escape Packages"
         items={boatPackagesData}
         buttonText="Explore Packages"
-        onButtonClick={handleExploreClick}
+       
         itemsToShow={{ mobile: 1, tablet: 2, desktop: 4 }}
       />
     </div>

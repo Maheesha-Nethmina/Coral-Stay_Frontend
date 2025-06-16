@@ -7,7 +7,7 @@ import img4 from '../../assets/package04.jpeg';
 import img5 from '../../assets/package05.jpeg';
 
 // Mock data that could be fetched from an API in the future
-const BoatHotelPackagesData = [
+const HotelPackagesData = [
   {
     id: 1,
     title: "Family Reef Retreat",
@@ -62,17 +62,17 @@ const BoatHotelPackagesData = [
 
 ];
 
-const BoatHotelPackages = () => {
+const HotelPackages = () => {
   const handleExploreClick = () => {
     console.log("Explore Packages clicked");
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-12 bg-[#EAF4F6]">
+    <div className="max-w-[1600px] mx-auto px-4 py-12 bg-[#EAF4F6] -mt-20">
       <PackageCarousel
-        title="Coral Escape and Hotel Packages"
-        description="Enjoy the best of sea and stay with our Coral Escape and Hotel Packages , combining scenic reef rides and cozy beachfront stays at CoralStay. Click a card to explore full package details."
-        items={BoatHotelPackagesData}
+        title="Hotel Packages"
+        description="Relax and unwind at CoralStay, your beachfront getaway in Hikkaduwa. Click a card to explore our hotel package options and find your perfect stay."
+        items={HotelPackagesData}
         buttonText="Explore Packages"
         onButtonClick={handleExploreClick}
         itemsToShow={{ mobile: 1, tablet: 2, desktop: 4 }}
@@ -81,4 +81,4 @@ const BoatHotelPackages = () => {
   );
 };
 
-export default BoatHotelPackages;
+export default HotelPackages;

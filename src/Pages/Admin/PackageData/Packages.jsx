@@ -6,7 +6,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 function Packages({ pack, onDelete }) {
   if (!pack) return null;
 
-  const { _id, title, description, price, days, offers, type, imageUrl } = pack;
+  const { _id, title, description,includes, price, days, offers, type, imageUrl } = pack;
 
   const deleteHandler = async () => {
     try {
@@ -29,6 +29,7 @@ function Packages({ pack, onDelete }) {
         </div>
         <div className="break-words font-medium">{title}</div>
         <div className="break-words">{description}</div>
+        <div className="break-words">{includes}</div>
         <div className="break-words">Rs.{price}</div>
         <div className="break-words">{days} days</div>
         <div className="break-words">{offers || 'N/A'}</div>
