@@ -1,4 +1,4 @@
-
+// BoatHotelPackages.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PackageCarousel from '../Common/PackageCarousel';
@@ -12,8 +12,8 @@ const BoatHotelPackages = () => {
     const fetchPackages = async () => {
       try {
         const res = await axios.get('http://localhost:3000/package');
-        const hotelPackages = (res.data?.packages || []).filter(pkg => pkg.type === 'both');
-        const transformed = hotelPackages.map(pkg => ({
+        const bothPackages = (res.data?.packages || []).filter(pkg => pkg.type === 'Both');
+        const transformed = bothPackages.map(pkg => ({
           image: pkg.imageUrl,
           title: pkg.title,
           description: pkg.includes,
@@ -33,7 +33,7 @@ const BoatHotelPackages = () => {
   }, []);
 
   const handleExploreClick = () => {
-    console.log("Explore Packages clicked");
+    console.log("Explore Boat + Hotel Packages clicked");
   };
 
   return (
@@ -45,7 +45,7 @@ const BoatHotelPackages = () => {
       ) : (
         <PackageCarousel
           title="Coral Escape and Hotel Packages"
-          description="Enjoy the best of sea and stay with our Coral Escape and Hotel Packages , combining scenic reef rides and cozy beachfront stays at CoralStay. Click a card to explore full package details"
+          description="Experience the best of both worlds with CoralStay’s combined boat and hotel stay packages. Tap a card to discover your perfect adventure."
           items={packages}
           buttonText="Explore Packages"
           onButtonClick={handleExploreClick}
