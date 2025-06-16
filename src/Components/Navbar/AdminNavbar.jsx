@@ -9,6 +9,8 @@ const Sidebar = () => {
     { name: 'Hotel Bookings', path: '/hotelbookingdetails' },
     { name: 'Messages', path: '/admin/messages' },
    { name: 'Events', path: '/eventDetails'},
+      { name: 'Packages', path: '/packageDetails'},
+
   ];
 
   return (

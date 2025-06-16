@@ -68,7 +68,7 @@ const BoatPackages = () => {
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-12 bg-[#EAF4F6] -mt-52">
+    <div className="max-w-[1600px] mx-auto px-4 py-12 bg-[#EAF4F6] -mt-20">
       <PackageCarousel
         title="Coral Escape Package"
         items={boatPackagesData}

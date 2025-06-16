@@ -11,11 +11,15 @@ import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
 import Profile from './Pages/User/Profile';
+
+import Packages from './Pages/User/Packages'
+
 import DeluxeRoom from './Pages/User/DeluxeRoom'
 import PremierRoom from './Pages/User/PremierRoom';
 import RoyalSuiteRoom from './Pages/User/RoyalSuiteRoom';
 import PremierOceanRoom from './Pages/User/PremierOceanRoom';
 import PresidentialSuiteRoom from './Pages/User/PresidentialSuiteRoom';
+
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
 import EventDetails from './Pages/Admin/EventDetails';
@@ -25,7 +29,9 @@ import ReefTourdetails from './Pages/Admin/ReefTourdetails';
 import AdminDash from './Pages/Admin/AdminDash';
 import HotelBookingdetails from './Pages/Admin/HotelBookingdetails';
 import EditUser from './Pages/Admin/EditUser';
-
+import AddPackages from './Pages/Admin/PackageData/AddPackages'
+import PackageDetails from './Pages/Admin/PackageData/PackageDetails'
+import UpdatePackages from './Pages/Admin/PackageData/UpdatePackages'
 
 
 // Auth Components
@@ -74,6 +80,10 @@ function App() {
           <Route path="/editUser/:id" element={<EditUser/>} />
           <Route path="/reeftourdetails" element={<ReefTourdetails/>} />
           <Route path="/hotelbookingdetails" element={<HotelBookingdetails/>} />
+          <Route path="/addPackages" element={<AddPackages/>} />
+          <Route path="/packageDetails" element={<PackageDetails/>} />
+          <Route path="/packageDetails/:id" element={<UpdatePackages/>} />
+          <Route path="/packages" element={<Packages/>} />
 
          
           
