@@ -14,13 +14,16 @@ const BoatHotelPackages = () => {
         const res = await axios.get('http://localhost:3000/package');
         const bothPackages = (res.data?.packages || []).filter(pkg => pkg.type === 'Both');
         const transformed = bothPackages.map(pkg => ({
-          image: pkg.imageUrl,
-          title: pkg.title,
-          description: pkg.includes,
-          price: pkg.price,
-          duration: `${pkg.days} days`,
-          discount: pkg.offers || null
-        }));
+  id: pkg._id,
+  image: pkg.imageUrl,
+  title: pkg.title,
+  description: pkg.description,
+  features: pkg.includes,
+  price: pkg.price,
+  duration: `${pkg.days} Day${pkg.days > 1 ? 's' : ''}`,
+  discount: pkg.offers || null,
+}));
+
         setPackages(transformed);
       } catch (err) {
         setError('Failed to fetch packages');
@@ -47,8 +50,6 @@ const BoatHotelPackages = () => {
           title="Coral Escape and Hotel Packages"
           description="Experience the best of both worlds with CoralStay’s combined boat and hotel stay packages. Tap a card to discover your perfect adventure."
           items={packages}
-          buttonText="Explore Packages"
-          onButtonClick={handleExploreClick}
           itemsToShow={{ mobile: 1, tablet: 2, desktop: 4 }}
         />
       )}

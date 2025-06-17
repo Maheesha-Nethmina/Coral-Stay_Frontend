@@ -1,3 +1,5 @@
+// src/App.js
+
 import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
@@ -11,12 +13,14 @@ import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
 import Profile from './Pages/User/Profile';
-import Packages from './Pages/User/Packages'
-import DeluxeRoom from './Pages/User/DeluxeRoom'
+import Booking from './Pages/User/Booking';
+import Packages from './Pages/User/Packages';
+import DeluxeRoom from './Pages/User/DeluxeRoom';
 import PremierRoom from './Pages/User/PremierRoom';
 import RoyalSuiteRoom from './Pages/User/RoyalSuiteRoom';
 import PremierOceanRoom from './Pages/User/PremierOceanRoom';
 import PresidentialSuiteRoom from './Pages/User/PresidentialSuiteRoom';
+import PackageDetail from './Pages/User/PackageDetail';
 
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
@@ -27,24 +31,20 @@ import ReefTourdetails from './Pages/Admin/ReefTourdetails';
 import AdminDash from './Pages/Admin/AdminDash';
 import HotelBookingdetails from './Pages/Admin/HotelBookingdetails';
 import EditUser from './Pages/Admin/EditUser';
-import AddPackages from './Pages/Admin/PackageData/AddPackages'
-import PackageDetails from './Pages/Admin/PackageData/PackageDetails'
-import UpdatePackages from './Pages/Admin/PackageData/UpdatePackages'
+import AddPackages from './Pages/Admin/PackageData/AddPackages';
+import PackageDetails from './Pages/Admin/PackageData/PackageDetails';
+import UpdatePackages from './Pages/Admin/PackageData/UpdatePackages';
 import SendEmail from './Pages/Admin/SendEmail';
 
-
-// Auth Components
+// Auth Component
 import ResetPassword from './Components/Auth/ResetPassword';
-// import Events from './Pages/User/Events';
 
 function App() {
   const { user, loading } = useAuth();
 
   const ProtectedAdminRoute = ({ element }) => {
     if (loading) return <div>Loading...</div>;
-    if (!user || user.role !== 'admin') {
-      return <Navigate to="/" />;
-    }
+    if (!user || user.role !== 'admin') return <Navigate to="/" />;
     return element;
   };
 
@@ -56,44 +56,40 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/reef_ride" element={<Reef_Ride />} />  
-          <Route path="/Stays" element={<Stays />} />
-          <Route path="/Events" element={<Events />} />
+          <Route path="/reef_ride" element={<Reef_Ride />} />
+          <Route path="/stays" element={<Stays />} />
+          <Route path="/events" element={<Events />} />
           <Route path="/room-booking" element={<RoomBooking />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/DeluxeRoom" element={<DeluxeRoom/>}/>
-          <Route path ="/PremierRoom" element={<PremierRoom/>}/>
-          <Route path ="/RoyalSuiteRoom" element={<RoyalSuiteRoom/>}/>
-          <Route path ="/PresidentialSuiteRoom" element={<PresidentialSuiteRoom/>}/>
-          <Route path ="/PremieOceanRoom" element={<PremierOceanRoom/>}/>
-          
-          
-          
+          <Route path="/deluxe-room" element={<DeluxeRoom />} />
+          <Route path="/premier-room" element={<PremierRoom />} />
+          <Route path="/royal-suite-room" element={<RoyalSuiteRoom />} />
+          <Route path="/presidential-suite-room" element={<PresidentialSuiteRoom />} />
+          <Route path="/premier-ocean-room" element={<PremierOceanRoom />} />
+          <Route path="/package-detail/:id" element={<PackageDetail />} />
+          <Route path="/booking" element={<Booking />} />
+          <Route path="/packages" element={<Packages />} />
 
+          {/* Admin Routes */}
+          <Route path="/add-events" element={<AddEvents />} />
+          <Route path="/event-details" element={<EventDetails />} />
+          <Route path="/event-details/:id" element={<UpdateEvent />} />
+          <Route path="/user-details" element={<UserDetails />} />
+          <Route path="/edit-user/:id" element={<EditUser />} />
+          <Route path="/reef-tour-details" element={<ReefTourdetails />} />
+          <Route path="/hotel-booking-details" element={<HotelBookingdetails />} />
+          <Route path="/add-packages" element={<AddPackages />} />
+          <Route path="/package-details" element={<PackageDetails />} />
+          <Route path="/package-details/:id" element={<UpdatePackages />} />
+          <Route path="/send-email/:id" element={<SendEmail />} />
 
-          {/* Admin panel routes */}
-          <Route path="/addEvents" element={<AddEvents/>} />
-          <Route path="/eventDetails" element={<EventDetails/>}/>
-          <Route path="/eventDetails/:id" element={<UpdateEvent/>} />
-          <Route path="/userDetails" element={<UserDetails/>} />
-          <Route path="/editUser/:id" element={<EditUser/>} />
-          <Route path="/reeftourdetails" element={<ReefTourdetails/>} />
-          <Route path="/hotelbookingdetails" element={<HotelBookingdetails/>} />
-          <Route path="/addPackages" element={<AddPackages/>} />
-          <Route path="/packageDetails" element={<PackageDetails/>} />
-          <Route path="/packageDetails/:id" element={<UpdatePackages/>} />
-          <Route path="/packages" element={<Packages/>} />
-          <Route path="/sendEmail/:id" element={<SendEmail/>} />
-
-         
-          
-          {/* Protected Admin Route */}
+          {/* Admin Protected */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
 
-          {/* Reset Password Route */}
+          {/* Auth */}
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-          {/* Catch-all Route */}
+          {/* Catch-all */}
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </BrowserRouter>
