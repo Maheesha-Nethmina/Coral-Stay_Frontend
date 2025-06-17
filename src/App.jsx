@@ -1,5 +1,3 @@
-// src/App.js
-
 import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
@@ -66,7 +64,7 @@ function App() {
           <Route path="/royal-suite-room" element={<RoyalSuiteRoom />} />
           <Route path="/presidential-suite-room" element={<PresidentialSuiteRoom />} />
           <Route path="/premier-ocean-room" element={<PremierOceanRoom />} />
-          <Route path="/package-detail/:id" element={<PackageDetail />} />
+          <Route path="/packagedetail/:id" element={<PackageDetail />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/packages" element={<Packages />} />
 
