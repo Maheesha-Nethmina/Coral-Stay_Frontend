@@ -59,27 +59,27 @@ function App() {
           <Route path="/events" element={<Events />} />
           <Route path="/room-booking" element={<RoomBooking />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/deluxe-room" element={<DeluxeRoom />} />
-          <Route path="/premier-room" element={<PremierRoom />} />
-          <Route path="/royal-suite-room" element={<RoyalSuiteRoom />} />
-          <Route path="/presidential-suite-room" element={<PresidentialSuiteRoom />} />
-          <Route path="/premier-ocean-room" element={<PremierOceanRoom />} />
+          <Route path="/deluxeroom" element={<DeluxeRoom />} />
+          <Route path="/premierroom" element={<PremierRoom />} />
+          <Route path="/royalsuiteroom" element={<RoyalSuiteRoom />} />
+          <Route path="/presidentialsuiteroom" element={<PresidentialSuiteRoom />} />
+          <Route path="/premieroceanroom" element={<PremierOceanRoom />} />
           <Route path="/packagedetail/:id" element={<PackageDetail />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/packages" element={<Packages />} />
 
           {/* Admin Routes */}
-          <Route path="/add-events" element={<AddEvents />} />
-          <Route path="/event-details" element={<EventDetails />} />
-          <Route path="/event-details/:id" element={<UpdateEvent />} />
-          <Route path="/user-details" element={<UserDetails />} />
-          <Route path="/edit-user/:id" element={<EditUser />} />
-          <Route path="/reef-tour-details" element={<ReefTourdetails />} />
-          <Route path="/hotel-booking-details" element={<HotelBookingdetails />} />
-          <Route path="/add-packages" element={<AddPackages />} />
-          <Route path="/package-details" element={<PackageDetails />} />
-          <Route path="/package-details/:id" element={<UpdatePackages />} />
-          <Route path="/send-email/:id" element={<SendEmail />} />
+          <Route path="/addevents" element={<AddEvents />} />
+          <Route path="/eventdetails" element={<EventDetails />} />
+          <Route path="/eventdetails/:id" element={<UpdateEvent />} />
+          <Route path="/userdetails" element={<UserDetails />} />
+          <Route path="/editUser/:id" element={<EditUser />} />
+          <Route path="/reeftourdetails" element={<ReefTourdetails />} />
+          <Route path="/hotelbookingdetails" element={<HotelBookingdetails />} />
+          <Route path="/addpackages" element={<AddPackages />} />
+          <Route path="/packagedetails" element={<PackageDetails />} />
+          <Route path="/packagedetails/:id" element={<UpdatePackages />} />
+          <Route path="/sendEmail/:id" element={<SendEmail />} />
 
           {/* Admin Protected */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
