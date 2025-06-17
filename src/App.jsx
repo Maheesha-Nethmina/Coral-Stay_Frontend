@@ -19,7 +19,7 @@ import PremierRoom from './Pages/User/PremierRoom';
 import RoyalSuiteRoom from './Pages/User/RoyalSuiteRoom';
 import PremierOceanRoom from './Pages/User/PremierOceanRoom';
 import PresidentialSuiteRoom from './Pages/User/PresidentialSuiteRoom';
-
+import PackageDetail from './Pages/User/PackageDetail';
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
 import EventDetails from './Pages/Admin/EventDetails';
@@ -67,6 +67,7 @@ function App() {
           <Route path ="/RoyalSuiteRoom" element={<RoyalSuiteRoom/>}/>
           <Route path ="/PresidentialSuiteRoom" element={<PresidentialSuiteRoom/>}/>
           <Route path ="/PremieOceanRoom" element={<PremierOceanRoom/>}/>
+          <Route path ="/PackageDetail/:id" element={<PackageDetail/>}/>
           
           
           
