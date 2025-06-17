@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
+import { Link } from 'react-router-dom';
 
 const PackageDetail = () => {
   const { id } = useParams();
@@ -69,9 +70,17 @@ const PackageDetail = () => {
             </div>
           )}
 
-          <button className="bg-[#014B54] hover:bg-[#013f48] text-white font-bold py-2 px-6 rounded-md mt-4">
+          <Link to="/Booking">
+          <button className="bg-[#014B54] hover:bg-[#013f48] text-white font-bold py-2 px-14 rounded-md mt-4">
             Book Now
           </button>
+          </Link>
+          
+          <Link to="/packages">
+          <button className="ml-20 bg-[#014B54] hover:bg-[#013f48] text-white font-bold py-2 px-6 rounded-md mt-4">
+            Back to Packages
+          </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, MapPin, DollarSign, User, Mail, Phone, CreditCard, CheckCircle } from 'lucide-react';
+import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
 
 const Booking = () => {
   const [formData, setFormData] = useState({
@@ -88,7 +90,9 @@ const Booking = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#EAF4F6] py-8 px-4 sm:px-6 lg:px-8">
+    <div>
+      <Navbar/>
+    <div className="min-h-screen bg-[#EAF4F6] py-8 px-4 sm:px-6 lg:px-8 mt-18">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -297,6 +301,8 @@ const Booking = () => {
           </form>
         </div>
       </div>
+    </div>
+    <Footer/>
     </div>
   );
 };

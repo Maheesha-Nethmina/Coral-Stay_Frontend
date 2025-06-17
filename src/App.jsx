@@ -11,7 +11,7 @@ import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
 import Profile from './Pages/User/Profile';
-
+import Booking from './Pages/User/Booking';
 import Packages from './Pages/User/Packages'
 
 import DeluxeRoom from './Pages/User/DeluxeRoom'
@@ -68,8 +68,9 @@ function App() {
           <Route path ="/PresidentialSuiteRoom" element={<PresidentialSuiteRoom/>}/>
           <Route path ="/PremieOceanRoom" element={<PremierOceanRoom/>}/>
           <Route path ="/PackageDetail/:id" element={<PackageDetail/>}/>
-          
-          
+          <Route path="/Booking" element={<Booking />} />
+          <Route path="/packages" element={<Packages/>} />
+
           
 
 
@@ -84,7 +85,6 @@ function App() {
           <Route path="/addPackages" element={<AddPackages/>} />
           <Route path="/packageDetails" element={<PackageDetails/>} />
           <Route path="/packageDetails/:id" element={<UpdatePackages/>} />
-          <Route path="/packages" element={<Packages/>} />
 
          
           
