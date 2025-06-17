@@ -44,6 +44,7 @@ function UserDetails() {
 
   const fetchUsers = () => {
     setLoading(true);
+    setError('');
     fetch('http://localhost:3000/admin/users', {
       credentials: 'include',
     })
@@ -80,11 +81,9 @@ function UserDetails() {
       })
       .catch(err => {
         if (err.message !== 'Account deactivated') {
-          // setError(err.message);
-          setMessage('User role updated successfully.');
-        setTimeout(() => setMessage(''), 3000);
+          setMessage('Failed to update user role.');
+          setTimeout(() => setMessage(''), 3000);
           window.location.reload();
-
         }
       });
   };
@@ -97,23 +96,23 @@ function UserDetails() {
     navigate(`/sendEmail/${user._id}`);
   };
 
-
   return (
-    <>
+    <div className="bg-[#eaf4f6] min-h-screen">
       <Navbar />
       <div className="flex w-full min-h-screen mt-10">
-        <div className="w-60 bg-white shadow-md">
+        <div className="w-60 bg-[#eaf4f6]">
           <AdminNavbar />
         </div>
 
-        <div className="flex-1 p-8 bg-[#eaf4f6] mt-5">
+        <div className="flex-1 p-8 mt-5">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold">User Details</h1>
+            <h1 className="text-3xl font-bold text-[#023545]">User Details</h1>
             <div className="flex items-center gap-4">
-              <span className="text-[#023545] text-sm">Today : {today}</span>
+              <span className="text-[#023545] text-sm">Today: {today}</span>
               <button
                 onClick={fetchUsers}
-                className="flex items-center gap-2 px-3 py-1 bg-[#023545] text-white rounded hover:bg-blue-600"
+                className="flex items-center gap-2 px-3 py-1 bg-[#023545] text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                aria-label="Refresh User List"
               >
                 <RefreshCw size={16} />
                 Refresh
@@ -138,41 +137,48 @@ function UserDetails() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.length > 0 ? users.map(user => (
-                    <tr key={user._id} className="hover:bg-gray-100">
-                      <td className="p-3">{user.name}</td>
-                      <td className="p-3">{user.email}</td>
-                      <td className="p-3">
-                        <select
-                          value={user.role}
-                          onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                          className="border px-2 py-1 rounded"
-                        >
-                          <option value="user">User</option>
-                          <option value="admin">Admin</option>
-                          <option value="deactivated">Deactivated</option>
-                        </select>
-                      </td>
-                      <td className="p-3 flex gap-3">
-                        <button
-                          title="Edit User"
-                          onClick={() => handleEditUser(user)}
-                          className="text-blue-600 hover:text-blue-800 coursor-pointer"
-                        >
-                          <Pencil size={18} />
-                        </button>
-                        <button
-                          title="Send Email"
-                          onClick={() => handleSendEmail(user)}
-                          className="text-green-600 hover:text-green-800 coursor-pointer"
-                        >
-                          <Mail size={18} />
-                        </button>
-                      </td>
-                    </tr>
-                  )) : (
+                  {users.length > 0 ? (
+                    users.map(user => (
+                      <tr key={user._id} className="hover:bg-gray-100">
+                        <td className="p-3">{user.name}</td>
+                        <td className="p-3">{user.email}</td>
+                        <td className="p-3">
+                          <select
+                            value={user.role}
+                            onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                            className="border px-2 py-1 rounded"
+                            aria-label={`Change role for ${user.name}`}
+                          >
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                            <option value="deactivated">Deactivated</option>
+                          </select>
+                        </td>
+                        <td className="p-3 flex gap-3">
+                          <button
+                            title="Edit User"
+                            onClick={() => handleEditUser(user)}
+                            className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                            aria-label={`Edit user ${user.name}`}
+                          >
+                            <Pencil size={18} />
+                          </button>
+                          <button
+                            title="Send Email"
+                            onClick={() => handleSendEmail(user)}
+                            className="text-green-600 hover:text-green-800 cursor-pointer"
+                            aria-label={`Send email to ${user.name}`}
+                          >
+                            <Mail size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
                     <tr>
-                      <td colSpan="5" className="p-3 text-center text-gray-500">No users found.</td>
+                      <td colSpan="4" className="p-3 text-center text-gray-500">
+                        No users found.
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -181,7 +187,7 @@ function UserDetails() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

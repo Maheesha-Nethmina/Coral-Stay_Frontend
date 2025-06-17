@@ -11,9 +11,7 @@ import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
 import Profile from './Pages/User/Profile';
-
 import Packages from './Pages/User/Packages'
-
 import DeluxeRoom from './Pages/User/DeluxeRoom'
 import PremierRoom from './Pages/User/PremierRoom';
 import RoyalSuiteRoom from './Pages/User/RoyalSuiteRoom';

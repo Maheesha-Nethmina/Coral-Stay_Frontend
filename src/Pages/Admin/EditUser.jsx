@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import Navbar from '../../Components/Navbar/Navbar';
+import AdminNavbar from '../../Components/Navbar/AdminNavbar';
 
 function EditUser() {
   const { id } = useParams();
@@ -11,16 +13,12 @@ function EditUser() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetch(`http://localhost:3000/admin/user/${id}`, { credentials: 'include' })
-      .then(async res => {
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.message || 'Failed to fetch user.');
-        }
-        return res.json();
-      })
+    fetch(`http://localhost:3000/admin/users`, { credentials: 'include' })
+      .then(res => res.json())
       .then(data => {
-        setUser(data);
+        const foundUser = data.find(u => u._id === id);
+        if (!foundUser) throw new Error('User not found');
+        setUser(foundUser);
         setLoading(false);
       })
       .catch(err => {
@@ -31,92 +29,110 @@ function EditUser() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setUser(prevUser => ({ ...prevUser, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleUpdate = (e) => {
     e.preventDefault();
 
-    fetch(`http://localhost:3000/admin/user/${id}`, {
+    fetch(`http://localhost:3000/admin/updateUser/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify(user),
+      body: JSON.stringify({
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      }),
     })
       .then(async res => {
         if (!res.ok) {
           const errorData = await res.json();
-          throw new Error(errorData.message || 'Failed to update user.');
+          throw new Error(errorData.message || 'Failed to update user');
         }
         return res.json();
       })
       .then(() => {
         setMessage('User updated successfully.');
-        setTimeout(() => navigate('/userdetails'), 2000);
+        setTimeout(() => navigate('/userDetails'), 2000);
       })
       .catch(err => {
         setError(err.message);
       });
   };
 
-  if (loading) return <p>Loading user...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
-
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Edit User</h1>
-
-      {message && <p className="text-green-600 mb-4">{message}</p>}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block mb-1 font-medium">Name:</label>
-          <input
-            type="text"
-            name="name"
-            value={user.name}
-            onChange={handleInputChange}
-            className="w-full border p-2 rounded"
-            required
-          />
+    <>
+      <Navbar />
+      <div className="flex min-h-screen bg-[#eaf4f6]">
+        {/* Sidebar */}
+        <div className="w-60 bg-white shadow-md mt-10">
+          <AdminNavbar />
         </div>
 
-        <div>
-          <label className="block mb-1 font-medium">Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={user.email}
-            onChange={handleInputChange}
-            className="w-full border p-2 rounded"
-            required
-          />
-        </div>
+        {/* Main Content */}
+        <div className="flex-1 flex justify-center items-start mt-26 p-6">
+          <div className="w-full max-w-2xl bg-white p-8 rounded-2xl shadow-lg">
+            <h1 className="text-2xl font-bold text-[#023545] mb-6">Edit User</h1>
 
-        <div>
-          <label className="block mb-1 font-medium">Role:</label>
-          <select
-            name="role"
-            value={user.role}
-            onChange={handleInputChange}
-            className="w-full border p-2 rounded"
-          >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-            <option value="deactivated">Deactivated</option>
-          </select>
-        </div>
+            {error && <p className="text-red-600 mb-4 text-sm">{error}</p>}
+            {message && <p className="text-green-600 mb-4 text-sm">{message}</p>}
 
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Update User
-        </button>
-      </form>
-    </div>
+            {user ? (
+              <form onSubmit={handleUpdate} className="space-y-5">
+                <div>
+                  <label className="block mb-1 font-medium text-gray-700">Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={user.name}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full border border-black px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-1 font-medium text-gray-700">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={user.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full border border-black px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-1 font-medium text-gray-700">Role</label>
+                  <select
+                    name="role"
+                    value={user.role}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full border border-black px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                    <option value="deactivated">Deactivated</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-[#023545] hover:bg-[#023545]-400 text-white py-2 rounded transition duration-200"
+                >
+                  Update User
+                </button>
+              </form>
+            ) : (
+              <p className="text-gray-600">{loading ? 'Loading user data...' : 'User not found'}</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
