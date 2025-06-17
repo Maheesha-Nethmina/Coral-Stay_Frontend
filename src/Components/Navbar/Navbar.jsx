@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Home, Info, Phone, Sailboat, LifeBuoy, UserRound } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import Login from "../Auth/Login";
 import Register from "../Auth/Register";
 import ForgotPassword from "../Auth/ForgotPassword";
@@ -35,11 +36,14 @@ const Navbar = () => {
     }
   }, [location.pathname]);
 
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
     if (confirmLogout) {
       logout();
       setIsOpen(false);
+      navigate('/'); 
     }
   };
 

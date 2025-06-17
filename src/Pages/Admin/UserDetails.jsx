@@ -94,9 +94,9 @@ function UserDetails() {
   };
 
   const handleSendEmail = (user) => {
-    alert(`Send email to: ${user.email}`);
-    // Optional: Trigger email modal or compose email action
+    navigate(`/sendEmail/${user._id}`);
   };
+
 
   return (
     <>
@@ -110,10 +110,10 @@ function UserDetails() {
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-3xl font-bold">User Details</h1>
             <div className="flex items-center gap-4">
-              <span className="text-gray-600 text-sm">Today : {today}</span>
+              <span className="text-[#023545] text-sm">Today : {today}</span>
               <button
                 onClick={fetchUsers}
-                className="flex items-center gap-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="flex items-center gap-2 px-3 py-1 bg-[#023545] text-white rounded hover:bg-blue-600"
               >
                 <RefreshCw size={16} />
                 Refresh
@@ -133,7 +133,7 @@ function UserDetails() {
                   <tr className="bg-gray-100 text-left">
                     <th className="p-3">Name</th>
                     <th className="p-3">Email</th>
-                    <th className="p-3">Role</th>
+                    <th className="p-3">Account Type</th>
                     <th className="p-3">Actions</th>
                   </tr>
                 </thead>
@@ -157,14 +157,14 @@ function UserDetails() {
                         <button
                           title="Edit User"
                           onClick={() => handleEditUser(user)}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-blue-600 hover:text-blue-800 coursor-pointer"
                         >
                           <Pencil size={18} />
                         </button>
                         <button
                           title="Send Email"
                           onClick={() => handleSendEmail(user)}
-                          className="text-green-600 hover:text-green-800"
+                          className="text-green-600 hover:text-green-800 coursor-pointer"
                         >
                           <Mail size={18} />
                         </button>

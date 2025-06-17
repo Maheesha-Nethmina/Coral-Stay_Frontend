@@ -32,6 +32,7 @@ import EditUser from './Pages/Admin/EditUser';
 import AddPackages from './Pages/Admin/PackageData/AddPackages'
 import PackageDetails from './Pages/Admin/PackageData/PackageDetails'
 import UpdatePackages from './Pages/Admin/PackageData/UpdatePackages'
+import SendEmail from './Pages/Admin/SendEmail';
 
 
 // Auth Components
@@ -84,6 +85,7 @@ function App() {
           <Route path="/packageDetails" element={<PackageDetails/>} />
           <Route path="/packageDetails/:id" element={<UpdatePackages/>} />
           <Route path="/packages" element={<Packages/>} />
+          <Route path="/sendEmail/:id" element={<SendEmail/>} />
 
          
           
