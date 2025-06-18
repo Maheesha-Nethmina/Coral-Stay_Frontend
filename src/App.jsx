@@ -33,6 +33,7 @@ import AddPackages from './Pages/Admin/PackageData/AddPackages';
 import PackageDetails from './Pages/Admin/PackageData/PackageDetails';
 import UpdatePackages from './Pages/Admin/PackageData/UpdatePackages';
 import SendEmail from './Pages/Admin/SendEmail';
+import BlockSheets from './Pages/Admin/BlockSheets';
 
 // Auth Component
 import ResetPassword from './Components/Auth/ResetPassword';
@@ -80,6 +81,7 @@ function App() {
           <Route path="/packagedetails" element={<PackageDetails />} />
           <Route path="/packagedetails/:id" element={<UpdatePackages />} />
           <Route path="/sendEmail/:id" element={<SendEmail />} />
+          <Route path="/blockSheets" element={<BlockSheets />} />
 
           {/* Admin Protected */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
