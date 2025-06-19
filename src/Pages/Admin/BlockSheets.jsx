@@ -1,14 +1,9 @@
 // File: pages/Admin/ReefTourdetails.js
 
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from '../../Components/Navbar/Navbar';
 import AdminNavbar from '../../Components/Navbar/AdminNavbar';
-
-const bookedSeatsData = {
-  '2025-06-19|09.00 am to 10.00 am': [7, 8],
-  '2025-06-19|10.30 am to 11.30 am': [3, 4, 5, 6],
-  '2025-06-20|09.00 am to 10.00 am': [1, 2, 9],
-};
 
 function ReefTourdetails() {
   const [dates, setDates] = useState([]);
@@ -16,6 +11,7 @@ function ReefTourdetails() {
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [bookedSeats, setBookedSeats] = useState([]);
+  const [mode, setMode] = useState('block');
 
   const timeSlots = ["09.00 am to 10.00 am", "10.30 am to 11.30 am"];
 
@@ -37,15 +33,24 @@ function ReefTourdetails() {
   }, []);
 
   useEffect(() => {
-    if (selectedDate && selectedTime) {
-      const key = `${selectedDate}|${selectedTime}`;
-      setBookedSeats(bookedSeatsData[key] || []);
-      setSelectedSeats([]);
-    }
+    const fetchBlockedSeats = async () => {
+      if (selectedDate && selectedTime) {
+        try {
+          const res = await axios.get(`http://localhost:3000/reeftour/blocked?date=${selectedDate}&timeSlot=${selectedTime}`);
+          setBookedSeats(res.data.blockedSeats || []);
+          setSelectedSeats([]);
+        } catch (error) {
+          console.error('Error fetching blocked seats', error);
+        }
+      }
+    };
+    fetchBlockedSeats();
   }, [selectedDate, selectedTime]);
 
   const toggleSeatSelection = (seatNumber) => {
-    if (bookedSeats.includes(seatNumber)) return;
+    if (mode === 'block' && bookedSeats.includes(seatNumber)) return;
+    if (mode === 'unblock' && !bookedSeats.includes(seatNumber)) return;
+
     if (selectedSeats.includes(seatNumber)) {
       setSelectedSeats(selectedSeats.filter((seat) => seat !== seatNumber));
     } else {
@@ -53,17 +58,52 @@ function ReefTourdetails() {
     }
   };
 
-  const handleBlockSeats = () => {
+  const handleBlockSeats = async () => {
     if (!selectedDate || !selectedTime || selectedSeats.length === 0) {
-      alert("Please select a date, time slot, and at least one seat.");
+      alert('Please select a date, time slot, and at least one seat.');
       return;
     }
-    console.log({
-      blockedDate: selectedDate,
-      blockedTime: selectedTime,
-      blockedSeats: selectedSeats
-    });
-    alert("Seats successfully marked as blocked.");
+
+    try {
+      await axios.post('http://localhost:3000/reeftour/block', {
+        date: selectedDate,
+        timeSlot: selectedTime,
+        seats: selectedSeats
+      });
+
+      alert('Seats successfully marked as blocked.');
+
+      const res = await axios.get(`http://localhost:3000/reeftour/blocked?date=${selectedDate}&timeSlot=${selectedTime}`);
+      setBookedSeats(res.data.blockedSeats || []);
+      setSelectedSeats([]);
+    } catch (error) {
+      console.error('Error blocking seats', error);
+      alert('Failed to block seats');
+    }
+  };
+
+  const handleUnblockSeats = async () => {
+    if (!selectedDate || !selectedTime || selectedSeats.length === 0) {
+      alert('Please select a date, time slot, and at least one seat.');
+      return;
+    }
+
+    try {
+      await axios.post('http://localhost:3000/reeftour/unblock', {
+        date: selectedDate,
+        timeSlot: selectedTime,
+        seats: selectedSeats
+      });
+
+      alert('Seats successfully unblocked.');
+
+      const res = await axios.get(`http://localhost:3000/reeftour/blocked?date=${selectedDate}&timeSlot=${selectedTime}`);
+      setBookedSeats(res.data.blockedSeats || []);
+      setSelectedSeats([]);
+    } catch (error) {
+      console.error('Error unblocking seats', error);
+      alert('Failed to unblock seats');
+    }
   };
 
   return (
@@ -84,7 +124,7 @@ function ReefTourdetails() {
                 {dates.map((date) => (
                   <button
                     key={date}
-                    className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium shadow-sm ${selectedDate === date ? "bg-blue-600 text-white" : "bg-gray-200 hover:bg-blue-100"}`}
+                    className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium shadow-sm ${selectedDate === date ? "bg-[#023545] text-white" : "bg-gray-200 hover:bg-blue-100"}`}
                     onClick={() => {
                       setSelectedDate(date);
                       setSelectedTime(null);
@@ -104,8 +144,11 @@ function ReefTourdetails() {
                   {timeSlots.map((slot) => (
                     <button
                       key={slot}
-                      className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium shadow-sm ${selectedTime === slot ? "bg-blue-600 text-white" : "bg-gray-200 hover:bg-blue-100"}`}
-                      onClick={() => setSelectedTime(slot)}
+                      className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium shadow-sm ${selectedTime === slot ? "bg-[#023545] text-white" : "bg-gray-200 hover:bg-blue-100"}`}
+                      onClick={() => {
+                        setSelectedTime(slot);
+                        setSelectedSeats([]);
+                      }}
                     >
                       {slot}
                     </button>
@@ -116,7 +159,28 @@ function ReefTourdetails() {
 
             {selectedDate && selectedTime && (
               <section>
-                <h3 className="font-medium mb-3">Select Seats</h3>
+                <div className="flex mb-4">
+                  <button
+                    onClick={() => {
+                      setMode('block');
+                      setSelectedSeats([]);
+                    }}
+                    className={`mr-4 px-4 py-2 rounded-md font-semibold transition-all duration-200 ${mode === 'block' ? 'bg-[#023545] text-white' : 'bg-gray-200 hover:bg-blue-100'}`}
+                  >
+                    Block Seats
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMode('unblock');
+                      setSelectedSeats([]);
+                    }}
+                    className={`px-4 py-2 rounded-md font-semibold transition-all duration-200 ${mode === 'unblock' ? 'bg-[#023545] text-white' : 'bg-gray-200 hover:bg-blue-100'}`}
+                  >
+                    Unblock Seats
+                  </button>
+                </div>
+
+                <h3 className="font-medium mb-3">Select Seats ({mode === 'block' ? 'Available Seats' : 'Blocked Seats'})</h3>
                 <div className="bg-gray-200 rounded-2xl p-4 inline-block">
                   {seatLayout.map((row, rowIndex) => (
                     <div key={rowIndex} className="flex justify-center mb-2">
@@ -125,14 +189,22 @@ function ReefTourdetails() {
                         const seatNumber = parseInt(seat);
                         const isBooked = bookedSeats.includes(seatNumber);
                         const isSelected = selectedSeats.includes(seatNumber);
+
+                        const isSelectable = (mode === 'block' && !isBooked) || (mode === 'unblock' && isBooked);
+
                         return (
                           <button
                             key={seat}
                             className={`w-10 h-10 mx-1 rounded-md border text-sm font-semibold transition-all duration-200
-                              ${isBooked ? "bg-red-400 text-white cursor-not-allowed" :
-                                isSelected ? "bg-teal-800 text-white" : "bg-white hover:bg-teal-100"}`}
-                            onClick={() => toggleSeatSelection(seatNumber)}
-                            disabled={isBooked}
+                              ${isBooked ? "bg-red-400 text-white" : "bg-white hover:bg-teal-100"}
+                              ${isSelected ? "!bg-[#023545] !text-white" : ""}
+                              ${!isSelectable ? "cursor-not-allowed opacity-50" : ""}`}
+                            onClick={() => {
+                              if (isSelectable) {
+                                toggleSeatSelection(seatNumber);
+                              }
+                            }}
+                            disabled={!isSelectable}
                           >
                             {seat}
                           </button>
@@ -142,12 +214,21 @@ function ReefTourdetails() {
                   ))}
                 </div>
                 <div className="mt-4 ">
-                  <button
-                    onClick={handleBlockSeats}
-                    className="bg-teal-900 hover:bg-teal-800 text-white px-6 py-2 rounded-md font-semibold transition-all duration-200"
-                  >
-                    Mark as Blocked
-                  </button>
+                  {mode === 'block' ? (
+                    <button
+                      onClick={handleBlockSeats}
+                      className="bg-[#023545]  text-white px-6 py-2 rounded-md font-semibold transition-all duration-200 mr-10"
+                    >
+                      Mark as Blocked
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleUnblockSeats}
+                      className="bg-[#023545]  text-white px-6 py-2 rounded-md font-semibold transition-all duration-200 mr-10"
+                    >
+                      Unblock Selected Seats
+                    </button>
+                  )}
                 </div>
               </section>
             )}

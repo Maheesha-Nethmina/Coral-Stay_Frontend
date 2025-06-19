@@ -111,7 +111,7 @@ function UserDetails() {
               <span className="text-[#023545] text-sm">Today: {today}</span>
               <button
                 onClick={fetchUsers}
-                className="flex items-center gap-2 px-3 py-1 bg-[#023545] text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="flex items-center gap-2 px-3 py-1 bg-[#023545] text-white rounded hover:bg-[#023545] focus:outline-none focus:ring-2 focus:ring-blue-400"
                 aria-label="Refresh User List"
               >
                 <RefreshCw size={16} />
