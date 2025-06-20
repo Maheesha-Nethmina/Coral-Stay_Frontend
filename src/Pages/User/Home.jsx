@@ -1,5 +1,5 @@
 import React from 'react'
-import { motion } from 'framer-motion'
+import { motion ,useAnimation} from 'framer-motion'
 import HeroSection from '../../Components/HomePage/HeroSection'
 
 import turtle from '../../assets/sea-turtle.png' 
@@ -13,7 +13,6 @@ import Footer from '../../Components/Footer/Footer'
 import Navbar from '../../Components/Navbar/Navbar'
 import img2 from '../../assets/event01.jpeg'
 import { useNavigate } from 'react-router-dom';
-
 
 function Home() {
   const categories = [
@@ -35,6 +34,8 @@ function Home() {
   const handleRedirect = () => {
     navigate('/Events');
   };
+
+  
   return (
     <div>
       <Navbar />
