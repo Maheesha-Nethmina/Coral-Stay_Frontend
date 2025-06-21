@@ -15,13 +15,13 @@ const BoatPackages = () => {
         const boatPackages = (res.data?.packages || []).filter(pkg => pkg.type === 'boatTour');
         const transformed = boatPackages.map(pkg => ({
           id: pkg._id,
-  image: pkg.imageUrl,
-  title: pkg.title,
-  description: pkg.description,
-  features: pkg.includes,
-  price: pkg.price,
-  duration: `${pkg.days} Day${pkg.days > 1 ? 's' : ''}`,
-  discount: pkg.offers || null,
+          image: pkg.imageUrl,
+          title: pkg.title,
+          description: pkg.description,
+          features: pkg.includes,
+          price: pkg.price,
+          duration: `${pkg.days} Day${pkg.days > 1 ? 's' : ''}`,
+          discount: pkg.offers || null,
         }));
         setPackages(transformed);
       } catch (err) {

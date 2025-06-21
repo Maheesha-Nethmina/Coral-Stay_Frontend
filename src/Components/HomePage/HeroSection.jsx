@@ -1,7 +1,9 @@
 import React from 'react';
 import video1 from '../../assets/final.mp4';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Background Video */}
@@ -29,7 +31,9 @@ const HeroSection = () => {
             Marvel at vibrant coral reefs, savor smooth sea breezes; <br className="hidden md:block" />
             And unwind in coastal comfort — your perfect getaway begins here.
           </p>
-          <button className="bg-[#023545] hover:bg-cyan-700 text-white font-semibold px-8 py-3 rounded-[10px] w-full md:w-[350px]">
+          <button className="bg-[#023545] hover:bg-cyan-700 text-white font-semibold px-8 py-3 rounded-[10px] w-full md:w-[350px]"
+           onClick={() => navigate('/reef_ride')}
+          >
             Explore the Experience
           </button>
         </div>

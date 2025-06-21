@@ -4,6 +4,7 @@ import image01 from '../../assets/carousel02.jpg';
 import image03 from '../../assets/image03.jpg';
 import image04 from '../../assets/image04.jpg';
 
+import { useNavigate } from 'react-router-dom';
 
 const cards = [
   {
@@ -17,7 +18,7 @@ const cards = [
   {
     id: 'accommodation',
     highlight: "Comfort is just a click away.",
-    subtext: "Private beaches and premium amenities.",
+    subtext: "Explore Our Exclusive Packages.",
     image: image03,
     size: 'small',
     hasButton: true
@@ -33,6 +34,8 @@ const cards = [
 ];
 
 const AfterHeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       
@@ -53,7 +56,9 @@ const AfterHeroSection = () => {
                   <p className="text-white font-semibold text-2xl md:text-4xl mb-2">{cards[0].highlight}</p>
                   <p className="text-white/90 text-sm md:text-base whitespace-pre-line">{cards[0].subtext}</p>
                 </div>
-                <button className="bg-[#023545] hover:bg-teal-700 text-white font-medium py-2 md:py-3 px-6 md:px-8 rounded-lg text-sm md:text-lg w-full md:w-[300px]">
+                <button className="bg-[#023545] hover:bg-teal-700 text-white font-medium py-2 md:py-3 px-6 md:px-8 rounded-lg text-sm md:text-lg w-full md:w-[300px]"
+                onClick={() => navigate('/reef_ride')}
+                >
                   Book Now
                 </button>
               </div>
@@ -73,7 +78,10 @@ const AfterHeroSection = () => {
                       <p className="text-white font-semibold text-2xl md:text-3xl mb-2">{card.highlight}</p>
                       <p className="text-white/90 text-sm md:text-base whitespace-pre-line">{card.subtext}</p>
                     </div>
-                    <button className="bg-[#023545] hover:bg-teal-700 text-white font-medium py-2 md:py-3 px-6 md:px-8 rounded-lg text-sm md:text-lg w-full">
+                    <button className="bg-[#023545] hover:bg-teal-700 text-white font-medium py-3 md:py-3 px-6 md:px-8 rounded-lg text-sm md:text-lg w-full"
+                   
+                    onClick={() => navigate('/Stays')}
+                    >
                       Book Now
                     </button>
                   </div>
@@ -97,7 +105,9 @@ const AfterHeroSection = () => {
                     <p className="text-white font-semibold text-2xl md:text-3xl mb-2">{card.highlight}</p>
                     <p className="text-white/90 text-sm md:text-base whitespace-pre-line">{card.subtext}</p>
                   </div>
-                  <button className="bg-[#023545] hover:bg-teal-700 text-white font-medium py-2 md:py-3 px-6 md:px-8 rounded-lg text-sm md:text-lg w-full">
+                  <button className="bg-[#023545] hover:bg-teal-700 text-white font-medium py-2 md:py-3 px-6 md:px-8 rounded-lg text-sm md:text-lg w-full"
+                    onClick={() => navigate('/packages')}
+                  >
                     Book Now
                   </button>
                 </div>

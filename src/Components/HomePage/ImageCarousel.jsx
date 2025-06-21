@@ -6,6 +6,8 @@ import carousel03 from '../../assets/carousel03.jpg';
 import carousel04 from '../../assets/carousel04.jpg';
 import carousel05 from '../../assets/carousel05.jpg';
 import accomodetion from '../../assets/accomodetion.jpg';
+import { useNavigate } from 'react-router-dom';
+
 
 const ImageCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -55,6 +57,7 @@ const ImageCarousel = () => {
     visibleImages.push(images[(currentIndex + i) % images.length]);
   }
 
+  const navigate = useNavigate();
   return (
     <div className="bg-white -mt-42">
       <div className="max-w-7xl mx-auto px-4 py-12 bg-slate-50">
@@ -119,6 +122,7 @@ const ImageCarousel = () => {
             className="w-full h-auto object-cover"
           />
           <button
+           onClick={() => navigate('/Stays')}
             className="absolute bottom-4 left-4 bg-slate-800 text-white text-sm font-bold px-4 py-2 rounded-md hover:bg-slate-900 transition"
           >
             View Accommodation
