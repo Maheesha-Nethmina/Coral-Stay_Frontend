@@ -14,14 +14,14 @@ const BoatHotelPackages = () => {
         const res = await axios.get('http://localhost:3000/package');
         const bothPackages = (res.data?.packages || []).filter(pkg => pkg.type === 'Both');
         const transformed = bothPackages.map(pkg => ({
-  id: pkg._id,
-  image: pkg.imageUrl,
-  title: pkg.title,
-  description: pkg.description,
-  features: pkg.includes,
-  price: pkg.price,
-  duration: `${pkg.days} Day${pkg.days > 1 ? 's' : ''}`,
-  discount: pkg.offers || null,
+          id: pkg._id,
+          image: pkg.imageUrl,
+          title: pkg.title,
+          description: pkg.description,
+          features: pkg.includes,
+          price: pkg.price,
+          duration: `${pkg.days} Day${pkg.days > 1 ? 's' : ''}`,
+          discount: pkg.offers || null,
 }));
 
         setPackages(transformed);

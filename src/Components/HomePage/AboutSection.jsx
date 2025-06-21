@@ -1,6 +1,8 @@
 import React from 'react';
 import video2 from '../../assets/video02.mp4'; 
+import { useNavigate } from 'react-router-dom';
 const AboutSection = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-[#EAF4F6] py-12 md:py-20 -mb-42">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-4 h-auto">
@@ -36,7 +38,10 @@ const AboutSection = () => {
               So come stay with us, hop on the boat, and discover what makes Hikkaduwa so special — both above and below the surface.
               </p>
             <div className="border-t border-gray-200 pt-4">
-              <button className="text-white bg-[#023545] hover:text-[#9ebdc6] font-medium text-xl transition-colors py-3 px-12 rounded-lg">
+              <button 
+               onClick={() => navigate('/about')}
+              className="text-white bg-[#023545]  hover:text-[#9ebdc6] font-medium text-xl transition-colors py-3 px-12 rounded-lg"
+              >
                 Read More 
               </button>
             </div>

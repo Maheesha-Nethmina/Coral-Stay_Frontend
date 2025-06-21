@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
-// Replace these with your actual image imports
+
 import whoWeAreImg from '../../assets/about01.jpeg';
 import whatWeDoImg from '../../assets/about02.jpg';
 import ourGoalImg from '../../assets/about03.jpeg';
