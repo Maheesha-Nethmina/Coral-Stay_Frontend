@@ -1,5 +1,3 @@
-// File: pages/Admin/ReefTourdetails.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar/Navbar';
@@ -13,8 +11,6 @@ function ReefTourdetails() {
   const [bookedSeats, setBookedSeats] = useState([]);
   const [mode, setMode] = useState('block');
 
-  const timeSlots = ["09.00 am to 10.00 am", "10.30 am to 11.30 am"];
-
   const seatLayout = [
     ["01", "02", "03", "04", "05", "06", "07", "08", "09"],
     ["24", null, null, null, null, null, null, null, "10"],
@@ -24,15 +20,45 @@ function ReefTourdetails() {
   ];
 
   useEffect(() => {
-    const tempDates = [];
-    const today = new Date();
-    for (let i = 1; i <= 7; i++) {
-      const nextDate = new Date(today);
-      nextDate.setDate(today.getDate() + i);
-      tempDates.push(nextDate.toISOString().split('T')[0]);
-    }
-    setDates(tempDates);
+    const generateValidDates = () => {
+      const now = new Date();
+      const sriLankaOffsetMinutes = 5.5 * 60;
+      const sriLankaTime = new Date(now.getTime() + sriLankaOffsetMinutes * 60000);
+
+      const hour = sriLankaTime.getHours();
+      const minute = sriLankaTime.getMinutes();
+
+      const startFromOffset = hour > 11 || (hour === 11 && minute >= 30) ? 3 : 2;
+
+      const result = [];
+      const startDate = new Date(sriLankaTime);
+      startDate.setDate(startDate.getDate() + startFromOffset);
+
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        result.push({
+          label: date.toLocaleString('en-US', { month: 'short', day: 'numeric' }), // "Jun 24"
+          value: date.toISOString().split('T')[0] // "YYYY-MM-DD"
+        });
+      }
+
+      return result;
+    };
+
+    const dateObjects = generateValidDates();
+    setDates(dateObjects);
   }, []);
+
+  const limitedSlotDate = dates[2]?.value;
+  const isLimitedSlotDate = selectedDate === limitedSlotDate;
+
+  const getTimeSlots = () => {
+    if (isLimitedSlotDate) {
+      return ["09.00 am to 10.00 am"];
+    }
+    return ["09.00 am to 10.00 am", "10.30 am to 11.30 am"];
+  };
 
   useEffect(() => {
     const fetchBlockedSeats = async () => {
@@ -109,7 +135,7 @@ function ReefTourdetails() {
   };
 
   return (
-    <div className="bg-[#eaf4f6] min-h-screen ">
+    <div className="bg-[#eaf4f6] min-h-screen">
       <Navbar />
       <div className="flex mt-10">
         <aside className="w-60">
@@ -125,15 +151,15 @@ function ReefTourdetails() {
               <div className="flex flex-wrap gap-2">
                 {dates.map((date) => (
                   <button
-                    key={date}
-                    className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium shadow-sm ${selectedDate === date ? "bg-[#023545] text-white" : "bg-gray-200 hover:bg-blue-100"}`}
+                    key={date.value}
+                    className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium shadow-sm ${selectedDate === date.value ? "bg-[#023545] text-white" : "bg-gray-200 hover:bg-blue-100"}`}
                     onClick={() => {
-                      setSelectedDate(date);
+                      setSelectedDate(date.value);
                       setSelectedTime(null);
                       setSelectedSeats([]);
                     }}
                   >
-                    {new Date(date).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' })}
+                    {date.label}
                   </button>
                 ))}
               </div>
@@ -143,7 +169,7 @@ function ReefTourdetails() {
               <section className="mb-6">
                 <h3 className="font-medium mb-2">Select Time Slot</h3>
                 <div className="flex gap-2">
-                  {timeSlots.map((slot) => (
+                  {getTimeSlots().map((slot) => (
                     <button
                       key={slot}
                       className={`px-3 py-2 rounded-md transition-all duration-200 text-sm font-medium shadow-sm ${selectedTime === slot ? "bg-[#023545] text-white" : "bg-gray-200 hover:bg-blue-100"}`}
@@ -191,7 +217,6 @@ function ReefTourdetails() {
                         const seatNumber = parseInt(seat);
                         const isBooked = bookedSeats.includes(seatNumber);
                         const isSelected = selectedSeats.includes(seatNumber);
-
                         const isSelectable = (mode === 'block' && !isBooked) || (mode === 'unblock' && isBooked);
 
                         return (
@@ -215,18 +240,19 @@ function ReefTourdetails() {
                     </div>
                   ))}
                 </div>
-                <div className="mt-4 ">
+
+                <div className="mt-4">
                   {mode === 'block' ? (
                     <button
                       onClick={handleBlockSeats}
-                      className="bg-[#023545]  text-white px-6 py-2 rounded-md font-semibold transition-all duration-200 mr-10"
+                      className="bg-[#023545] text-white px-6 py-2 rounded-md font-semibold transition-all duration-200 mr-10"
                     >
                       Mark as Blocked
                     </button>
                   ) : (
                     <button
                       onClick={handleUnblockSeats}
-                      className="bg-[#023545]  text-white px-6 py-2 rounded-md font-semibold transition-all duration-200 mr-10"
+                      className="bg-[#023545] text-white px-6 py-2 rounded-md font-semibold transition-all duration-200 mr-10"
                     >
                       Unblock Selected Seats
                     </button>

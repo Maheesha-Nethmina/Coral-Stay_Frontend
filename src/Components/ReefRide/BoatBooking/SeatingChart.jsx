@@ -1,42 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate }) => {
-  const getAvailabilityForSeat = (seatNumber) => {
-    const seed = selectedDate ? parseInt(selectedDate.value.replace(/\//g, '')) + seatNumber : 0;
-    const random = (seed * 9301 + 49297) % 233280 / 233280;
-    
-    if (random < 0.15) return 'booked';
-    if (random < 0.25) return 'partial';
-    return 'available';
-  };
+const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate, selectedTime }) => {
+  const [blockedSeats, setBlockedSeats] = useState([]);
 
-  // Create arrays for the different sections of seats
+  useEffect(() => {
+    const fetchBlockedSeats = async () => {
+      if (selectedDate && selectedTime) {
+        console.log('Fetching blocked seats for:', selectedDate, selectedTime);
+        try {
+          const url = `http://localhost:3000/reeftour/blocked?date=${selectedDate}&timeSlot=${selectedTime}`;
+          console.log('API Request URL:', url);
+
+          const res = await axios.get(url);
+          console.log('Blocked seats:', res.data.blockedSeats);
+
+          setBlockedSeats(res.data.blockedSeats || []);
+        } catch (error) {
+          console.error('Error fetching blocked seats', error);
+        }
+      }
+    };
+    fetchBlockedSeats();
+  }, [selectedDate, selectedTime]);
+
   const topSeats = Array.from({ length: 9 }, (_, i) => i + 1);
-  const leftSeats = Array.from({ length: 3 }, (_, i) => i + 24);
+  const leftSeats = Array.from({ length: 3 }, (_, i) => 24 - i);
   const rightSeats = Array.from({ length: 3 }, (_, i) => i + 10);
-  const bottomSeats = Array.from({ length: 9 }, (_, i) => i + 14).reverse();
+  const bottomSeats = Array.from({ length: 9 }, (_, i) => i + 13).reverse();
 
   const renderSeat = (seatNumber) => {
-    const availability = getAvailabilityForSeat(seatNumber);
+    const isBlocked = blockedSeats.includes(seatNumber);
     const isSelected = selectedSeats.includes(seatNumber);
     const seatString = seatNumber.toString().padStart(2, '0');
-    
-    let bgColor = 'bg-white';
-    if (isSelected) bgColor = 'bg-blue-500 text-white';
-    else if (availability === 'booked') bgColor = 'bg-teal-900 text-white cursor-not-allowed';
-    else if (availability === 'partial') bgColor = 'bg-rose-200';
+
+    let bgColor = 'bg-white text-gray-800';
+    if (isBlocked) {
+      bgColor = 'bg-red-400 text-white cursor-not-allowed';
+    } else if (isSelected) {
+      bgColor = 'bg-[#023545] text-white';
+    }
 
     return (
       <button
         key={seatNumber}
         className={`
-          w-12 h-12 rounded-md flex items-center justify-center text-sm font-medium
-          border border-gray-200 shadow-sm transition-all duration-200
+          w-12 h-12 rounded-md border text-sm font-semibold flex items-center justify-center shadow-sm transition-all duration-200
           ${bgColor}
-          ${availability !== 'booked' ? 'hover:scale-105 hover:shadow-md' : ''}
+          ${!isBlocked ? 'hover:bg-teal-100 hover:scale-105' : ''}
         `}
-        onClick={() => availability !== 'booked' && onSelectSeat(seatNumber)}
-        disabled={availability === 'booked'}
+        onClick={() => !isBlocked && onSelectSeat(seatNumber)}
+        disabled={isBlocked}
       >
         {seatString}
       </button>
@@ -45,18 +59,13 @@ const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate }) => {
 
   return (
     <div className="bg-[#d9d9d9] p-8 rounded-xl shadow-md">
-      {/* Top row */}
       <div className="grid grid-cols-9 gap-2 mb-8 justify-center">
-        {topSeats.map(seat => renderSeat(seat))}
+        {topSeats.map(renderSeat)}
       </div>
 
       <div className="flex justify-between mb-8">
-        {/* Left side seats */}
-        <div className="flex flex-col gap-2">
-          {leftSeats.map(seat => renderSeat(seat))}
-        </div>
+        <div className="flex flex-col gap-2">{leftSeats.map(renderSeat)}</div>
 
-        {/* Boat area */}
         <div className="mx-8 flex-grow bg-white/50 rounded-xl border-2 border-dashed border-[#023545] flex items-center justify-center">
           <div className="text-[#023545] font-medium text-center">
             <div className="text-4xl mb-2">⛵</div>
@@ -64,15 +73,11 @@ const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate }) => {
           </div>
         </div>
 
-        {/* Right side seats */}
-        <div className="flex flex-col gap-2">
-          {rightSeats.map(seat => renderSeat(seat))}
-        </div>
+        <div className="flex flex-col gap-2">{rightSeats.map(renderSeat)}</div>
       </div>
 
-      {/* Bottom row */}
       <div className="grid grid-cols-9 gap-2 justify-center">
-        {bottomSeats.map(seat => renderSeat(seat))}
+        {bottomSeats.map(renderSeat)}
       </div>
     </div>
   );
