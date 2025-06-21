@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Home, Info, Phone, Sailboat, LifeBuoy, UserRound } from "lucide-react";
+import { Menu, X, Home, Info, Phone, Sailboat, LifeBuoy, UserRound,Gift } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import Login from "../Auth/Login";
@@ -24,6 +24,7 @@ const Navbar = () => {
     { name: "Home", path: "/", icon: <Home size={18} /> },
     { name: "Reef Ride", path: "/reef_ride", icon: <Sailboat size={18} /> },
     { name: "Stays", path: "/Stays", icon: <LifeBuoy size={18} /> },
+    { name: "Packages", path: "/packages", icon: <Gift size={18} /> },
     { name: "About Us", path: "/about", icon: <Info size={18} /> },
     { name: "Contact Us", path: "/contact", icon: <Phone size={18} /> },
   ];

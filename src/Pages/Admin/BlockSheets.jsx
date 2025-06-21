@@ -17,7 +17,9 @@ function ReefTourdetails() {
 
   const seatLayout = [
     ["01", "02", "03", "04", "05", "06", "07", "08", "09"],
-    ["22", "23", "24", null, null, null, "10", "11", "12"],
+    ["24", null, null, null, null, null, null, null, "10"],
+    ["23", null, null, null, null, null, null, null, "11"],
+    ["22", null, null, null, null, null, null, null, "12"],
     ["21", "20", "19", "18", "17", "16", "15", "14", "13"]
   ];
 

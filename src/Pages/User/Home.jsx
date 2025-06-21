@@ -12,6 +12,7 @@ import Footer from '../../Components/Footer/Footer';
 import Navbar from '../../Components/Navbar/Navbar';
 import img2 from '../../assets/event01.jpeg';
 import { useNavigate } from 'react-router-dom';
+import { Book } from 'lucide-react';
 
 function Home() {
   const categories = [
@@ -231,6 +232,7 @@ function Home() {
       >
         <ImageCarousel />
       </motion.div>
+      
 
       <Footer />
     </div>

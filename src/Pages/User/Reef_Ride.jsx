@@ -7,8 +7,8 @@ import AboutReef from '../../Components/ReefRide/AboutReef'
 import Footer from '../../Components/Footer/Footer'
 import BookBoat from '../../Components/ReefRide/BoatBooking/BookBoat'
 
+
 import img2 from '../../assets/reef2.jpeg'
-import img3 from '../../assets/about02.jpg'
 import { useNavigate } from 'react-router-dom'
 function Reef_Ride() {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ function Reef_Ride() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <Hero 
+        <Hero
           cName="hero"
           heroImg={img1}
           title="Discover the Hidden Wonders beneath the Waves"
@@ -34,12 +34,12 @@ function Reef_Ride() {
 
     <AboutReef/>
 
-        <div className="relative w-full h-screen overflow-hidden -mt-53 -mb-53">
+        <div className="relative w-full overflow-hidden ">
       <div
-        className="fixed top-0 left-0 w-full h-screen bg-cover bg-center -z-5 "
+        className="fixed top-0 left-0 w-full h-screen bg-cover bg-center -z-10 "
         style={{ backgroundImage: `url(${img2})` }}
       />
-      <div className="w-full h-screen flex items-center justify-center ">
+      <div className=" flex items-center justify-center ">
         <div className="w-full max-w-8xl bg-black/20 text-white text-center px-4 py-22 ">
           <h1 className="text-3xl font-semibold mb-4">Your Coral Adventure Awaits!</h1>
           <p className="text-lg leading-relaxed max-w-5xl mx-auto">
@@ -53,11 +53,8 @@ function Reef_Ride() {
 
         
         <BookBoat />
-       
-     
-
-
-      <div className="relative w-full h-screen overflow-hidden -mt-46 -mb-46">
+      
+      <div className="relative w-full  overflow-hidden">
 
       <div className="w-full flex items-center justify-center h-full relative">
         <div className="w-full max-w-8xl bg-black/20 text-white text-center px-4 py-22 z-10">
