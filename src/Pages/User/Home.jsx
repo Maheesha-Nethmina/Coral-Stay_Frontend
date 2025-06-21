@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { motion ,useAnimation} from 'framer-motion'
 import HeroSection from '../../Components/HomePage/HeroSection'
 
@@ -14,6 +14,15 @@ import Navbar from '../../Components/Navbar/Navbar'
 import img2 from '../../assets/event01.jpeg'
 import img3 from '../../assets/package03.jpeg'
 import { useNavigate } from 'react-router-dom';
+
+import { 
+  Waves, 
+  Car, 
+  PawPrint, 
+  Cigarette, 
+  Wifi
+} from 'lucide-react';
+
 
 function Home() {
   const categories = [
@@ -35,6 +44,59 @@ function Home() {
   const handleRedirect = () => {
     navigate('/Events');
   };
+
+  // policy section 
+  const [activeTab, setActiveTab] = useState('resort');
+
+  const policyTabs = [
+    {
+      id: 'resort',
+      label: 'Resort',
+      icon: Waves,
+      content: {
+        title: 'Fees and charges',
+        description: 'Special pricing applies for children upon check-in: Full extra-bed and meal charges for children between the age of 12-17 years; Full extra-bed and 50% of meal charges for children 6-11 years.'
+      }
+    },
+    {
+      id: 'parking',
+      label: 'Parking',
+      icon: Car,
+      content: {
+        title: 'Parking Information',
+        description: 'Complimentary self-parking is available on-site. Valet parking service is available for an additional fee of RS.500 per night.'
+      }
+    },
+    {
+      id: 'pets',
+      label: 'Pets',
+      icon: PawPrint,
+      content: {
+        title: 'Pet Policy',
+        description: 'We welcome well-behaved pets up to 50 lbs. A non-refundable pet fee of rs.1000 per stay applies. Pets must be leashed in public areas.'
+      }
+    },
+    {
+      id: 'smoking',
+      label: 'Smoking',
+      icon: Cigarette,
+      content: {
+        title: 'Smoking Policy',
+        description: 'This is a non-smoking property. Smoking is prohibited in all indoor areas. Designated outdoor smoking areas are available.'
+      }
+    },
+    {
+      id: 'wifi',
+      label: 'WiFi',
+      icon: Wifi,
+      content: {
+        title: 'Internet Access',
+        description: 'Complimentary high-speed WiFi is available throughout the property including all guest rooms, lobby, and pool areas.'
+      }
+    }
+  ];
+
+  const activePolicy = policyTabs.find(tab => tab.id === activeTab);
 
   
   return (
@@ -194,9 +256,10 @@ function Home() {
         <ImageCarousel />
       </motion.div>
 
+{/* package section */}
 <div className="relative w-full h-screen overflow-hidden -mt-46 -mb-46">
 <div
-      className="absolute top-0 left-0 w-full h-full bg-cover bg-center -z-10"
+      className="absolute top-0 left-0 w-full h-140 bg-cover bg-center -z-10"
       style={{ backgroundImage: `url(${img3})` }}
     />
       <div className="w-full flex items-center justify-center h-full relative">
@@ -209,7 +272,7 @@ function Home() {
           </p>
           <div className="mt-8">
             <button
-              onClick={handleRedirect}
+              onClick={() => navigate('/Packages')}
               className="bg-[#023545] text-xl text-white px-3 py-3 rounded-lg hover:bg-[#06445f] transition-colors duration-300 w-[350px]"
             >
               Explore Packages
@@ -218,6 +281,58 @@ function Home() {
         </div>
       </div>
     </div>
+
+    {/* hotel policy section */}
+       <div className="max-w-8xl mx-auto p-6 bg-[#EAF4F6] ">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Hotel policies
+        </h1>
+      </div>
+
+      {/* Policy Tabs */}
+      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        {/* Tab Navigation */}
+        <div className="flex border-b border-gray-200">
+          {policyTabs.map((tab) => {
+            const IconComponent = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 px-4 py-6 flex flex-col items-center gap-2 transition-all duration-200 hover:bg-[#D9D9D9] relative ${
+                  activeTab === tab.id
+                    ? 'text-[#023545] bg-blue-50'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                <IconComponent size={24} />
+                <span className="font-medium text-sm">
+                  {tab.label}
+                </span>
+                {activeTab === tab.id && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#D9D9D9]"></div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Content Area */}
+        <div className="p-6 bg-gray-50">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            {activePolicy.content.title}
+          </h2>
+          <p className="text-gray-700 leading-relaxed">
+            {activePolicy.content.description}
+          </p>
+        </div>
+      </div>
+    </div>
+  
+
+
       <Footer />
     </div>
   )
