@@ -3,59 +3,62 @@ import axios from 'axios';
 
 const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate, selectedTime }) => {
   const [blockedSeats, setBlockedSeats] = useState([]);
+  const [bookedSeats, setBookedSeats] = useState([]);
 
   useEffect(() => {
-    const fetchBlockedSeats = async () => {
-      if (selectedDate && selectedTime) {
-        console.log('Fetching blocked seats for:', selectedDate, selectedTime);
-        try {
-          const url = `http://localhost:3000/reeftour/blocked?date=${selectedDate}&timeSlot=${selectedTime}`;
-          console.log('API Request URL:', url);
-
-          const res = await axios.get(url);
-          console.log('Blocked seats:', res.data.blockedSeats);
-
-          setBlockedSeats(res.data.blockedSeats || []);
-        } catch (error) {
-          console.error('Error fetching blocked seats', error);
-        }
-      }
-    };
-    fetchBlockedSeats();
+    if (selectedDate && selectedTime) {
+      fetchBlockedSeats(selectedDate, selectedTime);
+      fetchBookedSeats(selectedDate, selectedTime);
+    }
   }, [selectedDate, selectedTime]);
+
+  const fetchBlockedSeats = async (date, timeSlot) => {
+    try {
+      const url = `http://localhost:3000/reeftour/blocked?date=${date}&timeSlot=${timeSlot}`;
+      const res = await axios.get(url);
+      setBlockedSeats(res.data.blockedSeats || []);
+    } catch (error) {
+      console.error('Error fetching blocked seats:', error);
+    }
+  };
+
+  const fetchBookedSeats = async (date, timeSlot) => {
+    try {
+      const url = `http://localhost:3000/reeftour/displayBookedSeats?date=${date}&timeSlot=${timeSlot}`;
+      const res = await axios.get(url);
+      const booked = res.data.bookings?.flatMap(b => b.seats) || [];
+      setBookedSeats(booked);
+    } catch (error) {
+      console.error('Error fetching booked seats:', error);
+    }
+  };
+
+  const isSeatBlocked = (seat) => blockedSeats.includes(seat);
+  const isSeatBooked = (seat) => bookedSeats.includes(seat);
+  const isSeatSelected = (seat) => selectedSeats.includes(seat);
+
+  const getSeatClass = (seat) => {
+    if (isSeatBlocked(seat)) return 'bg-red-400 text-white cursor-not-allowed';
+    if (isSeatBooked(seat)) return 'bg-yellow-400 text-white cursor-not-allowed';
+    if (isSeatSelected(seat)) return 'bg-[#023545] text-white';
+    return 'bg-white text-gray-800 hover:bg-teal-100 hover:scale-105';
+  };
+
+  const renderSeat = (seat) => (
+    <button
+      key={seat}
+      disabled={isSeatBlocked(seat) || isSeatBooked(seat)}
+      onClick={() => !isSeatBlocked(seat) && !isSeatBooked(seat) && onSelectSeat(seat)}
+      className={`w-12 h-12 rounded-md border text-sm font-semibold flex items-center justify-center shadow-sm transition-all duration-200 ${getSeatClass(seat)}`}
+    >
+      {seat.toString().padStart(2, '0')}
+    </button>
+  );
 
   const topSeats = Array.from({ length: 9 }, (_, i) => i + 1);
   const leftSeats = Array.from({ length: 3 }, (_, i) => 24 - i);
   const rightSeats = Array.from({ length: 3 }, (_, i) => i + 10);
   const bottomSeats = Array.from({ length: 9 }, (_, i) => i + 13).reverse();
-
-  const renderSeat = (seatNumber) => {
-    const isBlocked = blockedSeats.includes(seatNumber);
-    const isSelected = selectedSeats.includes(seatNumber);
-    const seatString = seatNumber.toString().padStart(2, '0');
-
-    let bgColor = 'bg-white text-gray-800';
-    if (isBlocked) {
-      bgColor = 'bg-red-400 text-white cursor-not-allowed';
-    } else if (isSelected) {
-      bgColor = 'bg-[#023545] text-white';
-    }
-
-    return (
-      <button
-        key={seatNumber}
-        className={`
-          w-12 h-12 rounded-md border text-sm font-semibold flex items-center justify-center shadow-sm transition-all duration-200
-          ${bgColor}
-          ${!isBlocked ? 'hover:bg-teal-100 hover:scale-105' : ''}
-        `}
-        onClick={() => !isBlocked && onSelectSeat(seatNumber)}
-        disabled={isBlocked}
-      >
-        {seatString}
-      </button>
-    );
-  };
 
   return (
     <div className="bg-[#d9d9d9] p-8 rounded-xl shadow-md">

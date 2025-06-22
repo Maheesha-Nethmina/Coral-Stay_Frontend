@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+// src/pages/Booking/Booking.jsx
+
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Calendar, MapPin, DollarSign, User, Mail, Phone, CreditCard, CheckCircle, Package } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
@@ -7,7 +10,6 @@ import Footer from '../../Components/Footer/Footer';
 const Booking = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const bookingData = location.state;
 
   if (!bookingData) {
@@ -27,10 +29,41 @@ const Booking = () => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [priceSettings, setPriceSettings] = useState(null);
+  const [loadingPrices, setLoadingPrices] = useState(true);
 
-  const pricePerSeat = 30;
-  const serviceFee = 10;
-  const discount = 5;
+  useEffect(() => {
+    const fetchPriceSettings = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/reeftour/getPriceSetting');
+        setPriceSettings(response.data);
+      } catch (error) {
+        console.error('Error fetching price settings:', error);
+      } finally {
+        setLoadingPrices(false);
+      }
+    };
+
+    fetchPriceSettings();
+  }, []);
+
+  if (loadingPrices) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg font-semibold">Loading price settings...</div>
+      </div>
+    );
+  }
+
+  if (!priceSettings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg font-semibold text-red-600">Failed to load price settings.</div>
+      </div>
+    );
+  }
+
+  const { pricePerSeat, serviceFee, discount } = priceSettings;
 
   let fullAmount = 0;
 
@@ -94,10 +127,36 @@ const Booking = () => {
     setIsSubmitting(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      alert('Booking confirmed successfully!');
-      navigate('/');
+      const currentYear = new Date().getFullYear(); // or hardcode to 2025
+      const rawDate = `${currentYear} ${bookingData.date.display}`;
+      const dateObj = new Date(rawDate);
+      const formattedDate = dateObj.toISOString().split("T")[0];
+      
+      const bookingPayload = {
+        userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
+        googleId: bookingData.googleId || '',
+        date: formattedDate,
+        timeSlot: bookingData.time.time,
+        seats: type === 'seat' ? bookingData.seats : [],
+        user: {
+          fullName: formData.fullName,
+          email: formData.email,
+          contactNumber: formData.contactNumber,
+          nicNumber: formData.nicNumber,
+        },
+        totalAmount: fullAmount,
+      };
+
+      const response = await axios.post('http://localhost:3000/reeftour/bookSeats', bookingPayload);
+
+      if (response.status === 201) {
+        alert('Booking confirmed successfully!');
+        navigate('/');
+      } else {
+        alert('Booking failed. Please try again.');
+      }
     } catch (error) {
+      console.error('Error during booking:', error);
       alert('An error occurred. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -110,7 +169,6 @@ const Booking = () => {
       <div className="min-h-screen bg-[#EAF4F6] py-8 px-4 sm:px-6 lg:px-8 mt-18">
         <div className="max-w-4xl mx-auto">
 
-          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
               Welcome to the Reef!
@@ -118,11 +176,9 @@ const Booking = () => {
             <p className="text-xl text-gray-600">Here's Your Booking</p>
           </div>
 
-          {/* Booking Summary */}
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-8">
             <div className="grid md:grid-cols-2 gap-8">
 
-              {/* Selection Details */}
               <div className="space-y-4">
 
                 {type === 'seat' && (
@@ -167,41 +223,36 @@ const Booking = () => {
 
               </div>
 
-              {/* Price Breakdown */}
               <div className="bg-gray-50 rounded-xl p-6 space-y-3">
 
                 {type === 'seat' && (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Price per seat:</span>
-                      <span className="font-semibold">${pricePerSeat}</span>
-                    </div>
-                  </>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Price per seat:</span>
+                    <span className="font-semibold">Rs:{pricePerSeat}.00</span>
+                  </div>
                 )}
 
                 {type === 'package' && (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Package Price:</span>
-                      <span className="font-semibold">${bookingData.package.price}</span>
-                    </div>
-                  </>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Package Price:</span>
+                    <span className="font-semibold">Rs:{bookingData.package.price}.00</span>
+                  </div>
                 )}
 
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Service fee:</span>
-                  <span className="font-semibold">${serviceFee}</span>
+                  <span className="font-semibold">Rs:{serviceFee}.00</span>
                 </div>
 
                 <div className="flex items-center justify-between text-green-600">
                   <span>Discount:</span>
-                  <span className="font-semibold">-${discount}</span>
+                  <span className="font-semibold">Rs:{discount}.00</span>
                 </div>
 
                 <div className="border-t pt-3">
                   <div className="flex items-center justify-between text-lg font-bold">
                     <span>Full Amount:</span>
-                    <span className="text-teal-600">${fullAmount}</span>
+                    <span className="text-teal-600">Rs:{fullAmount}.00</span>
                   </div>
                 </div>
 
@@ -210,7 +261,6 @@ const Booking = () => {
             </div>
           </div>
 
-          {/* Terms Notice */}
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8">
             <p className="text-sm text-amber-800">
               Please read our{' '}
@@ -221,7 +271,6 @@ const Booking = () => {
             </p>
           </div>
 
-          {/* Booking Form */}
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
               <CheckCircle className="h-6 w-6 text-teal-600 mr-3" />
@@ -233,7 +282,6 @@ const Booking = () => {
                 <p className="text-lg font-semibold text-gray-900 mb-4">Add Your Details:</p>
               </div>
 
-              {/* Full Name */}
               <div>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -249,7 +297,6 @@ const Booking = () => {
                 {errors.fullName && <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>}
               </div>
 
-              {/* Email */}
               <div>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -265,7 +312,6 @@ const Booking = () => {
                 {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
               </div>
 
-              {/* Contact and NIC Numbers */}
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <div className="relative">
@@ -298,7 +344,6 @@ const Booking = () => {
                 </div>
               </div>
 
-              {/* Terms Checkbox */}
               <div className="flex items-start space-x-3">
                 <input
                   type="checkbox"
@@ -314,7 +359,6 @@ const Booking = () => {
               </div>
               {errors.termsAccepted && <p className="text-sm text-red-600 -mt-2">{errors.termsAccepted}</p>}
 
-              {/* Submit Button */}
               <div className="pt-4">
                 <button
                   type="submit"

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar/Navbar';
 import AdminNavbar from '../../Components/Navbar/AdminNavbar';
+import Footer from '../../Components/Footer/Footer';
 
 function ReefTourdetails() {
   const [dates, setDates] = useState([]);
@@ -145,7 +146,7 @@ function ReefTourdetails() {
         <main className="flex-1 flex justify-center p-6 mt-20">
           <div className="w-full max-w-4xl">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Mark Seats as Unavailable</h2>
-
+            
             <section className="mb-6">
               <h3 className="font-medium mb-2">Select Date</h3>
               <div className="flex flex-wrap gap-2">
@@ -263,6 +264,7 @@ function ReefTourdetails() {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 }

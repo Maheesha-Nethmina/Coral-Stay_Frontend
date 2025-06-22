@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../Components/Navbar/Navbar';
 import AdminNavbar from '../../Components/Navbar/AdminNavbar';
+import Footer from '../../Components/Footer/Footer';
 
 function ReefTourdetails() {
   const navigate = useNavigate();
@@ -25,9 +26,16 @@ function ReefTourdetails() {
             >
               Disable Selected Seats
             </button>
+            <button
+              onClick={() => navigate("/updatepriceSettings")}
+              className="bg-[#023545]  text-white font-medium px-5 py-2 rounded-md ml-4"
+            >
+              Update Price Settings
+            </button>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -121,6 +121,11 @@ const BookBoat = () => {
                 <div className="w-6 h-6 bg-[#023545] border border-gray-300 mr-2" />
                 <span className="text-sm text-slate-700">Selected Seats</span>
               </div>
+              <div className="flex items-center">
+              <div className="w-6 h-6 bg-yellow-400 border border-gray-300 mr-2" />
+              <span className="text-sm text-slate-700">Booked Seats</span>
+              </div>
+
             </div>
 
             {/* Confirm Booking Button */}
