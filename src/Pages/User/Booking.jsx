@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // ✅ Import useLocation and useNavigate
-import { Calendar, MapPin, DollarSign, User, Mail, Phone, CreditCard, CheckCircle } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Calendar, MapPin, DollarSign, User, Mail, Phone, CreditCard, CheckCircle, Package } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 
@@ -8,16 +8,14 @@ const Booking = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // ✅ Get the passed data from previous page
   const bookingData = location.state;
 
   if (!bookingData) {
-    // If user directly comes to this page without selection, redirect them
     navigate('/');
     return null;
   }
 
-  const { date, time, seats } = bookingData;
+  const { type } = bookingData;
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -30,11 +28,17 @@ const Booking = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // ✅ Calculate booking summary
-  const pricePerSheet = 30;
-  const serviceFee = 0;
-  const discount = 20;
-  const fullAmount = (seats.length * pricePerSheet) + serviceFee - discount;
+  const pricePerSeat = 30;
+  const serviceFee = 10;
+  const discount = 5;
+
+  let fullAmount = 0;
+
+  if (type === 'seat') {
+    fullAmount = (bookingData.seats.length * pricePerSeat) + serviceFee - discount;
+  } else if (type === 'package') {
+    fullAmount = bookingData.package.price + serviceFee - discount;
+  }
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -92,7 +96,7 @@ const Booking = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
       alert('Booking confirmed successfully!');
-      navigate('/'); // ✅ Redirect to home page after success
+      navigate('/');
     } catch (error) {
       alert('An error occurred. Please try again.');
     } finally {
@@ -120,29 +124,69 @@ const Booking = () => {
 
               {/* Selection Details */}
               <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <MapPin className="h-5 w-5 text-teal-600" />
-                  <div>
-                    <p className="text-sm text-gray-500">Your Selection</p>
-                    <p className="font-semibold text-gray-900">{`Sheet Number ${seats.join(', ')}`}</p>
-                  </div>
-                </div>
 
-                <div className="flex items-center space-x-3">
-                  <Calendar className="h-5 w-5 text-teal-600" />
-                  <div>
-                    <p className="text-sm text-gray-500">Selected Date</p>
-                    <p className="font-semibold text-gray-900">{date.display} - {time.time}</p>
-                  </div>
-                </div>
+                {type === 'seat' && (
+                  <>
+                    <div className="flex items-center space-x-3">
+                      <MapPin className="h-5 w-5 text-teal-600" />
+                      <div>
+                        <p className="text-sm text-gray-500">Your Selection</p>
+                        <p className="font-semibold text-gray-900">{`Seat Number ${bookingData.seats.join(', ')}`}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-3">
+                      <Calendar className="h-5 w-5 text-teal-600" />
+                      <div>
+                        <p className="text-sm text-gray-500">Selected Date</p>
+                        <p className="font-semibold text-gray-900">{bookingData.date.display} - {bookingData.time.time}</p>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {type === 'package' && (
+                  <>
+                    <div className="flex items-center space-x-3">
+                      <Package className="h-5 w-5 text-teal-600" />
+                      <div>
+                        <p className="text-sm text-gray-500">Package</p>
+                        <p className="font-semibold text-gray-900">{bookingData.package.name}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-3">
+                      <Calendar className="h-5 w-5 text-teal-600" />
+                      <div>
+                        <p className="text-sm text-gray-500">Booking Date</p>
+                        <p className="font-semibold text-gray-900">{new Date().toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                  </>
+                )}
+
               </div>
 
               {/* Price Breakdown */}
               <div className="bg-gray-50 rounded-xl p-6 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Price per sheet:</span>
-                  <span className="font-semibold">${pricePerSheet}</span>
-                </div>
+
+                {type === 'seat' && (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Price per seat:</span>
+                      <span className="font-semibold">${pricePerSeat}</span>
+                    </div>
+                  </>
+                )}
+
+                {type === 'package' && (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Package Price:</span>
+                      <span className="font-semibold">${bookingData.package.price}</span>
+                    </div>
+                  </>
+                )}
 
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Service fee:</span>
@@ -160,6 +204,7 @@ const Booking = () => {
                     <span className="text-teal-600">${fullAmount}</span>
                   </div>
                 </div>
+
               </div>
 
             </div>
@@ -198,14 +243,10 @@ const Booking = () => {
                     value={formData.fullName}
                     onChange={handleInputChange}
                     placeholder="Add Your Full Name"
-                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${
-                      errors.fullName ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                    }`}
+                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${errors.fullName ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
                   />
                 </div>
-                {errors.fullName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
-                )}
+                {errors.fullName && <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>}
               </div>
 
               {/* Email */}
@@ -218,14 +259,10 @@ const Booking = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="Add Your Email Address"
-                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${
-                      errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                    }`}
+                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
                   />
                 </div>
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                )}
+                {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
               </div>
 
               {/* Contact and NIC Numbers */}
@@ -239,14 +276,10 @@ const Booking = () => {
                       value={formData.contactNumber}
                       onChange={handleInputChange}
                       placeholder="Contact Number"
-                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${
-                        errors.contactNumber ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${errors.contactNumber ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
                     />
                   </div>
-                  {errors.contactNumber && (
-                    <p className="mt-1 text-sm text-red-600">{errors.contactNumber}</p>
-                  )}
+                  {errors.contactNumber && <p className="mt-1 text-sm text-red-600">{errors.contactNumber}</p>}
                 </div>
 
                 <div>
@@ -258,14 +291,10 @@ const Booking = () => {
                       value={formData.nicNumber}
                       onChange={handleInputChange}
                       placeholder="NIC Number"
-                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${
-                        errors.nicNumber ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${errors.nicNumber ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
                     />
                   </div>
-                  {errors.nicNumber && (
-                    <p className="mt-1 text-sm text-red-600">{errors.nicNumber}</p>
-                  )}
+                  {errors.nicNumber && <p className="mt-1 text-sm text-red-600">{errors.nicNumber}</p>}
                 </div>
               </div>
 
@@ -280,24 +309,17 @@ const Booking = () => {
                 />
                 <label className="text-sm text-gray-700">
                   I have read and agree to the{' '}
-                  <a href="#" className="text-teal-600 hover:text-teal-500 underline font-medium">
-                    Terms and Conditions
-                  </a>
-                  .
+                  <a href="#" className="text-teal-600 hover:text-teal-500 underline font-medium">Terms and Conditions</a>.
                 </label>
               </div>
-              {errors.termsAccepted && (
-                <p className="text-sm text-red-600 -mt-2">{errors.termsAccepted}</p>
-              )}
+              {errors.termsAccepted && <p className="text-sm text-red-600 -mt-2">{errors.termsAccepted}</p>}
 
               {/* Submit Button */}
               <div className="pt-4">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-full bg-[#023545] text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg hover:from-teal-700 hover:to-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
-                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
+                  className={`w-full bg-[#023545] text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg hover:from-teal-700 hover:to-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   {isSubmitting ? (
                     <div className="flex items-center justify-center space-x-2">

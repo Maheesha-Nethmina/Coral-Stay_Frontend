@@ -43,23 +43,25 @@ const BookBoat = () => {
   };
 
   const handleSeatSelect = (seatNumber) => {
-    setSelectedSeats(
-      selectedSeats.includes(seatNumber)
-        ? selectedSeats.filter(seat => seat !== seatNumber)
-        : [...selectedSeats, seatNumber]
+    setSelectedSeats((prev) =>
+      prev.includes(seatNumber)
+        ? prev.filter((s) => s !== seatNumber)
+        : [...prev, seatNumber]
     );
   };
 
   const handleConfirmBooking = () => {
     if (selectedSeats.length === 0) {
-      alert('Please select at least one seat to book');
+      alert('Please select at least one seat.');
       return;
     }
 
+    // Navigate to shared booking page with boat data
     navigate('/booking', {
       state: {
+        type: 'seat',
         date: selectedDate,
-        time: selectedTimeSlot.time,
+        time: selectedTimeSlot,
         seats: selectedSeats
       }
     });
@@ -72,6 +74,7 @@ const BookBoat = () => {
           Choose Your Dates and Let the Reef Welcome You!
         </h1>
 
+        {/* Date selection */}
         {dates.length > 0 && (
           <DateSelector
             dates={dates}
@@ -80,6 +83,7 @@ const BookBoat = () => {
           />
         )}
 
+        {/* Time slot selection */}
         {selectedDate && timeSlots.length > 0 && (
           <TimeSlotSelector
             timeSlots={timeSlots}
@@ -88,37 +92,41 @@ const BookBoat = () => {
           />
         )}
 
+        {/* Seat selection UI */}
         {showSeatingChart && (
           <div className="mt-8 animate-fade-in">
             <div className="mt-8">
-              <h2 className="text-xl font-semibold text-slate-800 mb-4">Select Your Seats</h2>
-             <SeatingChart
-              selectedSeats={selectedSeats}
-              onSelectSeat={handleSeatSelect}
-              selectedDate={selectedDate?.value}  // ✅ Correct: Directly pass YYYY-MM-DD
-              selectedTime={selectedTimeSlot?.time}  // ✅ Correct: Matches MongoDB
-            />
-
+              <h2 className="text-xl font-semibold text-slate-800 mb-4">
+                Select Your Seats
+              </h2>
+              <SeatingChart
+                selectedSeats={selectedSeats}
+                onSelectSeat={handleSeatSelect}
+                selectedDate={selectedDate?.value} // YYYY-MM-DD
+                selectedTime={selectedTimeSlot?.time}
+              />
             </div>
 
+            {/* Legend */}
             <div className="flex flex-wrap gap-4 justify-start mt-6">
               <div className="flex items-center">
-                <div className="w-6 h-6 border border-gray-300 bg-white mr-2"></div>
+                <div className="w-6 h-6 border border-gray-300 bg-white mr-2" />
                 <span className="text-sm text-slate-700">Available Seats</span>
               </div>
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-red-400 border border-gray-300 mr-2"></div>
+                <div className="w-6 h-6 bg-red-400 border border-gray-300 mr-2" />
                 <span className="text-sm text-slate-700">Blocked Seats</span>
               </div>
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-[#023545] border border-gray-300 mr-2"></div>
+                <div className="w-6 h-6 bg-[#023545] border border-gray-300 mr-2" />
                 <span className="text-sm text-slate-700">Selected Seats</span>
               </div>
             </div>
 
+            {/* Confirm Booking Button */}
             <button
               onClick={handleConfirmBooking}
-              className="mt-8 mb-15 w-full py-4 bg-[#023545] hover:bg-teal-900 text-white font-bold rounded-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+              className="mt-8 w-full py-4 bg-[#023545] hover:bg-teal-900 text-white font-bold rounded-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
             >
               Confirm Booking
             </button>

@@ -28,7 +28,7 @@ function ReefTourdetails() {
       const hour = sriLankaTime.getHours();
       const minute = sriLankaTime.getMinutes();
 
-      const startFromOffset = hour > 11 || (hour === 11 && minute >= 30) ? 3 : 2;
+      const startFromOffset = hour > 11 || (hour === 11 && minute >= 30) ? 2 : 1;
 
       const result = [];
       const startDate = new Date(sriLankaTime);
