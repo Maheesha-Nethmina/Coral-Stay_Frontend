@@ -37,37 +37,17 @@ const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate, selectedTime 
   const isSeatBooked = (seat) => bookedSeats.includes(seat);
   const isSeatSelected = (seat) => selectedSeats.includes(seat);
 
-  const getSeatClass = (seat) => {
-    if (isSeatBlocked(seat)) return 'bg-red-400 text-white cursor-not-allowed';
-    if (isSeatBooked(seat)) return 'bg-yellow-400 text-white cursor-not-allowed';
-    if (isSeatSelected(seat)) return 'bg-[#023545] text-white';
-    return 'bg-white text-gray-800 hover:bg-teal-100 hover:scale-105';
-  };
-
-  const renderSeat = (seat) => (
-    <button
-      key={seat}
-      disabled={isSeatBlocked(seat) || isSeatBooked(seat)}
-      onClick={() => !isSeatBlocked(seat) && !isSeatBooked(seat) && onSelectSeat(seat)}
-      className={`w-12 h-12 rounded-md border text-sm font-semibold flex items-center justify-center shadow-sm transition-all duration-200 ${getSeatClass(seat)}`}
-    >
-      {seat.toString().padStart(2, '0')}
-    </button>
-  );
-
-  const topSeats = Array.from({ length: 9 }, (_, i) => i + 1);
-  const leftSeats = Array.from({ length: 3 }, (_, i) => 24 - i);
-  const rightSeats = Array.from({ length: 3 }, (_, i) => i + 10);
-  const bottomSeats = Array.from({ length: 9 }, (_, i) => i + 13).reverse();
-
   const renderSeat = (seatNumber) => {
-    const isBlocked = blockedSeats.includes(seatNumber);
-    const isSelected = selectedSeats.includes(seatNumber);
+    const isBlocked = isSeatBlocked(seatNumber);
+    const isBooked = isSeatBooked(seatNumber);
+    const isSelected = isSeatSelected(seatNumber);
     const seatString = seatNumber.toString().padStart(2, '0');
 
     let bgColor = 'bg-white text-gray-800';
     if (isBlocked) {
       bgColor = 'bg-red-400 text-white cursor-not-allowed';
+    } else if (isBooked) {
+      bgColor = 'bg-yellow-400 text-white cursor-not-allowed';
     } else if (isSelected) {
       bgColor = 'bg-[#023545] text-white';
     }
@@ -75,18 +55,19 @@ const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate, selectedTime 
     return (
       <button
         key={seatNumber}
-        className={`
-          w-12 h-12 rounded-md border text-sm font-semibold flex items-center justify-center shadow-sm transition-all duration-200
-          ${bgColor}
-          ${!isBlocked ? 'hover:bg-teal-100 hover:scale-105' : ''}
-        `}
-        onClick={() => !isBlocked && onSelectSeat(seatNumber)}
-        disabled={isBlocked}
+        className={`w-12 h-12 rounded-md border text-sm font-semibold flex items-center justify-center shadow-sm transition-all duration-200 ${bgColor} ${!isBlocked && !isBooked ? 'hover:bg-teal-100 hover:scale-105' : ''}`}
+        onClick={() => !isBlocked && !isBooked && onSelectSeat(seatNumber)}
+        disabled={isBlocked || isBooked}
       >
         {seatString}
       </button>
     );
   };
+
+  const topSeats = Array.from({ length: 9 }, (_, i) => i + 1);
+  const leftSeats = Array.from({ length: 3 }, (_, i) => 24 - i);
+  const rightSeats = Array.from({ length: 3 }, (_, i) => i + 10);
+  const bottomSeats = Array.from({ length: 9 }, (_, i) => i + 13).reverse();
 
   return (
     <div className="bg-[#d9d9d9] p-8 rounded-xl shadow-md">
