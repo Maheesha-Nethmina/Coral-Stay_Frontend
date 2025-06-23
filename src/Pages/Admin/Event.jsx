@@ -9,6 +9,8 @@ function Event({ event, onDelete }) {
   const { _id, title, description, date, mapUrl, imageUrl } = event;
 
   const deleteHandler = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this event?");
+    if (!confirmDelete) return;
     try {
       await axios.delete(`http://localhost:3000/events/${_id}`);
       if (onDelete) onDelete(_id);

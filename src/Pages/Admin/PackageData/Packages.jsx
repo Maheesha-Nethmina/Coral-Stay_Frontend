@@ -9,6 +9,8 @@ function Packages({ pack, onDelete }) {
   const { _id, title, description, includes, price, days, offers, type, imageUrl } = pack;
 
   const deleteHandler = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this package?");
+    if (!confirmDelete) return;
     try {
       await axios.delete(`http://localhost:3000/package/${_id}`);
       if (onDelete) onDelete(_id);
