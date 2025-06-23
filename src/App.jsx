@@ -84,7 +84,6 @@ function App() {
           <Route path="/sendEmail/:id" element={<SendEmail />} />
           <Route path="/blockSheets" element={<BlockSheets />} />
           <Route path="/updatepriceSettings" element={<UpdatepriceSettings />} />
-          
 
           {/* Admin Protected */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />

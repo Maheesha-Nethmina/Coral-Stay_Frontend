@@ -169,6 +169,7 @@ const Booking = () => {
       <div className="min-h-screen bg-[#EAF4F6] py-8 px-4 sm:px-6 lg:px-8 mt-18">
         <div className="max-w-4xl mx-auto">
 
+          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
               Welcome to the Reef!
@@ -176,9 +177,11 @@ const Booking = () => {
             <p className="text-xl text-gray-600">Here's Your Booking</p>
           </div>
 
+          {/* Booking Summary */}
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-8">
             <div className="grid md:grid-cols-2 gap-8">
 
+              {/* Selection Details */}
               <div className="space-y-4">
 
                 {type === 'seat' && (
@@ -271,6 +274,7 @@ const Booking = () => {
             </p>
           </div>
 
+          {/* Booking Form */}
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
               <CheckCircle className="h-6 w-6 text-teal-600 mr-3" />
@@ -282,6 +286,7 @@ const Booking = () => {
                 <p className="text-lg font-semibold text-gray-900 mb-4">Add Your Details:</p>
               </div>
 
+              {/* Full Name */}
               <div>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -297,6 +302,7 @@ const Booking = () => {
                 {errors.fullName && <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>}
               </div>
 
+              {/* Email */}
               <div>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -312,6 +318,7 @@ const Booking = () => {
                 {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
               </div>
 
+              {/* Contact and NIC Numbers */}
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <div className="relative">
@@ -344,6 +351,7 @@ const Booking = () => {
                 </div>
               </div>
 
+              {/* Terms Checkbox */}
               <div className="flex items-start space-x-3">
                 <input
                   type="checkbox"
@@ -359,6 +367,7 @@ const Booking = () => {
               </div>
               {errors.termsAccepted && <p className="text-sm text-red-600 -mt-2">{errors.termsAccepted}</p>}
 
+              {/* Submit Button */}
               <div className="pt-4">
                 <button
                   type="submit"

@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { CalendarDays } from "lucide-react";
+
 import Navbar from '../../Components/Navbar/Navbar';
 import Hero from '../../Components/Common/Hero';
 import Footer from '../../Components/Footer/Footer';
@@ -81,9 +84,14 @@ const roomsData = [
 ];
 
 function RoomBooking() {
+  const location = useLocation();
+  const initialCheckIn = location.state?.checkIn || '';
+  const initialCheckOut = location.state?.checkOut || '';
+
   const [selectedPackages, setSelectedPackages] = useState({});
-  const [checkIn, setCheckIn] = useState('');
-  const [checkOut, setCheckOut] = useState('');
+  const [guestName, setGuestName] = useState('');
+  const [guestEmail, setGuestEmail] = useState('');
+  const [formError, setFormError] = useState('');
 
   const handlePackageChange = (roomId, packageType) => {
     setSelectedPackages(prev => ({
@@ -92,22 +100,74 @@ function RoomBooking() {
     }));
   };
 
+  const handleCancelPackage = (roomId) => {
+    setSelectedPackages(prev => {
+      const updated = { ...prev };
+      delete updated[roomId];
+      return updated;
+    });
+  };
+
+  const doBooking = (room) => {
+    const selectedPackage = selectedPackages[room.id];
+    setFormError('');
+    // POST booking to backend
+    fetch('http://localhost:3000/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        roomId: room.id,
+        roomTitle: room.title,
+        packageType: selectedPackage,
+        checkIn: initialCheckIn,
+        checkOut: initialCheckOut,
+        guestName,
+        guestEmail,
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message || 'Booking successful!');
+      })
+      .catch(() => {
+        alert('Booking failed!');
+      });
+  };
+
   const handleBookNow = (room) => {
     const selectedPackage = selectedPackages[room.id];
+    if (!guestName || !guestEmail) {
+      setFormError('Please enter your name and email before booking.');
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(guestEmail)) {
+      setFormError('Please enter a valid email address.');
+      return;
+    }
     if (!selectedPackage) {
-      alert('Please select a package first');
+      setFormError('Please select a package first.');
       return;
     }
-    if (!checkIn || !checkOut) {
-      alert('Please select check-in and check-out dates');
+    if (!initialCheckIn || !initialCheckOut) {
+      setFormError('Check-in and check-out dates are missing.');
       return;
     }
-    alert(`Booking ${room.title} with ${selectedPackage} from ${checkIn} to ${checkOut}`);
+    setFormError('');
+    doBooking(room);
   };
 
   return (
     <div className="relative">
       <Navbar />
+
+      {/* Error Popup */}
+      {formError && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-red-600 text-white px-6 py-3 rounded shadow-lg font-semibold text-center animate-bounce">
+            {formError}
+          </div>
+        </div>
+      )}
 
       {/* Hero Section with Hover */}
       <div className="relative overflow-hidden group">
@@ -121,31 +181,61 @@ function RoomBooking() {
           />
         </div>
 
-        {/* Booking Bar */}
+        {/* Show selected dates */}
         <div className="absolute top-[60%] left-1/2 transform -translate-x-1/2 z-10 w-full px-4">
-          <div className="flex flex-wrap justify-center items-end gap-6 bg-white/90 shadow-lg max-w-4xl mx-auto rounded-lg px-8 py-5">
-            <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-700 mb-1">Check-In Date</label>
-              <input
-                type="date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
-                min={new Date().toISOString().split('T')[0]}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-700 mb-1">Check-Out Date</label>
-              <input
-                type="date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
-                min={checkIn || new Date().toISOString().split('T')[0]}
-                disabled={!checkIn}
-              />
+          <div className="flex justify-center">
+            <div className="flex items-center gap-8 bg-white/90 shadow-lg max-w-2xl mx-auto rounded-lg px-8 py-5 border border-teal-100">
+              <div className="flex items-center gap-3">
+                <CalendarDays className="w-5 h-5 text-teal-600" />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                    Check-In
+                  </label>
+                  <div className="border border-gray-200 px-4 py-2 rounded-md bg-gray-100 text-gray-700 min-w-[120px] text-center font-semibold">
+                    {initialCheckIn}
+                  </div>
+                </div>
+              </div>
+              <span className="text-gray-400 font-bold text-xl">→</span>
+              <div className="flex items-center gap-3">
+                <CalendarDays className="w-5 h-5 text-teal-600" />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                    Check-Out
+                  </label>
+                  <div className="border border-gray-200 px-4 py-2 rounded-md bg-gray-100 text-gray-700 min-w-[120px] text-center font-semibold">
+                    {initialCheckOut}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Guest Info Form */}
+      <div className="max-w-2xl mx-auto mt-10 mb-4 bg-white/90 rounded-lg shadow px-8 py-6">
+        <h2 className="text-lg font-semibold mb-4 text-gray-800">Your Details</h2>
+        <div className="flex flex-col md:flex-row gap-4">
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={guestName}
+            onChange={e => setGuestName(e.target.value)}
+            className="flex-1 border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email Address"
+            value={guestEmail}
+            onChange={e => setGuestEmail(e.target.value)}
+            className="flex-1 border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
+            required
+          />
+        </div>
+        <div className="text-gray-500 text-xs mt-2">
+          Please enter your name and email to receive a confirmation email for your booking.
         </div>
       </div>
 
@@ -189,17 +279,28 @@ function RoomBooking() {
                     <h4 className="text-lg font-semibold text-gray-800 mb-3">Select Your Package</h4>
                     <div className="space-y-2">
                       {room.packages.map((pkg, index) => (
-                        <label key={index} className="flex items-center space-x-3 cursor-pointer">
-                          <input
-                            type="radio"
-                            name={`package-${room.id}`}
-                            value={pkg.type}
-                            checked={selectedPackages[room.id] === pkg.type}
-                            onChange={() => handlePackageChange(room.id, pkg.type)}
-                            className="w-4 h-4 text-teal-600 border-gray-300 focus:ring-teal-500"
-                          />
-                          <span className="text-sm text-gray-700">{pkg.type} {pkg.price}</span>
-                        </label>
+                        <div key={index} className="flex items-center space-x-3">
+                          <label className="flex items-center space-x-3 cursor-pointer">
+                            <input
+                              type="radio"
+                              name={`package-${room.id}`}
+                              value={pkg.type}
+                              checked={selectedPackages[room.id] === pkg.type}
+                              onChange={() => handlePackageChange(room.id, pkg.type)}
+                              className="w-4 h-4 text-teal-600 border-gray-300 focus:ring-teal-500"
+                            />
+                            <span className="text-sm text-gray-700">{pkg.type} {pkg.price}</span>
+                          </label>
+                          {selectedPackages[room.id] === pkg.type && (
+                            <button
+                              type="button"
+                              onClick={() => handleCancelPackage(room.id)}
+                              className="ml-2 px-2 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200 transition"
+                            >
+                              Cancel
+                            </button>
+                          )}
+                        </div>
                       ))}
                     </div>
                   </div>

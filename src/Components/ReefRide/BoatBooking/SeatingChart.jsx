@@ -60,6 +60,34 @@ const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate, selectedTime 
   const rightSeats = Array.from({ length: 3 }, (_, i) => i + 10);
   const bottomSeats = Array.from({ length: 9 }, (_, i) => i + 13).reverse();
 
+  const renderSeat = (seatNumber) => {
+    const isBlocked = blockedSeats.includes(seatNumber);
+    const isSelected = selectedSeats.includes(seatNumber);
+    const seatString = seatNumber.toString().padStart(2, '0');
+
+    let bgColor = 'bg-white text-gray-800';
+    if (isBlocked) {
+      bgColor = 'bg-red-400 text-white cursor-not-allowed';
+    } else if (isSelected) {
+      bgColor = 'bg-[#023545] text-white';
+    }
+
+    return (
+      <button
+        key={seatNumber}
+        className={`
+          w-12 h-12 rounded-md border text-sm font-semibold flex items-center justify-center shadow-sm transition-all duration-200
+          ${bgColor}
+          ${!isBlocked ? 'hover:bg-teal-100 hover:scale-105' : ''}
+        `}
+        onClick={() => !isBlocked && onSelectSeat(seatNumber)}
+        disabled={isBlocked}
+      >
+        {seatString}
+      </button>
+    );
+  };
+
   return (
     <div className="bg-[#d9d9d9] p-8 rounded-xl shadow-md">
       <div className="grid grid-cols-9 gap-2 mb-8 justify-center">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../Components/Navbar/Navbar';
 import Hero from '../../Components/Common/Hero';
@@ -23,6 +23,9 @@ import { Link } from 'react-router-dom';
 
 function Accommodation() {
   const navigate = useNavigate();
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
+  const [dateError, setDateError] = useState('');
 
   const rooms = [
     { title: 'Deluxe Room', img: room1, desc: 'Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast.',link: '/DeluxeRoom' },
@@ -31,6 +34,41 @@ function Accommodation() {
     { title: 'Premier Ocean Room', img: room4, desc: 'Wake up to ocean vistas in a room that echoes nature, with soft hues and native design details.',link: '/PremieOceanRoom' },
     { title: 'Presidential Suite', img: room5, desc: 'Luxurious comforts, space and gorgeous views are all part of the Presidential Suite.' ,link: '/PresidentialSuiteRoom'}
   ];
+
+  const handleCheckInChange = (e) => {
+    const value = e.target.value;
+    setCheckIn(value);
+    // Reset checkOut if it's before new checkIn
+    if (checkOut && value && checkOut <= value) {
+      setCheckOut('');
+      setDateError('Check-out date must be after check-in date.');
+    } else {
+      setDateError('');
+    }
+  };
+
+  const handleCheckOutChange = (e) => {
+    const value = e.target.value;
+    setCheckOut(value);
+    if (checkIn && value && value <= checkIn) {
+      setDateError('Check-out date must be after check-in date.');
+    } else {
+      setDateError('');
+    }
+  };
+
+  const handleBookNow = () => {
+    if (!checkIn || !checkOut) {
+      setDateError('Please select both check-in and check-out dates.');
+      return;
+    }
+    if (checkOut <= checkIn) {
+      setDateError('Check-out date must be after check-in date.');
+      return;
+    }
+    setDateError('');
+    navigate('/room-booking', { state: { checkIn, checkOut } });
+  };
 
   return (
     <div className="relative">
@@ -51,19 +89,37 @@ function Accommodation() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white/90 shadow-lg max-w-4xl mx-auto rounded-lg px-8 py-5 items-end">
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-700 mb-1">Check-In Date</label>
-              <input type="date" min={new Date().toISOString().split('T')[0]} className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600" />
+              <input
+                type="date"
+                min={new Date().toISOString().split('T')[0]}
+                value={checkIn}
+                onChange={handleCheckInChange}
+                className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
+              />
             </div>
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-700 mb-1">Check-Out Date</label>
-              <input type="date" min={new Date().toISOString().split('T')[0]} className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600" />
+              <input
+                type="date"
+                min={checkIn || new Date().toISOString().split('T')[0]}
+                value={checkOut}
+                onChange={handleCheckOutChange}
+                className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
+                disabled={!checkIn}
+              />
             </div>
             <button
-              onClick={() => navigate('/room-booking')}
+              onClick={handleBookNow}
               className="bg-teal-900 hover:bg-teal-800 text-white font-medium py-2 px-6 rounded-md transition-all duration-300 shadow-md hover:shadow-lg"
             >
               Book Now
             </button>
           </div>
+          {dateError && (
+            <div className="text-center mt-2 text-red-600 font-semibold text-sm">
+              {dateError}
+            </div>
+          )}
         </div>
       </div>
 

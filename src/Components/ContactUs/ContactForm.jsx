@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   MapPin,
   Mail,
@@ -11,43 +11,124 @@ import {
 } from "lucide-react";
 
 const ContactForm = () => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    message: "",
+  });
+
+  const [status, setStatus] = useState("");
+  const [statusType, setStatusType] = useState(""); // "success" or "error"
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("Sending...");
+    setStatusType("info");
+
+    try {
+      const response = await fetch("http://localhost:3000/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.firstName + " " + formData.lastName,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus("Message sent successfully!");
+        setStatusType("success");
+        setFormData({ firstName: "", lastName: "", email: "", message: "" });
+      } else {
+        setStatus("Failed to send message. Please try again.");
+        setStatusType("error");
+      }
+    } catch (error) {
+      setStatus("Error sending message.");
+      setStatusType("error");
+    }
+  };
+
   return (
     <div className="bg-[#EAF4F6] -mt-15">
       <div className="max-w-7xl mx-auto p-4 md:p-8 font-sans">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left Section - Form */}
           <div className="flex-1">
-            <div className="space-y-8 bg-white p-6 md:p-8 rounded-lg shadow-lg">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-8 bg-white p-6 md:p-8 rounded-lg shadow-lg"
+            >
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8">
                 Get In Touch With Us
               </h1>
               <div className="flex flex-col md:flex-row gap-4">
                 <input
                   type="text"
+                  name="firstName"
                   placeholder="First Name"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
                   className="flex-1 w-full p-3 border border-gray-300 text-gray-700 bg-transparent rounded-lg"
                 />
                 <input
                   type="text"
+                  name="lastName"
                   placeholder="Last Name"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
                   className="flex-1 w-full p-3 border border-gray-300 text-gray-700 bg-transparent rounded-lg"
                 />
               </div>
               <input
                 type="email"
+                name="email"
                 placeholder="Email Address"
+                value={formData.email}
+                onChange={handleChange}
+                required
                 className="w-full p-3 border border-gray-300 text-gray-700 bg-transparent rounded-lg"
               />
               <textarea
+                name="message"
                 placeholder="Add Your Message"
+                value={formData.message}
+                onChange={handleChange}
+                required
                 className="w-full p-3 border border-gray-300 text-gray-700 bg-transparent h-32 rounded-lg"
               />
               <div className="pt-1 text-center">
-                <button className="bg-[#023545] text-white px-12 md:px-44 py-3 rounded-sm hover:bg-blue-700 transition text-sm font-medium tracking-wide">
+                <button
+                  type="submit"
+                  className="bg-[#023545] text-white px-12 md:px-44 py-3 rounded-sm hover:bg-blue-700 transition text-sm font-medium tracking-wide"
+                >
                   Send Message
                 </button>
               </div>
-            </div>
+              {status && (
+                <p
+                  className={`text-center text-sm mt-2 font-semibold transition-colors duration-200 ${
+                    statusType === "success"
+                      ? "text-blue-600"
+                      : statusType === "error"
+                      ? "text-red-600"
+                      : "text-blue-500"
+                  }`}
+                >
+                  {status}
+                </p>
+              )}
+            </form>
           </div>
 
           {/* Right Section - Contact Details */}
@@ -56,9 +137,8 @@ const ContactForm = () => {
               Contact Details
             </h3>
             <p className="mb-8 text-black leading-relaxed">
-              To run Figma smoothly, especially in the desktop app or browser, your
-              device needs to meet or exceed certain system requirements and you
-              should optimize for performance. Here's a clear breakdown.
+              CoralStay is your gateway to an unforgettable reef tour and stay
+              experience. Feel free to reach out to us!
             </p>
 
             <div className="space-y-8">
@@ -68,8 +148,18 @@ const ContactForm = () => {
                     <MapPin className="w-4 h-4 text-blue-600" />
                   </div>
                   <div>
-                    <span className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Address</span>
-                    <span className="text-gray-700">No 123/A Hikkaduwa</span>
+                    <span className="block text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Address
+                    </span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=No+123%2FA+Hikkaduwa"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-700 hover:text-blue-600 underline transition-colors duration-200"
+                      title="View on Google Maps"
+                    >
+                      No 123/A Hikkaduwa
+                    </a>
                   </div>
                 </div>
 
@@ -78,8 +168,16 @@ const ContactForm = () => {
                     <Mail className="w-4 h-4 text-blue-600" />
                   </div>
                   <div>
-                    <span className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Email</span>
-                    <span className="text-gray-700">coralstay@gmail.com</span>
+                    <span className="block text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Email
+                    </span>
+                    <a
+                      href="mailto:coralstayhikkaduwa@gmail.com"
+                      className="text-gray-700 hover:text-blue-600 underline transition-colors duration-200"
+                      title="Send Email"
+                    >
+                      coralstayhikkaduwa@gmail.com
+                    </a>
                   </div>
                 </div>
               </div>
@@ -90,8 +188,16 @@ const ContactForm = () => {
                     <Phone className="w-4 h-4 text-blue-600" />
                   </div>
                   <div>
-                    <span className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Mobile</span>
-                    <span className="text-gray-700">072917345</span>
+                    <span className="block text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Mobile
+                    </span>
+                    <a
+                      href="tel:072917345"
+                      className="text-gray-700 hover:text-blue-600 underline transition-colors duration-200"
+                      title="Call Mobile"
+                    >
+                      072917345
+                    </a>
                   </div>
                 </div>
 
@@ -100,28 +206,64 @@ const ContactForm = () => {
                     <MessageSquare className="w-4 h-4 text-blue-600" />
                   </div>
                   <div>
-                    <span className="block text-xs font-medium text-gray-500 uppercase tracking-wider">Whatsapp</span>
-                    <span className="text-gray-700">072918348</span>
+                    <span className="block text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Whatsapp
+                    </span>
+                    <a
+                      href="https://wa.me/9472918348"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-700 hover:text-green-600 underline transition-colors duration-200"
+                      title="Chat on WhatsApp"
+                    >
+                      072918348
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="mt-12">
-              <p className="font-bold text-gray-700 text-sm mb-4">Search Us On</p>
+              <p className="font-bold text-gray-700 text-sm mb-4">
+                Search Us On
+              </p>
               <div className="flex gap-4">
-                <div className="bg-white p-2 rounded-full shadow-sm">
-                  <Facebook className="w-4 h-4 text-gray-600" />
-                </div>
-                <div className="bg-white p-2 rounded-full shadow-sm">
-                  <Twitter className="w-4 h-4 text-gray-600" />
-                </div>
-                <div className="bg-white p-2 rounded-full shadow-sm">
-                  <Instagram className="w-4 h-4 text-gray-600" />
-                </div>
-                <div className="bg-white p-2 rounded-full shadow-sm">
-                  <Linkedin className="w-4 h-4 text-gray-600" />
-                </div>
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white p-2 rounded-full shadow-sm transition-transform duration-200 hover:scale-110 group"
+                  title="Connect with us on Facebook"
+                >
+                  <Facebook className="w-6 h-6 text-gray-600 transition-colors duration-200 group-hover:text-blue-600" />
+                </a>
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white p-2 rounded-full shadow-sm transition-transform duration-200 hover:scale-110 group"
+                  title="Connect with us on Twitter"
+                >
+                  <Twitter className="w-6 h-6 text-gray-600 transition-colors duration-200 group-hover:text-sky-400" />
+                </a>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white p-2 rounded-full shadow-sm transition-transform duration-200 hover:scale-110 group"
+                  title="Connect with us on Instagram"
+                >
+                  <Instagram className="w-6 h-6 text-gray-600 transition-colors duration-200 group-hover:text-pink-500" />
+                </a>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white p-2 rounded-full shadow-sm transition-transform duration-200 hover:scale-110 group"
+                  title="Connect with us on LinkedIn"
+                >
+                  <Linkedin className="w-6 h-6 text-gray-600 transition-colors duration-200 group-hover:text-blue-800" />
+                </a>
               </div>
             </div>
           </div>
