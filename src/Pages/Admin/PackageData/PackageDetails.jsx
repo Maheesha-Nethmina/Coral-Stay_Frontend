@@ -4,6 +4,7 @@ import Package from './Packages';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../Components/Navbar/Navbar';
 import Footer from '../../../Components/Footer/Footer';
+import AdminNavbar from '../../../Components/Navbar/AdminNavbar';
 
 const URL = 'http://localhost:3000/package';
 
@@ -28,49 +29,58 @@ function PackageDetails() {
   };
 
   return (
-    <div>
-      <Navbar/>
-      <div className="flex items-center justify-center mt-24">
-        <h1 className="font-bold text-black text-lg">Package Details Display Page</h1>
+    <div className="bg-[#eaf4f6] min-h-screen flex flex-col">
+      <Navbar />
+
+      <div className="flex flex-1 bg-[#eaf4f6] mt-10">
+        {/* Sidebar */}
+        <aside className="w-60 bg-[#eaf4f6]">
+          <AdminNavbar />
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 p-6 mt-10 bg-[#eaf4f6]">
+          <h1 className="font-bold text-black text-lg mb-4">Package Details Display Page</h1>
+
+          {/* Add Package Button under the title */}
+          <button
+            onClick={() => navigate('/addPackages')}
+            className="mb-6 px-6 py-2 bg-[#023545] text-white rounded-md font-semibold hover:bg-[#014459] transition"
+          >
+            Add Package
+          </button>
+
+          {/* Table Header */}
+          <div className="overflow-x-auto w-full mb-4">
+            <div className="grid grid-cols-[100px_200px_400px_150px_80px_80px_120px_150px_100px] gap-4 bg-gray-100 text-gray-700 uppercase text-sm font-semibold p-2 rounded">
+              <div>Image</div>
+              <div>Title</div>
+              <div>Description</div>
+              <div>Includes</div>
+              <div>Price</div>
+              <div>Days</div>
+              <div>Offers</div>
+              <div>Type</div>
+              <div>Actions</div>
+            </div>
+          </div>
+
+          {/* Packages Display */}
+          {noResults ? (
+            <div className="text-center text-red-600 font-semibold mt-4">
+              <h2>No packages found</h2>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {packages.map((pack) => (
+                <div key={pack._id}><Package pack={pack} onDelete={handleDelete} /></div>
+              ))}
+            </div>
+          )}
+        </main>
       </div>
 
-      <div className="flex justify-center mt-4 mb-2">
-        <button
-          onClick={() => navigate('/addPackages')}
-          className="px-20 py-2 bg-[#023545] text-white rounded-md font-semibold hover:bg-[#014459] transition"
-        >
-          Add Package
-        </button>
-      </div>
-
-      <div className="overflow-x-auto w-full p-4">
-        <div className="grid grid-cols-[100px_200px_400px_150px_80px_80px_120px_150px] gap-4 bg-gray-100 text-gray-700 uppercase text-sm font-semibold mb-2 p-2 rounded">
-          <div>Image</div>
-          <div>Title</div>
-          <div>Description</div>
-          <div>Includes</div>
-          <div>Price</div>
-          <div>Days</div>
-          <div>Offers</div>
-          <div>Type</div>
-          <div>Actions</div>
-        </div>
-      </div>
-
-      {noResults ? (
-        <div className="text-center text-red-600 font-semibold mt-4">
-          <h2>No packages found</h2>
-        </div>
-      ) : (
-        <div>
-          {packages.map((pack) => (
-            <div key={pack._id}><Package pack={pack} onDelete={handleDelete} /></div>
-          ))}
-        </div>
-      )}
-
-      <br />
-      <Footer/>
+      <Footer />
     </div>
   );
 }
