@@ -52,7 +52,7 @@ function PackageDetails() {
 
           {/* Table Header */}
           <div className="overflow-x-auto w-full mb-4">
-            <div className="grid grid-cols-[100px_200px_400px_150px_80px_80px_120px_150px_100px] gap-4 bg-gray-100 text-gray-700 uppercase text-sm font-semibold p-2 rounded">
+            <div className="grid grid-cols-[100px_200px_400px_150px_80px_80px_120px_150px_100px] gap-3 bg-gray-100 text-gray-700 uppercase text-sm font-semibold p-2 rounded">
               <div>Image</div>
               <div>Title</div>
               <div>Description</div>

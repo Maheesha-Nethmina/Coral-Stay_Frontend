@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import img1 from '../../assets/event04.jpeg';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 
@@ -42,78 +41,85 @@ function UpdateUser() {
   };
 
   return (
-    <div>
-      <Navbar/>
-    <div className="min-h-screen flex bg-[#EAF4F6] mt-15">
-      
+    <div className="flex flex-col min-h-screen bg-[#EAF4F6]">
+      <Navbar />
 
-      {/* Right Side Form */}
-      <div className="mx-130 flex items-center justify-center">
+      <div className="flex-grow flex items-center justify-center px-4 py-10">
         <form
           onSubmit={handleSubmit}
           encType="multipart/form-data"
-          className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg"
+          className="bg-white p-6 sm:p-8 md:p-10 rounded-lg shadow-md w-full max-w-md sm:max-w-lg md:max-w-xl"
         >
-          <h1 className="text-2xl font-bold text-[#023545] mb-6">Update Event</h1>
+          <h1 className="text-2xl font-bold text-[#023545] mb-6 text-center">Update Event</h1>
 
-          <label className="block text-sm font-medium text-gray-700">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={inputs.title}
-            onChange={handleChange}
-            required
-            className="mt-1 mb-4 w-full border rounded-md p-2"
-          />
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={inputs.title}
+              onChange={handleChange}
+              required
+              className="mt-1 w-full border rounded-md p-2"
+            />
+          </div>
 
-          <label className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea
-            name="description"
-            rows="4"
-            value={inputs.description}
-            onChange={handleChange}
-            required
-            className="mt-1 mb-4 w-full border rounded-md p-2"
-          ></textarea>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <textarea
+              name="description"
+              rows="4"
+              value={inputs.description}
+              onChange={handleChange}
+              required
+              className="mt-1 w-full border rounded-md p-2"
+            ></textarea>
+          </div>
 
-          <label className="block text-sm font-medium text-gray-700">Date</label>
-          <input
-            type="date"
-            name="date"
-            value={inputs.date}
-            onChange={handleChange}
-            required
-            className="mt-1 mb-4 w-full border rounded-md p-2"
-          />
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Date</label>
+            <input
+              type="date"
+              name="date"
+              value={inputs.date}
+              onChange={handleChange}
+              required
+              className="mt-1 w-full border rounded-md p-2"
+            />
+          </div>
 
-          <label className="block text-sm font-medium text-gray-700">Map URL</label>
-          <input
-            type="url"
-            name="mapUrl"
-            value={inputs.mapUrl}
-            onChange={handleChange}
-            required
-            className="mt-1 mb-4 w-full border rounded-md p-2"
-          />
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Map URL</label>
+            <input
+              type="url"
+              name="mapUrl"
+              value={inputs.mapUrl}
+              onChange={handleChange}
+              required
+              className="mt-1 w-full border rounded-md p-2"
+            />
+          </div>
 
-          <label className="block text-sm font-medium text-gray-700">New Image (optional)</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
-            className="mt-1 mb-6 w-full"
-          />
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700">New Image (optional)</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files[0])}
+              className="mt-1 w-full"
+            />
+          </div>
 
           <input
             type="submit"
             value="Update"
-            className="bg-[#023545] text-white px-4 py-2 rounded-md hover:bg-teal-700 w-full"
+            className="bg-[#023545] text-white px-4 py-2 rounded-md hover:bg-teal-700 w-full font-semibold"
           />
         </form>
       </div>
+
+      <Footer />
     </div>
-    <Footer/>
-  </div>
   );
 }
 

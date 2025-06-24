@@ -29,7 +29,7 @@ function Packages({ pack, onDelete }) {
             <span className="text-gray-400 italic">No Image</span>
           )}
         </div>
-        <div className="w-2/12 font-medium break-words">{title}</div>
+        <div className="w-1/12 font-medium break-words">{title}</div>
         <div className="w-3/12 break-words">{description}</div>
         <div className="w-2/12 break-words">{includes}</div>
         <div className="w-1/12 break-words">Rs.{price}</div>

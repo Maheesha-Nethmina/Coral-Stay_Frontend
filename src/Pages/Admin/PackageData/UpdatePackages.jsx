@@ -8,6 +8,7 @@ function UpdatePackages() {
   const [inputs, setInputs] = useState({
     title: '',
     description: '',
+    includes: '',
     price: '',
     days: '',
     offers: '',
@@ -24,6 +25,7 @@ function UpdatePackages() {
       setInputs({
         title: pack.title || '',
         description: pack.description || '',
+        includes: pack.includes || '',
         price: pack.price || '',
         days: pack.days || '',
         offers: pack.offers || '',
@@ -50,95 +52,120 @@ function UpdatePackages() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="min-h-screen flex bg-[#EAF4F6] mt-15">
-        <div className="mx-130 flex items-center justify-center">
-          <form
-            onSubmit={handleSubmit}
-            encType="multipart/form-data"
-            className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg"
-          >
-            <h1 className="text-2xl font-bold text-[#023545] mb-6">Update Package</h1>
+      <main className="flex-grow bg-[#EAF4F6] py-12 px-4 md:px-6">
+        <div className="max-w-2xl mx-auto bg-white p-6 md:p-10 rounded-lg shadow-lg">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#023545] mb-6 text-center">
+            Update Package
+          </h1>
+          <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Title</label>
+              <input
+                type="text"
+                name="title"
+                value={inputs.title}
+                onChange={handleChange}
+                required
+                className="mt-1 w-full border rounded-md p-2"
+              />
+            </div>
 
-            <label className="block text-sm font-medium text-gray-700">Title</label>
-            <input
-              type="text"
-              name="title"
-              value={inputs.title}
-              onChange={handleChange}
-              required
-              className="mt-1 mb-4 w-full border rounded-md p-2"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <textarea
+                name="description"
+                rows="4"
+                value={inputs.description}
+                onChange={handleChange}
+                required
+                className="mt-1 w-full border rounded-md p-2"
+              ></textarea>
+            </div>
 
-            <label className="block text-sm font-medium text-gray-700">Description</label>
-            <textarea
-              name="description"
-              rows="4"
-              value={inputs.description}
-              onChange={handleChange}
-              required
-              className="mt-1 mb-4 w-full border rounded-md p-2"
-            ></textarea>
+          <div>
+              <label className="block text-sm font-medium text-gray-700">Includes</label>
+              <input
+                type="text"
+                name="includes"
+                value={inputs.includes}
+                onChange={handleChange}
+                required
+                className="mt-1 w-full border rounded-md p-2"
+              />
+            </div>
 
-            <label className="block text-sm font-medium text-gray-700">Price</label>
-            <input
-              type="number"
-              name="price"
-              value={inputs.price}
-              onChange={handleChange}
-              required
-              className="mt-1 mb-4 w-full border rounded-md p-2"
-            />
 
-            <label className="block text-sm font-medium text-gray-700">Days</label>
-            <input
-              type="number"
-              name="days"
-              value={inputs.days}
-              onChange={handleChange}
-              required
-              className="mt-1 mb-4 w-full border rounded-md p-2"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Price</label>
+              <input
+                type="number"
+                name="price"
+                value={inputs.price}
+                onChange={handleChange}
+                required
+                className="mt-1 w-full border rounded-md p-2"
+              />
+            </div>
 
-            <label className="block text-sm font-medium text-gray-700">Offers</label>
-            <input
-              type="text"
-              name="offers"
-              value={inputs.offers}
-              onChange={handleChange}
-              className="mt-1 mb-4 w-full border rounded-md p-2"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Days</label>
+              <input
+                type="number"
+                name="days"
+                value={inputs.days}
+                onChange={handleChange}
+                required
+                className="mt-1 w-full border rounded-md p-2"
+              />
+            </div>
 
-            <label className="block text-sm font-medium text-gray-700">Type</label>
-            <select
-              name="type"
-              value={inputs.type}
-              onChange={handleChange}
-              required
-              className="mt-1 mb-4 w-full border rounded-md p-2"
-            >
-              <option value="hotel">Hotel</option>
-              <option value="boatTour">Boat Tour</option>
-              <option value="Both">Both</option>
-            </select>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Offers</label>
+              <input
+                type="text"
+                name="offers"
+                value={inputs.offers}
+                onChange={handleChange}
+                className="mt-1 w-full border rounded-md p-2"
+              />
+            </div>
 
-            <label className="block text-sm font-medium text-gray-700">New Image (optional)</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImage(e.target.files[0])}
-              className="mt-1 mb-6 w-full"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Type</label>
+              <select
+                name="type"
+                value={inputs.type}
+                onChange={handleChange}
+                required
+                className="mt-1 w-full border rounded-md p-2"
+              >
+                <option value="hotel">Hotel</option>
+                <option value="boatTour">Boat Tour</option>
+                <option value="Both">Both</option>
+              </select>
+            </div>
 
-            <input
+            <div>
+              <label className="block text-sm font-medium text-gray-700">New Image (optional)</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImage(e.target.files[0])}
+                className="mt-1 w-full"
+              />
+            </div>
+
+            <button
               type="submit"
-              value="Update"
               className="bg-[#023545] text-white px-4 py-2 rounded-md hover:bg-teal-700 w-full"
-            />
+            >
+              Update
+            </button>
           </form>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );
