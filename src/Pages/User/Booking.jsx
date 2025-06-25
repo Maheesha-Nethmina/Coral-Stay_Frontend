@@ -118,50 +118,50 @@ const Booking = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!validateForm()) {
-      return;
+  if (!validateForm()) {
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  try {
+    // ✅ Use value field which should be like "2025-06-29"
+    const formattedDate = bookingData.date.value;
+
+    const bookingPayload = {
+      userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
+      googleId: bookingData.googleId || '',
+      date: formattedDate,
+      timeSlot: bookingData.time.time,
+      seats: bookingData.type === 'seat' ? bookingData.seats : [],
+      user: {
+        fullName: formData.fullName,
+        email: formData.email,
+        contactNumber: formData.contactNumber,
+        nicNumber: formData.nicNumber,
+      },
+      totalAmount: fullAmount,
+    };
+
+    const response = await axios.post('http://localhost:3000/reeftour/bookSeats', bookingPayload);
+
+    if (response.status === 201) {
+      alert('Booking confirmed successfully!');
+      navigate('/');
+    } else {
+      alert('Booking failed. Please try again.');
     }
+  } catch (error) {
+    console.error('Error during booking:', error);
+    alert('An error occurred. Please try again.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
-    setIsSubmitting(true);
 
-    try {
-      const currentYear = new Date().getFullYear(); // or hardcode to 2025
-      const rawDate = `${currentYear} ${bookingData.date.display}`;
-      const dateObj = new Date(rawDate);
-      const formattedDate = dateObj.toISOString().split("T")[0];
-      
-      const bookingPayload = {
-        userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
-        googleId: bookingData.googleId || '',
-        date: formattedDate,
-        timeSlot: bookingData.time.time,
-        seats: type === 'seat' ? bookingData.seats : [],
-        user: {
-          fullName: formData.fullName,
-          email: formData.email,
-          contactNumber: formData.contactNumber,
-          nicNumber: formData.nicNumber,
-        },
-        totalAmount: fullAmount,
-      };
-
-      const response = await axios.post('http://localhost:3000/reeftour/bookSeats', bookingPayload);
-
-      if (response.status === 201) {
-        alert('Booking confirmed successfully!');
-        navigate('/');
-      } else {
-        alert('Booking failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error during booking:', error);
-      alert('An error occurred. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div>
