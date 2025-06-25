@@ -192,11 +192,11 @@ const ContactForm = () => {
                       Mobile
                     </span>
                     <a
-                      href="tel:072917345"
+                      href="tel:0729173454"
                       className="text-gray-700 hover:text-blue-600 underline transition-colors duration-200"
                       title="Call Mobile"
                     >
-                      072917345
+                      0729317345
                     </a>
                   </div>
                 </div>
@@ -216,7 +216,7 @@ const ContactForm = () => {
                       className="text-gray-700 hover:text-green-600 underline transition-colors duration-200"
                       title="Chat on WhatsApp"
                     >
-                      072918348
+                      0729183348
                     </a>
                   </div>
                 </div>
