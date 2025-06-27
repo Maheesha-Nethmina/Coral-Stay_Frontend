@@ -153,7 +153,7 @@ function UpdatePackages() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => setImage(e.target.files[0])}
-                className="mt-1 w-full"
+                className="mb-6 w-full border rounded-md p-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#eaf4f6] file:text-[#023545] hover:file:bg-[#d1e7ed] transition-all cursor-pointer"
               />
             </div>
 
