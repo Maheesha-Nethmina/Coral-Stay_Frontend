@@ -4,8 +4,10 @@ import DateSelector from './DateSelector';
 import TimeSlotSelector from './TimeSlotSelector';
 import SeatingChart from './SeatingChart';
 import { getNextSevenDays, getTimeSlots } from './dateUtils';
+import { useAuth } from "../../../contexts/AuthContext";
 
 const BookBoat = () => {
+  const { user } = useAuth();
   const [dates, setDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [timeSlots, setTimeSlots] = useState([]);
@@ -28,6 +30,13 @@ const BookBoat = () => {
       setSelectedTimeSlot(null);
     }
   }, [selectedDate]);
+
+  // Log current user ID when user changes
+  useEffect(() => {
+    if (user && user._id) {
+      console.log(' Current logged-in User ID:', user._id);
+    }
+  }, [user]);
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -56,13 +65,19 @@ const BookBoat = () => {
       return;
     }
 
-    // Navigate to shared booking page with boat data
+    if (!user || !user._id) {
+      alert('You must be logged in to book seats.');
+      return;
+    }
+
+    // Pass user ID along with booking data
     navigate('/booking', {
       state: {
         type: 'seat',
         date: selectedDate,
         time: selectedTimeSlot,
-        seats: selectedSeats
+        seats: selectedSeats,
+        userId: user._id,
       }
     });
   };

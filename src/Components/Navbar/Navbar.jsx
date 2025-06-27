@@ -1,25 +1,31 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Home, Info, Phone, Sailboat, LifeBuoy, UserRound,Gift } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import {
+  Menu,
+  X,
+  Home,
+  Info,
+  Phone,
+  Sailboat,
+  LifeBuoy,
+  UserRound,
+  Gift,
+} from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Login from "../Auth/Login";
 import Register from "../Auth/Register";
 import ForgotPassword from "../Auth/ForgotPassword";
-
 import { useAuth } from "../../contexts/AuthContext";
 import navLogo from "../../assets/navLogo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [active, setActive] = useState("Home");
   const [showModal, setShowModal] = useState(false);
   const [authView, setAuthView] = useState("login");
 
   const { user, logout, loading } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
-
-  //Links and icons in navbar
   const navLinks = [
     { name: "Home", path: "/", icon: <Home size={18} /> },
     { name: "Reef Ride", path: "/reef_ride", icon: <Sailboat size={18} /> },
@@ -29,22 +35,21 @@ const Navbar = () => {
     { name: "Contact Us", path: "/contact", icon: <Phone size={18} /> },
   ];
 
+  // ✅ Log current user ID
   useEffect(() => {
-    const currentPath = location.pathname;
-    const activeLink = navLinks.find((link) => link.path === currentPath);
-    if (activeLink) {
-      setActive(activeLink.name);
+    if (user && user._id) {
+      console.log("✅ Current User ID:", user._id);
+    } else {
+      console.log("⚠️ No logged-in user");
     }
-  }, [location.pathname]);
-
-  const navigate = useNavigate();
+  }, [user]);
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
     if (confirmLogout) {
       logout();
       setIsOpen(false);
-      navigate('/'); 
+      navigate("/");
     }
   };
 
@@ -84,44 +89,42 @@ const Navbar = () => {
       <nav className="fixed top-0 left-0 w-full z-50 bg-[#EAF4F6] shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative flex justify-between items-center h-18">
-            <Link
-              to="/"
-              className="flex items-center gap-2"
-              onClick={() => setActive("Home")}
-            >
+            <Link to="/" className="flex items-center gap-2">
               <img src={navLogo} alt="Coral Stay Logo" className="h-30 w-auto" />
             </Link>
 
             <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-10">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  onClick={() => setActive(link.name)}
-                  className={`relative text-[023545] font-medium transition-all duration-200 ${
-                    active === link.name ? "text-indigo-600" : ""
-                  } after:content-[''] after:block after:h-[2px] after:bg-indigo-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${
-                    active === link.name ? "after:scale-x-100" : ""
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = location.pathname === link.path;
+                return (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    className={`relative text-[#023545] font-medium transition-all duration-200 ${
+                      isActive ? "text-indigo-600" : ""
+                    } after:content-[''] after:block after:h-[2px] after:bg-indigo-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${
+                      isActive ? "after:scale-x-100" : ""
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
             </div>
 
             <div className="hidden md:flex items-center gap-4">
               {user ? (
                 <>
-                  {/* display user role or username */}
                   <Link
                     to={user.role === "admin" ? "/admin" : "/profile"}
                     className="text-[#023545] font-medium hover:underline flex items-center gap-1"
                   >
                     <UserRound size={18} />
-                    {user.role === "admin" ? "Admin" : user.name?.split(" ")[0] || "User"}
+                    {user.role === "admin"
+                      ? "Admin"
+                      : user.name?.split(" ")[0] || "User"}
                   </Link>
 
-                  {/*logout button*/}
                   <button
                     onClick={handleLogout}
                     className="bg-[#023545] text-white px-4 py-2 rounded-2xl hover:opacity-90 transition shadow-md"
@@ -130,7 +133,6 @@ const Navbar = () => {
                   </button>
                 </>
               ) : (
-                // Login button
                 <button
                   onClick={() => {
                     setAuthView("login");
@@ -157,34 +159,35 @@ const Navbar = () => {
 
         {isOpen && (
           <div className="md:hidden mx-4 mt-2 bg-[#EAF4F6] px-6 pt-6 pb-6 space-y-3 shadow-xl rounded-2xl border border-white/30">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                onClick={() => {
-                  setActive(link.name);
-                  setIsOpen(false);
-                }}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium hover:bg-white/60 transition text-[#023545] ${
-                  active === link.name ? "bg-white/60" : ""
-                }`}
-              >
-                {link.icon}
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.path;
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium hover:bg-white/60 transition text-[#023545] ${
+                    isActive ? "bg-white/60" : ""
+                  }`}
+                >
+                  {link.icon}
+                  {link.name}
+                </Link>
+              );
+            })}
+
             {user ? (
               <>
-                {/*Mobile view: user name */}
                 <Link
                   to={user.role === "admin" ? "/admin" : "/profile"}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium hover:bg-white/60 transition text-[#023545]"
                 >
                   <UserRound size={18} />
-                  {user.role === "admin" ? "Admin" : user.name?.split(" ")[0] || "User"}
+                  {user.role === "admin"
+                    ? "Admin"
+                    : user.name?.split(" ")[0] || "User"}
                 </Link>
 
-                {/*Mobile view: logout */}
                 <button
                   onClick={handleLogout}
                   className="flex items-center justify-center gap-2 w-full bg-[#023545] text-white px-5 py-2.5 rounded-2xl hover:opacity-90 transition-all duration-200 shadow-md"
@@ -193,7 +196,6 @@ const Navbar = () => {
                 </button>
               </>
             ) : (
-              // Mobile view: login
               <button
                 onClick={() => {
                   setIsOpen(false);

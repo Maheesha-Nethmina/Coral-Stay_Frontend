@@ -7,9 +7,8 @@ const Sidebar = () => {
     { name: 'Users', path: '/userDetails' },
     { name: 'Reef Tours', path: '/reeftourdetails' },
     { name: 'Hotel Bookings', path: '/hotelbookingdetails' },
-    { name: 'Messages', path: '/admin/messages' },
-   { name: 'Events', path: '/eventDetails'},
-      { name: 'Packages', path: '/packageDetails'},
+    { name: 'Events', path: '/eventDetails'},
+    { name: 'Packages', path: '/packageDetails'},
 
   ];
 
@@ -24,8 +23,8 @@ const Sidebar = () => {
               to={item.path}
               className={`px-4 py-3 rounded-lg transition-all duration-300 text-center font-medium cursor-pointer
                 ${isActive
-                  ? 'bg-[#023545] text-white font-semibold border-l-4 border-[#00ffff] pl-6' // Active state: darker background, white text, left border, extra padding
-                  : 'text-black hover:bg-[#023545] hover:text-white hover:pl-6' // Hover state: dark background, white text, padding shift
+                  ? 'bg-[#023545] text-white font-semibold border-l-4 border-[#00ffff] pl-6'
+                  : 'text-black hover:bg-[#023545] hover:text-white hover:pl-6'
                 }`}
             >
               {item.name}
