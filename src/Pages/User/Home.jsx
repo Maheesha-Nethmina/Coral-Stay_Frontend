@@ -109,8 +109,14 @@ function Home() {
       icon: Waves,
       content: {
         title: 'Fees and charges',
-        description: 'Special pricing applies for children upon check-in: Full extra-bed and meal charges for children between the age of 12-17 years; Full extra-bed and 50% of meal charges for children 6-11 years.'
-      }
+     description: [
+        'Special pricing applies for children upon check-in.',
+        'Children aged 12-17 years incur full extra-bed and meal charges.',
+        'Children aged 6-11 years are charged full extra-bed and 50% of meal charges.',
+        'Children under 6 years may stay free with existing bedding.',
+        'All fees are payable at the time of check-in.',
+        'Rates are subject to applicable taxes and service charges.'
+      ]     }
     },
     {
       id: 'parking',
@@ -118,8 +124,14 @@ function Home() {
       icon: Car,
       content: {
         title: 'Parking Information',
-        description: 'Complimentary self-parking is available on-site. Valet parking service is available for an additional fee of RS.500 per night.'
-      }
+description: [
+        'Complimentary self-parking is available for all guests.',
+        'Valet parking is offered at Rs.500 per night.',
+        'Accessible parking spaces are located near the entrance.',
+        'Oversized vehicle parking is available upon request.',
+        'Guests are responsible for securing their belongings.',
+        'Parking is at the owner’s risk; the hotel is not liable for theft or damage.'
+      ]      }
     },
     {
       id: 'pets',
@@ -127,8 +139,14 @@ function Home() {
       icon: PawPrint,
       content: {
         title: 'Pet Policy',
-        description: 'We welcome well-behaved pets up to 50 lbs. A non-refundable pet fee of rs.1000 per stay applies. Pets must be leashed in public areas.'
-      }
+        description: [
+        'Well-behaved pets up to 50 lbs are welcome.',
+        'A non-refundable pet fee of Rs.1000 per stay is charged.',
+        'Pets must be leashed at all times in public areas.',
+        'Pets are not allowed in restaurants, pool areas, or the spa.',
+        'Guests must clean up after their pets immediately.',
+        'Excessive noise or disruption may result in eviction without refund.'
+      ]      }
     },
     {
       id: 'smoking',
@@ -136,8 +154,14 @@ function Home() {
       icon: Cigarette,
       content: {
         title: 'Smoking Policy',
-        description: 'This is a non-smoking property. Smoking is prohibited in all indoor areas. Designated outdoor smoking areas are available.'
-      }
+      description: [
+        'This is a 100% non-smoking property.',
+        'Smoking is strictly prohibited in all indoor areas.',
+        'Designated outdoor smoking zones are available.',
+        'Smoking in rooms will incur a cleaning fee of Rs.2000.',
+        'Guests violating this policy may be asked to vacate.',
+        'Please respect non-smoking guests and posted signage.'
+      ]      }
     },
     {
       id: 'wifi',
@@ -145,8 +169,14 @@ function Home() {
       icon: Wifi,
       content: {
         title: 'Internet Access',
-        description: 'Complimentary high-speed WiFi is available throughout the property including all guest rooms, lobby, and pool areas.'
-      }
+      description: [
+        'Complimentary high-speed WiFi is available property-wide.',
+        'All guest rooms include WiFi access.',
+        'WiFi is also accessible in the lobby and pool areas.',
+        'Streaming and video calls are supported on the network.',
+        'Technical support is available 24/7 at the front desk.',
+        'Please avoid downloading large files to maintain network speed for others.'
+      ]      }
     }
   ];
 
@@ -328,7 +358,8 @@ function Home() {
     </div>
 
     {/* hotel policy section */}
-       <div className="max-w-8xl mx-auto p-6 bg-[#EAF4F6] ">
+    <div className=' bg-[#EAF4F6]'>
+       <div className="max-w-7xl mx-auto p-6  ">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -369,10 +400,13 @@ function Home() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
             {activePolicy.content.title}
           </h2>
-          <p className="text-gray-700 leading-relaxed">
-            {activePolicy.content.description}
-          </p>
+          <ul className="list-disc list-inside text-gray-700 leading-relaxed space-y-2">
+             {activePolicy.content.description.map((item, index) => (
+             <li key={index}>{item}</li>
+             ))}
+           </ul>
         </div>
+      </div>
       </div>
     </div>
   
