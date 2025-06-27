@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   MapPin,
@@ -31,11 +32,12 @@ const ContactForm = () => {
     setStatusType("info");
 
     try {
-      const response = await fetch("http://localhost:3000/contact", {
+      const response = await fetch("http://localhost:3000/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.firstName + " " + formData.lastName,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
           email: formData.email,
           message: formData.message,
         }),
@@ -192,11 +194,11 @@ const ContactForm = () => {
                       Mobile
                     </span>
                     <a
-                      href="tel:0729173454"
+                      href="tel:072917345"
                       className="text-gray-700 hover:text-blue-600 underline transition-colors duration-200"
                       title="Call Mobile"
                     >
-                      0729317345
+                      072917345
                     </a>
                   </div>
                 </div>
@@ -216,7 +218,7 @@ const ContactForm = () => {
                       className="text-gray-700 hover:text-green-600 underline transition-colors duration-200"
                       title="Chat on WhatsApp"
                     >
-                      0729183348
+                      072918348
                     </a>
                   </div>
                 </div>
