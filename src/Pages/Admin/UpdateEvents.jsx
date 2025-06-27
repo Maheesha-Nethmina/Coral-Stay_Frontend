@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
+import AdminNavbar from '../../Components/Navbar/AdminNavbar';
 
 function UpdateUser() {
   const [inputs, setInputs] = useState({ title: '', description: '', date: '', mapUrl: '' });
@@ -41,10 +42,16 @@ function UpdateUser() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#EAF4F6]">
+    <>
       <Navbar />
+      <div className="flex min-h-screen bg-[#eaf4f6]">
+        <div className="w-60 mt-10 bg-[#eaf4f6]">
+          <AdminNavbar />
+        </div>
+      
 
-      <div className="flex-grow flex items-center justify-center px-4 py-10">
+
+      <div className="flex-grow flex items-center justify-center px-4 py-10 mt-10">
         <form
           onSubmit={handleSubmit}
           encType="multipart/form-data"
@@ -117,9 +124,9 @@ function UpdateUser() {
           />
         </form>
       </div>
-
+      </div>
       <Footer />
-    </div>
+    </>
   );
 }
 

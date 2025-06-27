@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../../Components/Navbar/Navbar';
 import Footer from '../../../Components/Footer/Footer';
+import AdminNavbar from '../../../Components/Navbar/AdminNavbar';
 
 function UpdatePackages() {
   const [inputs, setInputs] = useState({
@@ -52,9 +53,14 @@ function UpdatePackages() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
       <Navbar />
-      <main className="flex-grow bg-[#EAF4F6] py-12 px-4 md:px-6">
+      <div className="flex min-h-screen bg-[#eaf4f6]">
+        <div className="w-60 mt-10 bg-[#eaf4f6]">
+          <AdminNavbar />
+        </div>
+      
+      <main className="flex-grow bg-[#EAF4F6] py-12 px-4 md:px-6 mt-10">
         <div className="max-w-2xl mx-auto bg-white p-6 md:p-10 rounded-lg shadow-lg">
           <h1 className="text-2xl md:text-3xl font-bold text-[#023545] mb-6 text-center">
             Update Package
@@ -166,8 +172,9 @@ function UpdatePackages() {
           </form>
         </div>
       </main>
+      </div>
       <Footer />
-    </div>
+    </>
   );
 }
 
