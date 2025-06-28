@@ -22,16 +22,16 @@ const SeatingChart = ({ selectedSeats, onSelectSeat, selectedDate, selectedTime 
     }
   };
 
-  const fetchBookedSeats = async (date, timeSlot) => {
-    try {
-      const url = `http://localhost:3000/reeftour/displayBookedSeats?date=${date}&timeSlot=${timeSlot}`;
-      const res = await axios.get(url);
-      const booked = res.data.bookings?.flatMap(b => b.seats) || [];
-      setBookedSeats(booked);
-    } catch (error) {
-      console.error('Error fetching booked seats:', error);
-    }
-  };
+ const fetchBookedSeats = async (date, timeSlot) => {
+  try {
+    const url = `http://localhost:3000/reeftour/displayBookedSeats?date=${date}&timeSlot=${timeSlot}`;
+    const res = await axios.get(url);
+    setBookedSeats(res.data.bookedSeats || []);
+  } catch (error) {
+    console.error('Error fetching booked seats:', error);
+  }
+};
+
 
   const isSeatBlocked = (seat) => blockedSeats.includes(seat);
   const isSeatBooked = (seat) => bookedSeats.includes(seat);
