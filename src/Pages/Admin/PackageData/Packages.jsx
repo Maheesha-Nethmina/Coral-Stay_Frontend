@@ -34,7 +34,7 @@ function Packages({ pack, onDelete }) {
         <div className="w-1/12 break-words">{includes}</div>
         <div className="w-1/12 break-words">Rs.{price}</div>
         <div className="w-1/12 break-words">{days}d</div>
-        <div className="w-1/12 break-words">{offers || 'N/A'}</div>
+        <div className="w-1/12 break-words text-[#2d6671] font-bold">{offers || 'N/A'}</div>
         <div className="w-1/12 font-semibold text-gray-600">{type}</div>
         <div className="w-1/12 flex gap-2 items-center justify-center">
           <Link
