@@ -1,5 +1,7 @@
+// src/pages/RoomBooking/RoomBooking.jsx
+
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CalendarDays } from "lucide-react";
 
 import Navbar from '../../Components/Navbar/Navbar';
@@ -13,7 +15,6 @@ import room4 from '../../assets/Accomodation-Room4.png';
 import room5 from '../../assets/Accomodation-Room5.png';
 
 import image1 from '../../assets/RoomBooking.png';
-import image2 from '../../assets/RoomBooking2.png';
 
 const roomsData = [
   {
@@ -59,7 +60,7 @@ const roomsData = [
     id: 4,
     title: 'Premier Ocean Room',
     size: '50 sqm',
-    features: ['Bathrobe', 'Free wifi', 'Minibar', 'Tea Maker', 'Room service', 'Shower Cubicle', 'Safety Locker', 'Celling Fan'],
+    features: ['Bathrobe', 'Free wifi', 'Minibar', 'Tea Maker', 'Room service', 'Shower Cubicle', 'Safety Locker', 'Ceiling Fan'],
     packages: [
       { type: 'Full Board Package', price: 'LKR 40,000.00' },
       { type: 'Half Board Package', price: 'LKR 35,000.00' },
@@ -72,7 +73,7 @@ const roomsData = [
     id: 5,
     title: 'Presidential Suite',
     size: '80 sqm',
-    features: ['Bathrobe', 'iron', 'Free wifi', 'Minibar', 'Tea Maker', 'Room service', 'Shower Cubicle', 'Celling Fan', 'Safety Locker'],
+    features: ['Bathrobe', 'Iron', 'Free wifi', 'Minibar', 'Tea Maker', 'Room service', 'Shower Cubicle', 'Ceiling Fan', 'Safety Locker'],
     packages: [
       { type: 'Full Board Package', price: 'LKR 55,000.00' },
       { type: 'Half Board Package', price: 'LKR 50,000.00' },
@@ -85,12 +86,12 @@ const roomsData = [
 
 function RoomBooking() {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const initialCheckIn = location.state?.checkIn || '';
   const initialCheckOut = location.state?.checkOut || '';
 
   const [selectedPackages, setSelectedPackages] = useState({});
-  const [guestName, setGuestName] = useState('');
-  const [guestEmail, setGuestEmail] = useState('');
   const [formError, setFormError] = useState('');
 
   const handlePackageChange = (roomId, packageType) => {
@@ -108,42 +109,8 @@ function RoomBooking() {
     });
   };
 
-  const doBooking = (room) => {
-    const selectedPackage = selectedPackages[room.id];
-    setFormError('');
-    // POST booking to backend
-    fetch('http://localhost:3000/bookings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        roomId: room.id,
-        roomTitle: room.title,
-        packageType: selectedPackage,
-        checkIn: initialCheckIn,
-        checkOut: initialCheckOut,
-        guestName,
-        guestEmail,
-      }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        alert(data.message || 'Booking successful!');
-      })
-      .catch(() => {
-        alert('Booking failed!');
-      });
-  };
-
   const handleBookNow = (room) => {
     const selectedPackage = selectedPackages[room.id];
-    if (!guestName || !guestEmail) {
-      setFormError('Please enter your name and email before booking.');
-      return;
-    }
-    if (!/\S+@\S+\.\S+/.test(guestEmail)) {
-      setFormError('Please enter a valid email address.');
-      return;
-    }
     if (!selectedPackage) {
       setFormError('Please select a package first.');
       return;
@@ -153,14 +120,26 @@ function RoomBooking() {
       return;
     }
     setFormError('');
-    doBooking(room);
+
+    const packageDetails = room.packages.find(p => p.type === selectedPackage);
+
+    navigate('/roomBookingForm', {
+      state: {
+        roomId: room.id,
+        roomTitle: room.title,
+        packageType: selectedPackage,
+        checkIn: initialCheckIn,
+        checkOut: initialCheckOut,
+        price: packageDetails.price,
+        quantity: 1,
+      },
+    });
   };
 
   return (
     <div className="relative">
       <Navbar />
 
-      {/* Error Popup */}
       {formError && (
         <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
           <div className="bg-red-600 text-white px-6 py-3 rounded shadow-lg font-semibold text-center animate-bounce">
@@ -169,7 +148,6 @@ function RoomBooking() {
         </div>
       )}
 
-      {/* Hero Section with Hover */}
       <div className="relative overflow-hidden group">
         <div className="transition-transform duration-500 group-hover:scale-105">
           <Hero
@@ -181,7 +159,6 @@ function RoomBooking() {
           />
         </div>
 
-        {/* Show selected dates */}
         <div className="absolute top-[60%] left-1/2 transform -translate-x-1/2 z-10 w-full px-4">
           <div className="flex justify-center">
             <div className="flex items-center gap-8 bg-white/90 shadow-lg max-w-2xl mx-auto rounded-lg px-8 py-5 border border-teal-100">
@@ -192,7 +169,7 @@ function RoomBooking() {
                     Check-In
                   </label>
                   <div className="border border-gray-200 px-4 py-2 rounded-md bg-gray-100 text-gray-700 min-w-[120px] text-center font-semibold">
-                    {initialCheckIn}
+                    {initialCheckIn || 'Not selected'}
                   </div>
                 </div>
               </div>
@@ -204,7 +181,7 @@ function RoomBooking() {
                     Check-Out
                   </label>
                   <div className="border border-gray-200 px-4 py-2 rounded-md bg-gray-100 text-gray-700 min-w-[120px] text-center font-semibold">
-                    {initialCheckOut}
+                    {initialCheckOut || 'Not selected'}
                   </div>
                 </div>
               </div>
@@ -213,39 +190,11 @@ function RoomBooking() {
         </div>
       </div>
 
-      {/* Guest Info Form */}
-      <div className="max-w-2xl mx-auto mt-10 mb-4 bg-white/90 rounded-lg shadow px-8 py-6">
-        <h2 className="text-lg font-semibold mb-4 text-gray-800">Your Details</h2>
-        <div className="flex flex-col md:flex-row gap-4">
-          <input
-            type="text"
-            placeholder="Full Name"
-            value={guestName}
-            onChange={e => setGuestName(e.target.value)}
-            className="flex-1 border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={guestEmail}
-            onChange={e => setGuestEmail(e.target.value)}
-            className="flex-1 border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-teal-600"
-            required
-          />
-        </div>
-        <div className="text-gray-500 text-xs mt-2">
-          Please enter your name and email to receive a confirmation email for your booking.
-        </div>
-      </div>
-
-      {/* Room Cards */}
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="space-y-8">
           {roomsData.map((room) => (
             <div key={room.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
               <div className="md:flex">
-                {/* Image */}
                 <div className="md:w-1/3 relative overflow-hidden group">
                   <img
                     src={room.image}
@@ -256,8 +205,6 @@ function RoomBooking() {
                     <span className="text-white text-lg font-semibold">View Room</span>
                   </div>
                 </div>
-
-                {/* Details */}
                 <div className="md:w-2/3 p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
@@ -265,7 +212,6 @@ function RoomBooking() {
                       <p className="text-gray-600 mb-4">Room size: {room.size}</p>
                     </div>
                   </div>
-
                   <div className="grid grid-cols-2 gap-2 mb-6">
                     {room.features.map((feature, index) => (
                       <div key={index} className="flex items-center text-sm text-gray-600">
@@ -274,7 +220,6 @@ function RoomBooking() {
                       </div>
                     ))}
                   </div>
-
                   <div className="mb-6">
                     <h4 className="text-lg font-semibold text-gray-800 mb-3">Select Your Package</h4>
                     <div className="space-y-2">
@@ -304,7 +249,6 @@ function RoomBooking() {
                       ))}
                     </div>
                   </div>
-
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-4">
                       <div className="text-sm text-gray-600">
@@ -318,22 +262,16 @@ function RoomBooking() {
                         <div className="text-center mt-1 font-bold text-lg">
                           {selectedPackages[room.id]
                             ? room.packages.find(p => p.type === selectedPackages[room.id])?.price
-                            : room.packages[0].price
-                          }
+                            : room.packages[0].price}
                         </div>
                       </div>
                     </div>
-                    <div className="flex space-x-3">
-                      <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors">
-                        More Info
-                      </button>
-                      <button
-                        onClick={() => handleBookNow(room)}
-                        className="bg-teal-600 text-white px-6 py-2 rounded-md hover:bg-teal-700 transition-colors"
-                      >
-                        Book Now
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handleBookNow(room)}
+                      className="bg-teal-600 text-white px-5 py-2 rounded-md hover:bg-teal-700 transition-colors"
+                    >
+                      Book Now
+                    </button>
                   </div>
                 </div>
               </div>
@@ -341,15 +279,6 @@ function RoomBooking() {
           ))}
         </div>
       </div>
-
-      {/* Footer Image Section */}
-      <section className="bg-gray-50">
-        <img 
-          src={image2} 
-          alt="Coral Stay Beach Resort" 
-          className="w-full h-64 object-cover hover:opacity-90 transition-opacity duration-300"
-        />
-      </section>
 
       <Footer />
     </div>

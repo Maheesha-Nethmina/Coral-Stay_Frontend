@@ -58,6 +58,7 @@ const ImageCarousel = () => {
   }
 
   const navigate = useNavigate();
+  
   return (
     <div className="bg-white -mt-42">
       <div className="max-w-7xl mx-auto px-4 py-12 bg-slate-50">
