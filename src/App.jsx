@@ -71,20 +71,20 @@ function App() {
           <Route path="/packages" element={<Packages />} />
 
           {/* Admin Routes */}
-          <Route path="/addevents" element={<AddEvents />} />
-          <Route path="/eventdetails" element={<EventDetails />} />
-          <Route path="/eventdetails/:id" element={<UpdateEvent />} />
-          <Route path="/userdetails" element={<UserDetails />} />
-          <Route path="/editUser/:id" element={<EditUser />} />
-          <Route path="/reeftourdetails" element={<ReefTourdetails />} />
-          <Route path="/hotelbookingdetails" element={<HotelBookingdetails />} />
-          <Route path="/addpackages" element={<AddPackages />} />
-          <Route path="/packagedetails" element={<PackageDetails />} />
-          <Route path="/packagedetails/:id" element={<UpdatePackages />} />
-          <Route path="/sendEmail/:id" element={<SendEmail />} />
-          <Route path="/blockSheets" element={<BlockSheets />} />
-          <Route path="/updatepriceSettings" element={<UpdatepriceSettings />} />
-          <Route path="/weatherDetails" element={<WeatherDetails />} />
+          <Route path="/addevents" element={<ProtectedAdminRoute element={<AddEvents />} />} />
+          <Route path="/eventdetails"  element={<ProtectedAdminRoute element={<EventDetails />} />} />
+          <Route path="/eventdetails/:id"  element={<ProtectedAdminRoute element={<UpdateEvent />} />} />
+          <Route path="/userdetails"  element={<ProtectedAdminRoute element={<UserDetails />} />} />
+          <Route path="/editUser/:id"  element={<ProtectedAdminRoute element={<EditUser />} />} />
+          <Route path="/reeftourdetails" element={<ProtectedAdminRoute element={<ReefTourdetails />} />} />
+          <Route path="/hotelbookingdetails" element={<ProtectedAdminRoute element={<HotelBookingdetails />} />} />
+          <Route path="/addpackages"  element={<ProtectedAdminRoute element={<AddPackages />} />} />
+          <Route path="/packagedetails"  element={<ProtectedAdminRoute element={<PackageDetails />} />} />
+          <Route path="/packagedetails/:id" element={<ProtectedAdminRoute element={<UpdatePackages />} />} />
+          <Route path="/sendEmail/:id" element={<ProtectedAdminRoute element={<SendEmail />} />} />
+          <Route path="/blockSheets" element={<ProtectedAdminRoute element={<BlockSheets />} />} />
+          <Route path="/updatepriceSettings"  element={<ProtectedAdminRoute element={<UpdatepriceSettings />} />} />
+          <Route path="/weatherDetails"  element={<ProtectedAdminRoute element={<WeatherDetails />} />} />
           {/* Admin Protected */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
 
