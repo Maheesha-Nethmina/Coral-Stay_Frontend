@@ -1,6 +1,7 @@
 import React from 'react';
 import video2 from '../../assets/video02.mp4'; 
 import { useNavigate } from 'react-router-dom';
+
 const AboutSection = () => {
   const navigate = useNavigate();
   return (
@@ -8,7 +9,7 @@ const AboutSection = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-4 h-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Image Section */}
-          <div className="order-2 md:order-1">
+          <div className="order-2 md:order-1 relative z-0">
             <div className="relative rounded-lg overflow-hidden shadow-xl">
               <video 
                 className="w-full h-auto max-h-[500px] object-cover"
@@ -26,7 +27,7 @@ const AboutSection = () => {
           </div>
 
           {/* Text Content Section */}
-          <div className="order-1 md:order-2">
+          <div className="order-1 md:order-2 relative z-10">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               Who We Are
             </h2>
@@ -40,10 +41,13 @@ const AboutSection = () => {
             <div className="border-t border-gray-200 pt-4">
               <button 
                onClick={() => navigate('/about')}
-              className="text-white bg-[#023545]  hover:text-[#9ebdc6] font-medium text-xl transition-colors py-3 px-12 rounded-lg"
+              className="text-white bg-[#023545]  hover:text-[#9ebdc6] font-medium text-xl transition-colors py-3 px-15 rounded-lg"
               >
                 Read More 
               </button>
+
+              
+
             </div>
           </div>
         </div>

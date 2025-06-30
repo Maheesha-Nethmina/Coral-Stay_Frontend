@@ -122,8 +122,8 @@ const ImageCarousel = () => {
             className="w-full h-auto object-cover"
           />
           <button
-           onClick={() => navigate('/Stays')}
-            className="absolute bottom-4 left-4 bg-slate-800 text-white text-sm font-bold px-4 py-2 rounded-md hover:bg-slate-900 transition"
+           onClick={() => navigate('/stays')}
+            className="absolute bottom-4 left-4 bg-slate-800 text-white text-sm font-bold px-4 py-2 rounded-md hover:bg-slate-900 transition z-50"
           >
             View Accommodation
           </button>
