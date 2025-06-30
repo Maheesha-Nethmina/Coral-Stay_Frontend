@@ -117,7 +117,7 @@ const RoomBookingForm = () => {
       };
 
       const response = await axios.post(
-        'http://localhost:3000/booking/roombookings',
+        'http://localhost:3000/bookings/roombookings',
         bookingPayload
       );
 
