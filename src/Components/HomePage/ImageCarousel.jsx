@@ -58,6 +58,7 @@ const ImageCarousel = () => {
   }
 
   const navigate = useNavigate();
+  
   return (
     <div className="bg-white -mt-42">
       <div className="max-w-7xl mx-auto px-4 py-12 bg-slate-50">
@@ -122,8 +123,8 @@ const ImageCarousel = () => {
             className="w-full h-auto object-cover"
           />
           <button
-           onClick={() => navigate('/Stays')}
-            className="absolute bottom-4 left-4 bg-slate-800 text-white text-sm font-bold px-4 py-2 rounded-md hover:bg-slate-900 transition"
+           onClick={() => navigate('/stays')}
+            className="absolute bottom-4 left-4 bg-slate-800 text-white text-sm font-bold px-4 py-2 rounded-md hover:bg-slate-900 transition cursor-pointer"
           >
             View Accommodation
           </button>
