@@ -5,22 +5,27 @@ const AboutReef = () => {
   const [showTerms, setShowTerms] = useState(false);
 
   const termsContent = `
-    <h2 class="text-2xl font-bold mb-4">Terms and Conditions</h2>
+    <h2 class="text-4xl font-bold mb-4 text-center">Terms and Conditions</h2>
     
+    <div class="hover:bg-[#EAF4F6] cursor-pointer p-1 rounded">
     <h3 class="text-xl font-semibold mt-4 mb-2">1. Booking and Payment</h3>
     <ul class="list-disc pl-5 space-y-2 mb-4">
       <li>Full payment is required at the time of booking to secure your reservation</li>
       <li>We accept major credit cards and bank transfers</li>
       <li>Prices include all government taxes and service charges</li>
     </ul>
+    </div>
     
+    <div class="hover:bg-[#EAF4F6] cursor-pointer p-1 rounded">
     <h3 class="text-xl font-semibold mt-4 mb-2">2. Cancellation Policy</h3>
     <ul class="list-disc pl-5 space-y-2 mb-4">
       <li>Cancellations made 48 hours or more before the tour: Full refund</li>
       <li>Cancellations made within 48 hours of the tour: 50% refund</li>
       <li>No-shows will be charged the full amount</li>
     </ul>
+     </div>
     
+    <div class="hover:bg-[#EAF4F6] cursor-pointer p-1 rounded">
     <h3 class="text-xl font-semibold mt-4 mb-2">3. Safety Regulations</h3>
     <ul class="list-disc pl-5 space-y-2 mb-4">
       <li>All participants must wear life jackets during boat transit</li>
@@ -28,20 +33,25 @@ const AboutReef = () => {
       <li>Do not touch or stand on coral reefs</li>
       <li>Children under 12 must be supervised by an adult</li>
     </ul>
+     </div>
     
+    <div class="hover:bg-[#EAF4F6] cursor-pointer p-1 rounded">
     <h3 class="text-xl font-semibold mt-4 mb-2">4. Health Requirements</h3>
     <ul class="list-disc pl-5 space-y-2 mb-4">
       <li>Notify us of any medical conditions before booking</li>
       <li>Not recommended for pregnant women or people with heart conditions</li>
       <li>Basic swimming ability required for snorkeling activities</li>
     </ul>
+     </div>
     
+    <div class="hover:bg-[#EAF4F6] cursor-pointer p-1 rounded">
     <h3 class="text-xl font-semibold mt-4 mb-2">5. Environmental Policy</h3>
     <ul class="list-disc pl-5 space-y-2 mb-4">
       <li>Use only reef-safe sunscreen (available for purchase)</li>
       <li>Do not feed fish or disturb marine life</li>
       <li>Take only photos, leave only bubbles</li>
     </ul>
+     </div>
     
     <p class="mt-6">By booking with us, you agree to these terms and conditions.</p>
   `;
@@ -98,7 +108,7 @@ const AboutReef = () => {
             className="absolute inset-0 bg-[#EAF4F6] opacity-95"
             onClick={() => setShowTerms(false)}
           ></div>
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative z-10 border-2 border-[#023545]">
+          <div className="bg-[#F4F2F2] rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative z-10 ">
             <div className="p-6">
               <div 
                 className="prose prose-lg max-w-none"
@@ -107,7 +117,7 @@ const AboutReef = () => {
               <div className="mt-6 text-center">
                 <button
                   onClick={() => setShowTerms(false)}
-                  className="bg-[#023545] text-white font-medium py-2 px-6 rounded-lg hover:bg-[#01212d] transition-colors"
+                  className="bg-[#023545] text-white font-medium py-2 px-10 rounded-lg hover:bg-[#01212d] transition-colors"
                 >
                   Yes I Agree
                 </button>
