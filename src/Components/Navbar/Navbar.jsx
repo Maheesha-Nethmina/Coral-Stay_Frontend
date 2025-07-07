@@ -35,12 +35,12 @@ const Navbar = () => {
     { name: "Contact Us", path: "/contact", icon: <Phone size={18} /> },
   ];
 
-  // ✅ Log current user ID
+  // Log current user ID
   useEffect(() => {
     if (user && user._id) {
-      console.log("✅ Current User ID:", user._id);
+      console.log("Current User ID:", user._id);
     } else {
-      console.log("⚠️ No logged-in user");
+      console.log("No logged-in user");
     }
   }, [user]);
 

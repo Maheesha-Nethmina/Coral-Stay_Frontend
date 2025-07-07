@@ -10,7 +10,7 @@ import Reef_Ride from './Pages/User/Reef_Ride';
 import Stays from './Pages/User/Stays';
 import Events from './Pages/User/Events';
 import RoomBooking from './Pages/User/RoomBooking';
-import RoomBookingForm from './Pages/User/RoomBookingForm'; // <-- Added import
+import RoomBookingForm from './Pages/User/RoomBookingForm';
 import Profile from './Pages/User/Profile';
 import Booking from './Pages/User/Booking';
 import Packages from './Pages/User/Packages';
@@ -61,7 +61,7 @@ function App() {
           <Route path="/stays" element={<Stays />} />
           <Route path="/events" element={<Events />} />
           <Route path="/room-booking" element={<RoomBooking />} />
-          <Route path="/roomBookingForm" element={<RoomBookingForm />} />  {/* <-- Added this route */}
+          <Route path="/roomBookingForm" element={<RoomBookingForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/deluxeroom" element={<DeluxeRoom />} />
           <Route path="/premierroom" element={<PremierRoom />} />
