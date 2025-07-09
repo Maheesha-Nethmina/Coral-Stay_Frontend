@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }) => {
         "http://localhost:3000/authentication/login",
         { email, password }
       );
-      
       await refreshUser();
       return response.data;
     } catch (error) {
@@ -62,7 +61,7 @@ export const AuthProvider = ({ children }) => {
       login, 
       logout, 
       loading,
-      refreshUser // Expose refresh function if needed
+      refreshUser
     }}>
       {children}
     </AuthContext.Provider>
