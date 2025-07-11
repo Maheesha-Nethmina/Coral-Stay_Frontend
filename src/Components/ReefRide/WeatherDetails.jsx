@@ -10,9 +10,10 @@ import sunAnim from '../../assets/sunny.json';
 import rainAnim from '../../assets/rainy.json';
 import cloudAnim from '../../assets/cloudy.json';
 import unknownAnim from '../../assets/thunder.json';
-
+import Activity from '../../Components/ReefRide/Activity'
 const WeatherDetails = () => {
   const [forecast, setForecast] = useState([]);
+  const [isActivityOpen, setIsActivityOpen] = useState(false);
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/weather/forecast')
@@ -53,7 +54,14 @@ const WeatherDetails = () => {
     );
   };
 
+  const now = new Date();
+  const isAfterNoon = now.getHours() >= 12;
+
   const filtered = Object.entries(grouped)
+    .filter(([date]) => {
+      const dateObj = new Date(date);
+      return dateObj > now || (isAfterNoon && dateObj.toDateString() !== now.toDateString());
+    })
     .sort((a, b) => new Date(a[0]) - new Date(b[0]))
     .slice(0, 5);
 
@@ -65,15 +73,19 @@ const WeatherDetails = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {filtered.map(([date, entries], i) => {
           const slot = entries.find(e => {
-            const hour = parseInt(e.time.split(":"[0]), 10);
+            const hour = parseInt(e.time.split(":")[0], 10);
             return hour === 9;
-          });
+          }) || entries[0];
+
           if (!slot) return null;
 
           const bg = getBg(slot.description);
           return (
-            <div key={i} className="relative rounded-2xl shadow-2xl  overflow-hidden">
-              <div className="absolute inset-0 bg-cover bg-center bg-gradient-to-br from-teal-50 to-white " style={{ backgroundImage: `url('${bg}')` }} />
+            <div key={i} className="relative rounded-2xl shadow-2xl overflow-hidden">
+              <div
+                className="absolute inset-0 bg-cover bg-center bg-gradient-to-br from-teal-50 to-white opacity-80"
+                style={{ backgroundImage: `url('${bg}')` }}
+              />
               <div className="relative">
                 <div className="bg-gradient-to-br from-[#023545] to-[#EAF4F6] w-full py-4">
                   <h3 className="text-3xl font-bold text-white text-center">
@@ -87,13 +99,13 @@ const WeatherDetails = () => {
                     <div className="flex justify-center mb-2">
                       {getWeatherIcon(slot.description)}
                     </div>
-                    <p className="text-center capitalize text-lg text-black font-medium">
+                    <p className="text-center capitalize text-2xl text-white font-medium">
                       {slot.description}
                     </p>
-                    <p className="text-3xl text-center font-bold text-white mt-1">
+                    <p className="text-3xl text-center font-bold text-black mt-1">
                       {Math.round(slot.temperature)}°C
                     </p>
-                    <p className="text-center text-lg font-bold mt-1">
+                    <p className="text-center text-lg font-bold mt-1 ">
                       {slot.suggestion}
                     </p>
                     <div className="mt-4 text-lg text-white space-y-1">
@@ -103,10 +115,15 @@ const WeatherDetails = () => {
                       <p><span className="font-semibold">Cloud:</span> {slot.cloudiness}%</p>
                       <p><span className="font-semibold">Rain:</span> {slot.rainVolume} mm</p>
                       <p><span className="font-semibold">Status:</span> {slot.isSafe ? '✅ Safe' : '❌ Unsafe'}</p>
+                      <button
+                        onClick={() => setIsActivityOpen(true)}
+                        className="mt-6 px-16 py-2 rounded-full text-white font-semibold bg-black">Activities</button>
                     </div>
                   </div>
                 </div>
               </div>
+                    <Activity isOpen={isActivityOpen} onClose={() => setIsActivityOpen(false)} />
+
             </div>
           );
         })}
