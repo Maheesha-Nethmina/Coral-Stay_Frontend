@@ -10,10 +10,13 @@ import sunAnim from '../../assets/sunny.json';
 import rainAnim from '../../assets/rainy.json';
 import cloudAnim from '../../assets/cloudy.json';
 import unknownAnim from '../../assets/thunder.json';
-import Activity from '../../Components/ReefRide/Activity'
+import Activity from '../../Components/ReefRide/Activity';
+
 const WeatherDetails = () => {
   const [forecast, setForecast] = useState([]);
   const [isActivityOpen, setIsActivityOpen] = useState(false);
+  const [selectedSuggestion, setSelectedSuggestion] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/weather/forecast')
@@ -80,6 +83,7 @@ const WeatherDetails = () => {
           if (!slot) return null;
 
           const bg = getBg(slot.description);
+
           return (
             <div key={i} className="relative rounded-2xl shadow-2xl overflow-hidden">
               <div
@@ -105,7 +109,7 @@ const WeatherDetails = () => {
                     <p className="text-3xl text-center font-bold text-black mt-1">
                       {Math.round(slot.temperature)}°C
                     </p>
-                    <p className="text-center text-lg font-bold mt-1 ">
+                    <p className="text-center text-lg font-bold mt-1">
                       {slot.suggestion}
                     </p>
                     <div className="mt-4 text-lg text-white space-y-1">
@@ -116,14 +120,24 @@ const WeatherDetails = () => {
                       <p><span className="font-semibold">Rain:</span> {slot.rainVolume} mm</p>
                       <p><span className="font-semibold">Status:</span> {slot.isSafe ? '✅ Safe' : '❌ Unsafe'}</p>
                       <button
-                        onClick={() => setIsActivityOpen(true)}
-                        className="mt-6 px-16 py-2 rounded-full text-white font-semibold bg-black">Activities</button>
+                        onClick={() => {
+                          setSelectedSuggestion(slot.suggestion);
+                          setSelectedDate(date);
+                          setIsActivityOpen(true);
+                        }}
+                        className="mt-6 px-16 py-2 rounded-full text-white font-semibold bg-black">
+                        Activities
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-                    <Activity isOpen={isActivityOpen} onClose={() => setIsActivityOpen(false)} />
-
+              <Activity
+                isOpen={isActivityOpen}
+                onClose={() => setIsActivityOpen(false)}
+                suggestion={selectedSuggestion}
+                date={selectedDate}
+              />
             </div>
           );
         })}
