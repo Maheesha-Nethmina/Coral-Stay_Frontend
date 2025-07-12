@@ -127,7 +127,7 @@ const Booking = () => {
   setIsSubmitting(true);
 
   try {
-    // ✅ Use value field which should be like "2025-06-29"
+    // Use value field which should be like "2025-06-29"
     const formattedDate = bookingData.date.value;
 
     const bookingPayload = {
@@ -149,7 +149,7 @@ const Booking = () => {
 
     if (response.status === 201) {
       alert('Booking confirmed successfully!');
-      navigate('/');
+      navigate('/profile');
     } else {
       alert('Booking failed. Please try again.');
     }
