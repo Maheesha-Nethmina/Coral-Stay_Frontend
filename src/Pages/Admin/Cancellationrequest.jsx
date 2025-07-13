@@ -5,6 +5,8 @@ import AdminNavbar from '../../Components/Navbar/AdminNavbar';
 import Footer from '../../Components/Footer/Footer';
 
 function CancellationRequest() {
+
+  
   const [requests, setRequests] = useState([]);
 
   const fetchRequests = async () => {
@@ -17,16 +19,17 @@ function CancellationRequest() {
   };
 
   const handleAccept = async (id) => {
-  try {
-    await axios.post(`http://localhost:3000/admin/acceptCancellationRequest/${id}/accept`);
-    fetchRequests();
-  } catch (err) {
-    console.error('Error accepting request:', err);
-    alert('Failed to accept cancellation request');
-  }
-};
+    const confirm = window.confirm("Are you sure you want to accept this cancellation request?");
+    if (!confirm) return;
 
-
+    try {
+      await axios.put(`http://localhost:3000/admin/acceptCancellationRequest/${id}`);
+      fetchRequests();
+    } catch (err) {
+      console.error('Error accepting request:', err);
+      alert('Failed to accept cancellation request');
+    }
+  };
 
   useEffect(() => {
     fetchRequests();
@@ -63,7 +66,7 @@ function CancellationRequest() {
                   <td className="px-4 py-2">
                     <button
                       onClick={() => handleAccept(req._id)}
-                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded"
+                      className="bg-[#023545] hover:bg-[#023545] text-white px-4 py-1 rounded cursor-pointer transition duration-300 hover:scale-105"
                     >
                       Accept
                     </button>
