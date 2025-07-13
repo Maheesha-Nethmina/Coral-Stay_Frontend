@@ -36,6 +36,7 @@ import UpdatePackages from './Pages/Admin/PackageData/UpdatePackages';
 import SendEmail from './Pages/Admin/SendEmail';
 import BlockSheets from './Pages/Admin/BlockSheets';
 import UpdatepriceSettings from './Pages/Admin/UpdatepriceSettings';
+import CancellationRequest from './Pages/Admin/cancellationrequest';
 // Auth Component
 import ResetPassword from './Components/Auth/ResetPassword';
 
@@ -85,6 +86,7 @@ function App() {
           <Route path="/sendEmail/:id" element={<ProtectedAdminRoute element={<SendEmail />} />} />
           <Route path="/blockSheets" element={<ProtectedAdminRoute element={<BlockSheets />} />} />
           <Route path="/updatepriceSettings"  element={<ProtectedAdminRoute element={<UpdatepriceSettings />} />} />
+          <Route path="/cancellationrequest" element={<ProtectedAdminRoute element={<CancellationRequest />} />} />
           {/* Admin Protected */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
 
