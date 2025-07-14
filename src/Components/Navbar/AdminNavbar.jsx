@@ -10,6 +10,7 @@ const Sidebar = () => {
     { name: 'Events', path: '/eventDetails'},
     { name: 'Packages', path: '/packageDetails'},
     { name: 'Cancellation Request', path: '/cancellationrequest'},
+    {name:' Weather Alerts', path: '/weather-alerts'},
 
   ];
 

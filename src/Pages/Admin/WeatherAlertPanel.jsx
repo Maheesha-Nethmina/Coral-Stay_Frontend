@@ -1,0 +1,84 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const WeatherAlertPanel = () => {
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get('/api/weather-alerts/unsafe-bookings');
+        console.log("API Response:", res.data);
+        setBookings(res.data.bookings || []);
+      } catch (err) {
+        console.error('Error fetching bookings:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const sendEmail = async (id) => {
+    try {
+      await axios.post(`/api/weather-alerts/send-alert-email/${id}`);
+      setStatus((prev) => ({ ...prev, [id]: 'Sent' }));
+    } catch (err) {
+      setStatus((prev) => ({ ...prev, [id]: 'Failed' }));
+      console.error('Email send error:', err);
+    }
+  };
+
+  if (loading) return <p className="text-center">Loading unsafe weather bookings...</p>;
+
+  return (
+    <div className="p-6 m-6 bg-white rounded-2xl shadow-xl">
+      <h2 className="text-2xl font-bold mb-4">Unsafe Boat Ride Bookings (9AM - 12PM)</h2>
+      {bookings.length === 0 ? (
+        <p className="text-gray-500">No unsafe bookings found.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left text-gray-700">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100">
+              <tr>
+                <th scope="col" className="px-4 py-2">User</th>
+                <th scope="col" className="px-4 py-2">Email</th>
+                <th scope="col" className="px-4 py-2">Date</th>
+                <th scope="col" className="px-4 py-2">Time Slot</th>
+                <th scope="col" className="px-4 py-2">Seats</th>
+                <th scope="col" className="px-4 py-2">Total</th>
+                <th scope="col" className="px-4 py-2">Status</th>
+                <th scope="col" className="px-4 py-2">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bookings.map((booking) => (
+                <tr key={booking._id} className="bg-white border-b">
+                  <td className="px-4 py-2">{booking.user.fullName}</td>
+                  <td className="px-4 py-2">{booking.user.email}</td>
+                  <td className="px-4 py-2">{booking.date}</td>
+                  <td className="px-4 py-2">{booking.timeSlot}</td>
+                  <td className="px-4 py-2">{booking.seats.join(', ')}</td>
+                  <td className="px-4 py-2">${booking.totalAmount}</td>
+                  <td className="px-4 py-2">{status[booking._id] || '-'}</td>
+                  <td className="px-4 py-2">
+                    <button
+                      className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                      onClick={() => sendEmail(booking._id)}
+                    >
+                      Send Email
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default WeatherAlertPanel;
