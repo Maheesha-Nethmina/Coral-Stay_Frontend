@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
+import AdminNavbar from '../../Components/Navbar/AdminNavbar'
 
 const WeatherAlertPanel = () => {
   const [bookings, setBookings] = useState([]);
@@ -25,6 +28,7 @@ const WeatherAlertPanel = () => {
     try {
       await axios.post(`http://localhost:3000/api/weather-alerts/send-alert-email/${id}`);
       setStatus((prev) => ({ ...prev, [id]: 'Sent' }));
+      alert('Email sent successfully!'); 
     } catch (err) {
       setStatus((prev) => ({ ...prev, [id]: 'Failed' }));
       console.error('Email send error:', err);
@@ -34,8 +38,16 @@ const WeatherAlertPanel = () => {
   if (loading) return <p className="text-center">Loading unsafe weather bookings...</p>;
 
   return (
-    <div className="p-6 m-6 bg-[#eaf4f6] rounded-2xl shadow-xl">
-      <h2 className="text-2xl font-bold mb-4">Unsafe Boat Ride Bookings (9AM - 12PM)</h2>
+
+    <div>
+      <Navbar />
+    <div className='flex   bg-white shadow-md rounded-xl'>
+     
+      <div className="flex-shrink-0">
+    <AdminNavbar />
+      </div>
+    <div className="flex-grow p-6  bg-[#eaf4f6] rounded-2xl shadow-xl mt-18">
+      <h2 className="text-2xl font-bold mb-4">Unsafe Boat Ride Bookings Details</h2>
       {Array.isArray(bookings) && bookings.length === 0 ? (
         <p className="text-gray-500">No unsafe bookings found.</p>
       ) : (
@@ -76,6 +88,10 @@ const WeatherAlertPanel = () => {
           </table>
         </div>
       )}
+    </div>
+   
+    </div>
+     <Footer />
     </div>
   );
 };
