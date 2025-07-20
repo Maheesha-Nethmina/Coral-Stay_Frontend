@@ -68,7 +68,7 @@ const PackageDetail = () => {
           <div className="md:w-1/2">
             <h1 className="text-2xl md:text-3xl font-bold mb-4 text-[#023545]">{pkg.title}</h1>
             <p className="mb-4 text-gray-700">{pkg.description}</p>
-
+            
             <h2 className="font-semibold text-md mb-1">Features</h2>
             <ul className="grid grid-cols-2 gap-x-4 text-gray-600 mb-4">
               {features.map((f, idx) => (
@@ -87,6 +87,18 @@ const PackageDetail = () => {
                 Offers: {pkg.offers}
               </div>
             )}
+
+            {(pkg.type === 'Both' || pkg.type === 'hotel') && (
+  <div className="text-gray-700 mb-2">
+    <span className="font-semibold">Room Type:</span> {pkg.roomtype || 'N/A'}
+  </div>
+)}
+
+{(pkg.type === 'Both' || pkg.type === 'boatTour') && (
+  <div className="text-gray-700 mb-4">
+    <span className="font-semibold">Seats Available:</span> {pkg.seatNumber ?? 'N/A'}
+  </div>
+)}
 
             {/* Book Now */}
             <button
