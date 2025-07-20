@@ -14,7 +14,9 @@ function AddPackages() {
     price: '',
     days: '',
     offers: '',
-    type: 'hotel'
+    type: 'hotel',
+    roomtype: '',
+    seatNumber : ''
   });
   const [image, setImage] = useState(null);
 
@@ -28,8 +30,12 @@ function AddPackages() {
     Object.entries(inputs).forEach(([key, val]) => formData.append(key, val));
     if (image) formData.append('image', image);
 
-    await axios.post('http://localhost:3000/package', formData);
-    navigate('/packageDetails');
+    try {
+      await axios.post('http://localhost:3000/package', formData);
+      navigate('/packageDetails');
+    } catch (error) {
+      alert('Failed to add package: ' + (error.response?.data?.message || error.message));
+    }
   };
 
   return (
@@ -37,23 +43,25 @@ function AddPackages() {
       <Navbar />
 
       <div className="flex flex-1 bg-[#eaf4f6] mt-10">
-        {/* Sidebar */}
         <aside className="w-60 bg-[#eaf4f6]">
           <AdminNavbar />
         </aside>
 
-        {/* Main Content */}
         <main className="flex-1 flex items-center justify-center p-6 mt-16">
           <form
             onSubmit={handleSubmit}
             encType="multipart/form-data"
             className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl"
           >
-            <h1 className="text-2xl font-bold text-[#023545] mb-6 text-center">Add Package</h1>
+            <h1 className="text-2xl font-bold text-[#023545] mb-6 text-center">
+              Add Package
+            </h1>
 
             <div className="grid grid-cols-1 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Title
+                </label>
                 <input
                   type="text"
                   name="title"
@@ -65,7 +73,9 @@ function AddPackages() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
                 <textarea
                   name="description"
                   rows="4"
@@ -73,11 +83,13 @@ function AddPackages() {
                   onChange={handleChange}
                   required
                   className="w-full border rounded-md p-2"
-                ></textarea>
+                />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Includes</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Includes
+                </label>
                 <input
                   type="text"
                   name="includes"
@@ -90,7 +102,9 @@ function AddPackages() {
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Price
+                  </label>
                   <input
                     type="number"
                     name="price"
@@ -102,7 +116,9 @@ function AddPackages() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Days</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Days
+                  </label>
                   <input
                     type="number"
                     name="days"
@@ -115,7 +131,9 @@ function AddPackages() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Offers</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Offers
+                </label>
                 <input
                   type="text"
                   name="offers"
@@ -126,7 +144,9 @@ function AddPackages() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Type
+                </label>
                 <select
                   name="type"
                   value={inputs.type}
@@ -141,12 +161,48 @@ function AddPackages() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                 <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Room type
+                </label>
+                <select
+                  name="roomtype"
+                  value={inputs.roomtype}
+                  onChange={handleChange}
+                  className="w-full border rounded-md p-2"
+                >
+                  <option value="">Select a Room Type</option>
+                  <option value="Deluxe">Deluxe</option>
+                  <option value="Premier">Premier</option>
+                  <option value="Royal">Royal</option>
+                  <option value="PremierOcean">Premier Ocean</option>
+                  <option value="Presidential">Presidential</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Number of Seats
+                </label>
+                <input
+                  type="number"
+                  name="seatNumber"
+                  value={inputs.seatNumber}
+                  onChange={handleChange}
+                  className="w-full border rounded-md p-2"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Image
+                </label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => setImage(e.target.files[0])}
-                  className="mb-6 w-full border rounded-md p-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#eaf4f6] file:text-[#023545] hover:file:bg-[#d1e7ed] transition-all cursor-pointer"
+                  className="mb-6 w-full border rounded-md p-2 text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0
+                    file:text-sm file:font-semibold file:bg-[#eaf4f6] file:text-[#023545]
+                    hover:file:bg-[#d1e7ed] transition-all cursor-pointer"
                 />
               </div>
             </div>
