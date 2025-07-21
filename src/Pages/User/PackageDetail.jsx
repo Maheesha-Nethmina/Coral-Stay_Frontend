@@ -1,3 +1,5 @@
+// src/pages/PackageDetail.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -32,7 +34,9 @@ const PackageDetail = () => {
         package: {
           id: pkg._id,
           name: pkg.title,
-          price: pkg.price
+          price: pkg.price,
+          roomtype: pkg.roomtype,
+          seatNumber: pkg.seatNumber,
         }
       }
     });
@@ -68,7 +72,7 @@ const PackageDetail = () => {
           <div className="md:w-1/2">
             <h1 className="text-2xl md:text-3xl font-bold mb-4 text-[#023545]">{pkg.title}</h1>
             <p className="mb-4 text-gray-700">{pkg.description}</p>
-
+            
             <h2 className="font-semibold text-md mb-1">Features</h2>
             <ul className="grid grid-cols-2 gap-x-4 text-gray-600 mb-4">
               {features.map((f, idx) => (
@@ -85,6 +89,19 @@ const PackageDetail = () => {
             {pkg.offers && (
               <div className="text-yellow-600 font-semibold mb-4">
                 Offers: {pkg.offers}
+              </div>
+            )}
+
+            {/* Show roomtype and seatNumber */}
+            {(pkg.type === 'Both' || pkg.type === 'hotel') && (
+              <div className="text-gray-700 mb-2">
+                <span className="font-semibold">Room Type:</span> {pkg.roomtype || 'N/A'}
+              </div>
+            )}
+
+            {(pkg.type === 'Both' || pkg.type === 'boatTour') && (
+              <div className="text-gray-700 mb-4">
+                <span className="font-semibold">Number of seats received:</span> {pkg.seatNumber ?? 'N/A'}
               </div>
             )}
 

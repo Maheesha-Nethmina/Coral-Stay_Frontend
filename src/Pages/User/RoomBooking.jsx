@@ -251,8 +251,12 @@ function RoomBooking() {
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-4">
-                      {/* Removed Rooms display */}
-
+                      <div className="text-sm text-gray-600">
+                        <span className="font-semibold">Rooms</span>
+                        <div className="text-center mt-1">
+                          <span className="bg-gray-100 px-2 py-1 rounded">{room.rooms}</span>
+                        </div>
+                      </div>
                       <div className="text-sm text-gray-600">
                         <span className="font-semibold">Price</span>
                         <div className="text-center mt-1 font-bold text-lg">

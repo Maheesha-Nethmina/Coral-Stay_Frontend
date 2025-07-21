@@ -6,7 +6,7 @@ import img1 from '../../assets/reef.jpeg'
 import AboutReef from '../../Components/ReefRide/AboutReef'
 import Footer from '../../Components/Footer/Footer'
 import BookBoat from '../../Components/ReefRide/BoatBooking/BookBoat'
-
+import WeatherDetails from '../../Components/ReefRide/WeatherDetails'
 
 import img2 from '../../assets/reef2.jpeg'
 import { useNavigate } from 'react-router-dom'
@@ -50,8 +50,8 @@ function Reef_Ride() {
         </div>
       </div>
     </div>
-
         
+        <WeatherDetails/>
         <BookBoat />
       
       <div className="relative w-full  overflow-hidden">
