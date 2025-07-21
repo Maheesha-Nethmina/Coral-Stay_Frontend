@@ -1,3 +1,5 @@
+// src/pages/PackageDetail.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -32,7 +34,9 @@ const PackageDetail = () => {
         package: {
           id: pkg._id,
           name: pkg.title,
-          price: pkg.price
+          price: pkg.price,
+          roomtype: pkg.roomtype,
+          seatNumber: pkg.seatNumber,
         }
       }
     });
@@ -88,17 +92,18 @@ const PackageDetail = () => {
               </div>
             )}
 
+            {/* Show roomtype and seatNumber */}
             {(pkg.type === 'Both' || pkg.type === 'hotel') && (
-  <div className="text-gray-700 mb-2">
-    <span className="font-semibold">Room Type:</span> {pkg.roomtype || 'N/A'}
-  </div>
-)}
+              <div className="text-gray-700 mb-2">
+                <span className="font-semibold">Room Type:</span> {pkg.roomtype || 'N/A'}
+              </div>
+            )}
 
-{(pkg.type === 'Both' || pkg.type === 'boatTour') && (
-  <div className="text-gray-700 mb-4">
-    <span className="font-semibold">Seats Available:</span> {pkg.seatNumber ?? 'N/A'}
-  </div>
-)}
+            {(pkg.type === 'Both' || pkg.type === 'boatTour') && (
+              <div className="text-gray-700 mb-4">
+                <span className="font-semibold">Number of seats received:</span> {pkg.seatNumber ?? 'N/A'}
+              </div>
+            )}
 
             {/* Book Now */}
             <button
