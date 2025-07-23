@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CalendarDays } from "lucide-react";
+import axios from 'axios';
 
 import Navbar from '../../Components/Navbar/Navbar';
 import Hero from '../../Components/Common/Hero';
@@ -27,7 +28,6 @@ const roomsData = [
       { type: 'Half Board Package', price: 'LKR 15,000.00' },
       { type: 'Room Only Package', price: 'LKR 10,000.00' }
     ],
-    rooms: 5,
     image: room1
   },
   {
@@ -40,7 +40,6 @@ const roomsData = [
       { type: 'Half Board Package', price: 'LKR 25,000.00' },
       { type: 'Room Only Package', price: 'LKR 20,000.00' }
     ],
-    rooms: 3,
     image: room2
   },
   {
@@ -53,7 +52,6 @@ const roomsData = [
       { type: 'Half Board Package', price: 'LKR 32,000.00' },
       { type: 'Room Only Package', price: 'LKR 30,000.00' }
     ],
-    rooms: 2,
     image: room3
   },
   {
@@ -66,7 +64,6 @@ const roomsData = [
       { type: 'Half Board Package', price: 'LKR 35,000.00' },
       { type: 'Room Only Package', price: 'LKR 30,000.00' }
     ],
-    rooms: 4,
     image: room4
   },
   {
@@ -79,7 +76,6 @@ const roomsData = [
       { type: 'Half Board Package', price: 'LKR 50,000.00' },
       { type: 'Room Only Package', price: 'LKR 45,000.00' }
     ],
-    rooms: 1,
     image: room5
   }
 ];
@@ -93,12 +89,38 @@ function RoomBooking() {
 
   const [selectedPackages, setSelectedPackages] = useState({});
   const [formError, setFormError] = useState('');
+  const [availableRooms, setAvailableRooms] = useState({}); // { [roomId]: number }
+  const [loadingAvailability, setLoadingAvailability] = useState({}); // { [roomId]: boolean }
 
-  const handlePackageChange = (roomId, packageType) => {
+  const handlePackageChange = async (roomId, packageType) => {
     setSelectedPackages(prev => ({
       ...prev,
       [roomId]: packageType
     }));
+
+    // Fetch availability for this room/package/dates
+    if (initialCheckIn && initialCheckOut) {
+      setLoadingAvailability(prev => ({ ...prev, [roomId]: true }));
+      try {
+        const res = await axios.post('http://localhost:3000/bookings/availability', {
+          roomId,
+          packageType,
+          checkIn: initialCheckIn,
+          checkOut: initialCheckOut,
+        });
+        setAvailableRooms(prev => ({
+          ...prev,
+          [roomId]: res.data.availableRooms
+        }));
+      } catch (error) {
+        setAvailableRooms(prev => ({
+          ...prev,
+          [roomId]: 0
+        }));
+      } finally {
+        setLoadingAvailability(prev => ({ ...prev, [roomId]: false }));
+      }
+    }
   };
 
   const handleCancelPackage = (roomId) => {
@@ -249,21 +271,25 @@ function RoomBooking() {
                       ))}
                     </div>
                   </div>
+                  {/* Show available rooms if a package is selected */}
+                  {selectedPackages[room.id] && (
+                    <div className="mb-4 text-sm text-gray-700">
+                      <span className="font-semibold">Available Rooms: </span>
+                      {loadingAvailability[room.id]
+                        ? <span className="text-gray-400">Checking...</span>
+                        : availableRooms[room.id] !== undefined
+                          ? <span className={availableRooms[room.id] > 0 ? "text-green-600" : "text-red-600"}>{availableRooms[room.id]}</span>
+                          : <span className="text-gray-400">Select dates</span>
+                      }
+                    </div>
+                  )}
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-4">
-                      <div className="text-sm text-gray-600">
-                        <span className="font-semibold">Rooms</span>
-                        <div className="text-center mt-1">
-                          <span className="bg-gray-100 px-2 py-1 rounded">{room.rooms}</span>
-                        </div>
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        <span className="font-semibold">Price</span>
-                        <div className="text-center mt-1 font-bold text-lg">
-                          {selectedPackages[room.id]
-                            ? room.packages.find(p => p.type === selectedPackages[room.id])?.price
-                            : room.packages[0].price}
-                        </div>
+                    <div className="text-sm text-gray-600">
+                      <span className="font-semibold">Price</span>
+                      <div className="text-center mt-1 font-bold text-lg">
+                        {selectedPackages[room.id]
+                          ? room.packages.find(p => p.type === selectedPackages[room.id])?.price
+                          : room.packages[0].price}
                       </div>
                     </div>
                     <button

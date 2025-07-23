@@ -1,6 +1,7 @@
-// src/pages/RoomBookingForm/RoomBookingForm.jsx
 
-import React, { useState } from 'react';
+//roomBookingForm.jsx
+
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -11,7 +12,7 @@ import {
   Phone,
   CreditCard,
   CheckCircle,
-  MapPin,      // Added here
+  MapPin,
 } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
@@ -21,31 +22,35 @@ const RoomBookingForm = () => {
   const navigate = useNavigate();
   const bookingData = location.state;
 
-  // If no booking data passed, redirect home
   if (!bookingData) {
     navigate('/');
     return null;
   }
 
-  // Extract data passed via router state
   const {
     roomId,
     roomTitle,
     packageType,
     checkIn,
     checkOut,
-    price, // e.g. 'LKR 20,000.00'
-    quantity = 1,
+    price,
+    //quantity,
+
   } = bookingData;
 
-  // Extract numeric price from string (remove currency formatting)
-  const priceNum = parseInt(price.replace(/[^0-9]/g, ''), 10);
+  // Quantity now controlled locally for dynamic updates
+  const [quantity, setQuantity] = useState(1);
+  const [availableRooms, setAvailableRooms] = useState(null);
 
-  const serviceFee = 1500;
-  const discount = 500;
+// Extract numeric price from string (remove currency formatting but keep decimal)
+const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
+
+  const serviceFee = 300;
+  const discount = 0;
 
   const roomPackageTotal = priceNum * quantity;
   const fullAmount = roomPackageTotal + serviceFee - discount;
+
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -57,6 +62,28 @@ const RoomBookingForm = () => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch availability on mount and when dependencies change
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const response = await axios.post('http://localhost:3000/bookings/availability', {
+          roomId,
+          packageType,
+          checkIn,
+          checkOut,
+        });
+        setAvailableRooms(response.data.availableRooms);
+        if (response.data.availableRooms < quantity) {
+          setQuantity(response.data.availableRooms > 0 ? response.data.availableRooms : 1);
+        }
+      } catch (error) {
+        console.error('Error fetching availability:', error);
+      }
+    };
+
+    fetchAvailability();
+  }, [roomId, packageType, checkIn, checkOut, quantity]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -88,6 +115,9 @@ const RoomBookingForm = () => {
     }
     if (!formData.termsAccepted) {
       newErrors.termsAccepted = 'You must accept the terms and conditions';
+    }
+    if (quantity < 1 || quantity > availableRooms) {
+      newErrors.quantity = 'Please select a valid room quantity';
     }
 
     setErrors(newErrors);
@@ -179,13 +209,39 @@ const RoomBookingForm = () => {
                 </div>
               </div>
 
+              {/* Available rooms display */}
               <div className="flex items-center space-x-3">
                 <MapPin className="h-5 w-5 text-teal-600" />
                 <div>
-                  <p className="text-sm text-gray-500">Room Quantity</p>
-                  <p className="font-semibold text-gray-900">{quantity}</p>
+                  <p className="text-sm text-gray-500">Rooms Available</p>
+                  <p className="font-semibold text-gray-900">
+                    {availableRooms !== null ? availableRooms : 'Loading...'}
+                  </p>
                 </div>
               </div>
+
+               {/* Quantity selector */}
+          {availableRooms !== null && availableRooms > 0 && (
+            <div className="mb-6">
+              <label className="block mb-2 font-semibold text-gray-700">Select Room Quantity</label>
+              <select
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                className={`w-full py-3 px-4 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${
+                  errors.quantity ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                }`}
+              >
+                {Array.from({ length: availableRooms }, (_, i) => i + 1).map((num) => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
+                ))}
+              </select>
+              {errors.quantity && (
+                <p className="mt-1 text-sm text-red-600">{errors.quantity}</p>
+              )}
+            </div>
+          )}
 
               <div className="border-t pt-4 space-y-3 text-gray-700">
                 <div className="flex justify-between">
@@ -207,6 +263,8 @@ const RoomBookingForm = () => {
               </div>
             </div>
           </div>
+
+         
 
           {/* Booking Form */}
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
@@ -341,20 +399,16 @@ const RoomBookingForm = () => {
               <div className="pt-4">
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full bg-[#023545] text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
-                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
+                  disabled={isSubmitting || availableRooms === 0}
+                  className={`w-full bg-teal-600 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
                 >
-                  {isSubmitting ? (
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                      <span>Processing...</span>
-                    </div>
-                  ) : (
-                    'Book Now'
-                  )}
+                  {isSubmitting ? 'Booking...' : 'Book Now'}
                 </button>
+                {availableRooms === 0 && (
+                  <p className="mt-2 text-red-600 text-center font-semibold">
+                    Sorry, no rooms available for the selected dates.
+                  </p>
+                )}
               </div>
             </form>
           </div>

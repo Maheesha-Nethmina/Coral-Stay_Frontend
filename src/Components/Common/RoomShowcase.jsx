@@ -38,9 +38,7 @@ const RoomShowcase = (props) => {
         <h2 className="text-2xl font-semibold text-gray-900 max-w-2xl text-center md:text-left">
           {props.tagline}
         </h2>
-        <button className="bg-[#023545] hover:bg-teal-800 text-white font-medium py-4 px-8 rounded-md transition-all duration-300 shadow-lg hover:shadow-xl min-w-[200px]">
-          {props.ctaText}
-        </button>
+      
       </div>
 
       {/* Amenities */}
@@ -56,9 +54,7 @@ const RoomShowcase = (props) => {
         <h2 className="text-2xl font-semibold text-gray-900 max-w-2xl text-center md:text-left">
           {props.tagline2}
         </h2>
-        <button className="bg-[#023545] hover:bg-teal-800 text-white font-medium py-4 px-8 rounded-md transition-all duration-300 shadow-lg hover:shadow-xl min-w-[200px]">
-          {props.ctaText2}
-        </button>
+       
       </div>
     </div>
     </div>
