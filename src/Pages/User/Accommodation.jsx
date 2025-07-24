@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Hero from '../../Components/Common/Hero';
 import Footer from '../../Components/Footer/Footer';
@@ -26,6 +28,20 @@ function Accommodation() {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [dateError, setDateError] = useState('');
+
+  const location = useLocation();
+
+useEffect(() => {
+  const hash = location.hash;
+  if (hash) {
+    const el = document.querySelector(hash);
+    if (el) {
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }, 100); // slight delay to ensure DOM is rendered
+    }
+  }
+}, [location]);
 
   const rooms = [
     { title: 'Deluxe Room', img: room1, desc: 'Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast.',link: '/DeluxeRoom' },
@@ -75,7 +91,7 @@ function Accommodation() {
       <Navbar />
 
       {/* Hero Section */}
-      <div className="relative">
+      <div id="book-section" className="relative">
         <Hero
           cName="hero"
           heroImg={accommodationImg}
@@ -146,7 +162,7 @@ function Accommodation() {
       </section>
 
       {/* Room Showcase */}
-      <section className="bg-white">
+      <section id="room-types" className="bg-white">
         <div className="max-w-7xl mx-auto px-4 py-16 text-left">
           <h2 className="text-2xl font-semibold text-center mb-6">Recommended Room Types</h2>
           <p className="text-gray-600 mb-10 text-left">
