@@ -41,12 +41,12 @@ const WeatherAlertPanel = () => {
 
     <div>
       <Navbar />
-    <div className='flex   bg-white shadow-md rounded-xl'>
+    <div className='flex   bg-white rounded-xl'>
      
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 mt-10">
     <AdminNavbar />
       </div>
-    <div className="flex-grow p-6  bg-[#eaf4f6] rounded-2xl shadow-xl mt-18">
+    <div className="flex-grow p-6  bg-[#eaf4f6] rounded-2xl shadow-xl mt-15">
       <h2 className="text-2xl font-bold mb-4">Unsafe Boat Ride Bookings Details</h2>
       {Array.isArray(bookings) && bookings.length === 0 ? (
         <p className="text-gray-500">No unsafe bookings found.</p>
