@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Trash2 } from 'lucide-react'; // 🗑️ icon
+import { Trash2 } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
 import AdminNavbar from '../../Components/Navbar/AdminNavbar';
 
@@ -21,8 +21,8 @@ function HotelBookingdetails() {
   }, []);
 
   const handleDelete = async (id) => {
-    const confirm = window.confirm('Are you sure you want to cancel this booking?');
-    if (!confirm) return;
+    const confirmDelete = window.confirm('Are you sure you want to cancel this booking?');
+    if (!confirmDelete) return;
 
     try {
       await axios.delete(`http://localhost:3000/admin/deleteBooking/${id}`);
@@ -34,12 +34,18 @@ function HotelBookingdetails() {
     }
   };
 
+  // Group bookings by Check-In date
   const groupedByDate = bookings.reduce((acc, booking) => {
     const date = booking.checkIn;
     if (!acc[date]) acc[date] = [];
     acc[date].push(booking);
     return acc;
   }, {});
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    return new Date(dateString).toISOString().split('T')[0];
+  };
 
   return (
     <>
@@ -54,12 +60,13 @@ function HotelBookingdetails() {
           <div className="overflow-x-auto">
             {Object.keys(groupedByDate).map((date) => (
               <div key={date} className="mb-10">
-                <h3 className="text-xl font-bold text-[#023545] mb-3">Check-In: {date}</h3>
+                <h3 className="text-xl font-bold text-[#023545] mb-3">
+                  Check-In: {formatDate(date)}
+                </h3>
                 <table className="min-w-full bg-white shadow">
                   <thead>
                     <tr className="bg-gray-200 text-[#023545] text-left">
                       <th className="py-3 px-4">Guest Name</th>
-                      {/* <th className="py-3 px-4">Guest Email</th> */}
                       <th className="py-3 px-4">Room Title</th>
                       <th className="py-3 px-4">Package Type</th>
                       <th className="py-3 px-4">Check In</th>
@@ -71,11 +78,10 @@ function HotelBookingdetails() {
                     {groupedByDate[date].map((booking, index) => (
                       <tr key={index} className="hover:bg-gray-100">
                         <td className="py-2 px-4">{booking.guestName}</td>
-                        {/* <td className="py-2 px-4">{booking.guestEmail}</td> */}
                         <td className="py-2 px-4">{booking.roomTitle}</td>
                         <td className="py-2 px-4">{booking.packageType}</td>
-                        <td className="py-2 px-4">{booking.checkIn}</td>
-                        <td className="py-2 px-4">{booking.checkOut}</td>
+                        <td className="py-2 px-4">{formatDate(booking.checkIn)}</td>
+                        <td className="py-2 px-4">{formatDate(booking.checkOut)}</td>
                         <td className="py-2 px-4">
                           <button onClick={() => handleDelete(booking._id)}>
                             <Trash2 className="text-[#023545] hover:text-[#023545] cursor-pointer" />
