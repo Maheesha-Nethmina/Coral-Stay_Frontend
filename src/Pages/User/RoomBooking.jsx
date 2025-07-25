@@ -46,7 +46,7 @@ const roomsData = [
     id: 3,
     title: 'Royal Suite',
     size: '60 sqm',
-    features: ['Bathrobe', 'Free wifi', 'Minibar', 'Room service'],
+    features: ['Safety Locker', 'Bathrobe', 'Free wifi', 'Minibar', 'Umbrella', 'Tea Maker', 'Room service'],
     packages: [
       { type: 'Full Board Package', price: 'LKR 35,000.00' },
       { type: 'Half Board Package', price: 'LKR 32,000.00' },
@@ -89,8 +89,8 @@ function RoomBooking() {
 
   const [selectedPackages, setSelectedPackages] = useState({});
   const [formError, setFormError] = useState('');
-  const [availableRooms, setAvailableRooms] = useState({}); // { [roomId]: number }
-  const [loadingAvailability, setLoadingAvailability] = useState({}); // { [roomId]: boolean }
+  const [availableRooms, setAvailableRooms] = useState({});
+  const [loadingAvailability, setLoadingAvailability] = useState({});
 
   const handlePackageChange = async (roomId, packageType) => {
     setSelectedPackages(prev => ({
@@ -98,7 +98,6 @@ function RoomBooking() {
       [roomId]: packageType
     }));
 
-    // Fetch availability for this room/package/dates
     if (initialCheckIn && initialCheckOut) {
       setLoadingAvailability(prev => ({ ...prev, [roomId]: true }));
       try {
@@ -271,7 +270,7 @@ function RoomBooking() {
                       ))}
                     </div>
                   </div>
-                  {/* Show available rooms if a package is selected */}
+
                   {selectedPackages[room.id] && (
                     <div className="mb-4 text-sm text-gray-700">
                       <span className="font-semibold">Available Rooms: </span>
@@ -283,21 +282,28 @@ function RoomBooking() {
                       }
                     </div>
                   )}
+
                   <div className="flex justify-between items-center">
-                    <div className="text-sm text-gray-600">
-                      <span className="font-semibold">Price</span>
-                      <div className="text-center mt-1 font-bold text-lg">
-                        {selectedPackages[room.id]
-                          ? room.packages.find(p => p.type === selectedPackages[room.id])?.price
-                          : room.packages[0].price}
+                    {/* Only show price if a package is selected */}
+                    {selectedPackages[room.id] && (
+                      <div className="text-sm text-gray-600">
+                        <span className="font-semibold">Price</span>
+                        <div className="text-center mt-1 font-bold text-lg">
+                          {room.packages.find(p => p.type === selectedPackages[room.id])?.price}
+                        </div>
                       </div>
-                    </div>
+                    )}
                     <button
                       onClick={() => handleBookNow(room)}
-                      className="bg-teal-600 text-white px-5 py-2 rounded-md hover:bg-teal-700 transition-colors"
+                      disabled={selectedPackages[room.id] && availableRooms[room.id] === 0}
+                      className={`px-5 py-2 rounded-md transition-colors text-white ${selectedPackages[room.id] && availableRooms[room.id] === 0
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : 'bg-teal-600 hover:bg-teal-700'
+                        }`}
                     >
-                      Book Now
+                      {selectedPackages[room.id] && availableRooms[room.id] === 0 ? 'Fully Booked' : 'Book Now'}
                     </button>
+
                   </div>
                 </div>
               </div>
