@@ -34,13 +34,13 @@ function Events() {
           cName="hero"
           heroImg={img1}
           title="Events/Activities around Hikkaduwa"
-          text=" Discover the latest events and fun activities happening around Hikkaduwa—from beach festivals and cultural shows to thrilling diving adventures."
+          text=" Discover the latest events and fun activities happening around Hikkaduwa from beach festivals and cultural shows to thrilling diving adventures."
           overlayOpacity="20"
         />
       </motion.div>
       
       <div>
-        <h1 className="text-4xl font-bold text-center mt-10 mb-7 text-[#023545] mx-7">Explore beach festivals, cultural shows, diving trips, turtle hatcheries, surf contests, and local markets—all bringing Hikkaduwa’s vibrant spirit to life.</h1>
+        <h1 className="text-4xl font-bold text-center mt-10 mb-7 text-[#023545] mx-7">Explore beach festivals, cultural shows, diving trips, turtle hatcheries, surf contests, and local markets all bringing Hikkaduwa’s vibrant spirit to life.</h1>
       </div>
      <div className="p-6 grid gap-10 md:grid-cols-2 mx-20 ">
       {events.map((event, index) => (
