@@ -4,7 +4,7 @@ import axios from 'axios';
 import { StarIcon } from '@heroicons/react/24/solid';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
-import hotelcrew from '../../assets/hotelcrew.jpeg';
+
 
 
 const AddReview = () => {
@@ -29,9 +29,9 @@ const AddReview = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/reviews', formData);
+      await axios.post('http://localhost:3000/api/reviews', formData);
       alert('Review submitted successfully!');
-      navigate('/');
+      navigate('/about');
     } catch (err) {
       console.error('Failed to submit review:', err);
       alert('Something went wrong. Please try again.');
