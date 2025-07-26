@@ -228,13 +228,16 @@ const Booking = () => {
                       </div>
                     )}
 
-                    <div className="flex items-center space-x-3">
-                      <Calendar className="h-5 w-5 text-teal-600" />
-                      <div>
-                        <p className="text-sm text-gray-500">Booking Date</p>
-                        <p className="font-semibold text-gray-900">{new Date().toLocaleDateString()}</p>
-                      </div>
+                   <div className="flex items-center space-x-3">
+                    <Calendar className="h-5 w-5 text-teal-600" />
+                    <div>
+                      <p className="text-sm text-gray-500">Booking Date</p>
+                      <p className="font-semibold text-gray-900">
+                        {bookingData.date ? new Date(bookingData.date).toLocaleDateString() : 'Not Selected'}
+                      </p>
                     </div>
+                  </div>
+
                   </>
                 )}
               </div>

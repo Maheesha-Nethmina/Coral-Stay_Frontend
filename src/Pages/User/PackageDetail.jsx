@@ -1,5 +1,4 @@
-// src/pages/PackageDetail.jsx
-
+// src/pages/PackageDetail/PackageDetail.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -12,6 +11,8 @@ const PackageDetail = () => {
 
   const [pkg, setPkg] = useState(null);
   const [error, setError] = useState(null);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [availabilityStatus, setAvailabilityStatus] = useState(null);
 
   useEffect(() => {
     const fetchPackage = async () => {
@@ -26,54 +27,84 @@ const PackageDetail = () => {
     fetchPackage();
   }, [id]);
 
-  const handlePackageBooking = () => {
-    if (!pkg) return;
-    navigate('/booking', {
-      state: {
-        type: 'package',
-        package: {
-          id: pkg._id,
-          name: pkg.title,
-          price: pkg.price,
-          roomtype: pkg.roomtype,
-          seatNumber: pkg.seatNumber,
-        }
+  const handlePackageBooking = async () => {
+    if (!pkg || !selectedDate) {
+      alert('Please select a date before checking availability.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:3000/package/check-availability', {
+        date: selectedDate,
+        seatNumber: pkg.seatNumber,
+      });
+
+      const { available } = response.data;
+
+      if (available) {
+        setAvailabilityStatus('available');
+        setTimeout(() => {
+          navigate('/booking', {
+            state: {
+              type: 'package',
+              date: selectedDate,
+              package: {
+                id: pkg._id,
+                name: pkg.title,
+                price: pkg.price,
+                roomtype: pkg.roomtype,
+                seatNumber: pkg.seatNumber,
+              }
+            }
+          });
+        }, 1000);
+      } else {
+        setAvailabilityStatus('unavailable');
       }
-    });
+    } catch (error) {
+      console.error(error);
+      alert('Error checking availability. Please try again.');
+    }
+  };
+
+  const getMinBookingDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 2);
+    return date.toISOString().split('T')[0];
   };
 
   if (error) return <div className="text-red-500 text-center mt-20">{error}</div>;
   if (!pkg) return <div className="text-center mt-20">Loading...</div>;
 
-  const features = Array.isArray(pkg.includes) ? pkg.includes : pkg.includes?.split(',') ?? [];
+  const features = Array.isArray(pkg.includes)
+    ? pkg.includes
+    : pkg.includes?.split(',') ?? [];
 
   return (
-    <div className="bg-[#EAF4F6]">
+    <div className="bg-[#EAF4F6] min-h-screen">
       <Navbar />
-      <div className="min-h-screen py-12 px-6 flex justify-center items-start mt-16">
-        <div className="max-w-5xl w-full bg-white rounded-lg shadow-lg p-6 md:flex gap-10">
-          
-          {/* Image Section */}
-          <div className="md:w-1/2 bg-gray-300 rounded-lg h-[400px] overflow-hidden">
+      <div className="py-16 px-6 md:px-12 lg:px-24 flex justify-center items-start mt-10">
+        <div className="w-full max-w-6xl bg-white rounded-xl shadow-md p-6 md:flex gap-10">
+
+          <div className="md:w-1/2 h-[470px] bg-gray-100 rounded-lg overflow-hidden">
             {pkg.imageUrl ? (
               <img
                 src={pkg.imageUrl}
                 alt={pkg.title}
-                className="w-full h-[400px] object-cover rounded-lg"
+                className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 text-gray-400 italic rounded-lg">
-                No Image
+              <div className="w-full h-full flex items-center justify-center text-gray-400 italic">
+                No Image Available
               </div>
             )}
           </div>
 
-          {/* Content Section */}
           <div className="md:w-1/2">
-            <h1 className="text-2xl md:text-3xl font-bold mb-4 text-[#023545]">{pkg.title}</h1>
-            <p className="mb-4 text-gray-700">{pkg.description}</p>
-            
-            <h2 className="font-semibold text-md mb-1">Features</h2>
+            <h1 className="text-3xl font-bold text-[#023545] mb-3">{pkg.title}</h1>
+            <p className="text-gray-700 mb-4">{pkg.description}</p>
+
+            <h2 className="text-md font-semibold mb-2">Features</h2>
             <ul className="grid grid-cols-2 gap-x-4 text-gray-600 mb-4">
               {features.map((f, idx) => (
                 <li key={idx}>{f.trim()}</li>
@@ -81,18 +112,17 @@ const PackageDetail = () => {
               <li>{pkg.days} Day{pkg.days > 1 ? 's' : ''}</li>
             </ul>
 
-            <div className="mb-2 font-bold text-xl text-[#023545]">
+            <div className="mb-2 text-xl font-bold text-[#023545]">
               Price: Rs.{pkg.price.toFixed(2)}
               <span className="ml-4 text-sm font-normal text-gray-600">All Taxes Included</span>
             </div>
 
             {pkg.offers && (
-              <div className="text-yellow-600 font-semibold mb-4">
+              <div className="text-yellow-600 font-semibold mb-3">
                 Offers: {pkg.offers}
               </div>
             )}
 
-            {/* Show roomtype and seatNumber */}
             {(pkg.type === 'Both' || pkg.type === 'hotel') && (
               <div className="text-gray-700 mb-2">
                 <span className="font-semibold">Room Type:</span> {pkg.roomtype || 'N/A'}
@@ -105,21 +135,46 @@ const PackageDetail = () => {
               </div>
             )}
 
-            {/* Book Now */}
-            <button
-              onClick={handlePackageBooking}
-              className="bg-[#014B54] hover:bg-[#013f48] text-white font-bold py-2 px-14 rounded-md mt-4"
-            >
-              Book Now
-            </button>
+            {availabilityStatus === 'available' && (
+              <div className="mb-4 text-green-700 bg-green-100 border border-green-400 px-4 py-2 rounded">
+                Seats are available! Redirecting to booking...
+              </div>
+            )}
+            {availabilityStatus === 'unavailable' && (
+              <div className="mb-4 text-red-700 bg-red-100 border border-red-400 px-4 py-2 rounded">
+                Sorry, the selected date does not have enough available seats.
+              </div>
+            )}
 
-            {/* Back to Packages */}
-            <button
-              onClick={() => navigate('/packages')}
-              className="ml-4 bg-[#014B54] hover:bg-[#013f48] text-white font-bold py-2 px-6 rounded-md mt-4"
-            >
-              Back to Packages
-            </button>
+            <div className="mb-4">
+              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+                Select Date for Booking
+              </label>
+              <input
+                type="date"
+                id="date"
+                min={getMinBookingDate()}
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="w-full max-w-xs px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#014B54] focus:border-[#014B54] sm:text-sm"
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 mt-4">
+              <button
+                onClick={handlePackageBooking}
+                className="w-full sm:w-auto bg-[#014B54] hover:bg-[#013f48] text-white font-bold py-3 px-8 rounded-xl transition duration-200"
+              >
+                Book Now
+              </button>
+
+              <button
+                onClick={() => navigate('/packages')}
+                className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-[#014B54] font-bold py-3 px-6 rounded-xl transition duration-200"
+              >
+                Back to Packages
+              </button>
+            </div>
           </div>
         </div>
       </div>
