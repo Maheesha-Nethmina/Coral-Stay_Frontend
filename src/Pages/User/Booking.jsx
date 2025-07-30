@@ -18,11 +18,7 @@ const Booking = () => {
     return null;
   }
 
-  const { type } = bookingData;
-
-  // Debugging logs
-  console.log('Package Room Type:', bookingData?.package?.roomtype);
-  console.log('Package Seat Number:', bookingData?.package?.seatNumber);
+  const type = bookingData.type?.toLowerCase(); // 🔥 Normalize type for comparison
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -163,6 +159,14 @@ const Booking = () => {
     }
   };
 
+  const checkOutDate = (type === 'hotel' || type === 'both') && bookingData.date && bookingData.package?.days
+    ? (() => {
+        const checkOut = new Date(bookingData.date);
+        checkOut.setDate(checkOut.getDate() + bookingData.package.days);
+        return checkOut.toLocaleDateString();
+      })()
+    : null;
+
   return (
     <div>
       <Navbar />
@@ -204,7 +208,7 @@ const Booking = () => {
                       <Package className="h-5 w-5 text-teal-600" />
                       <div>
                         <p className="text-sm text-gray-500">Package</p>
-                        <p className="font-semibold text-gray-900">{bookingData.package.name}</p>
+                        <p className="font-semibold text-gray-900">{bookingData.package.title}</p>
                       </div>
                     </div>
 
@@ -228,16 +232,26 @@ const Booking = () => {
                       </div>
                     )}
 
-                   <div className="flex items-center space-x-3">
-                    <Calendar className="h-5 w-5 text-teal-600" />
-                    <div>
-                      <p className="text-sm text-gray-500">Booking Date</p>
-                      <p className="font-semibold text-gray-900">
-                        {bookingData.date ? new Date(bookingData.date).toLocaleDateString() : 'Not Selected'}
-                      </p>
+                    <div className="flex items-center space-x-3">
+                      <Calendar className="h-5 w-5 text-teal-600" />
+                      <div>
+                        <p className="text-sm text-gray-500">Booking Date</p>
+                        <p className="font-semibold text-gray-900">
+                          {bookingData.date ? new Date(bookingData.date).toLocaleDateString() : 'Not Selected'}
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
+                    {/* ✅ Show only for hotel or both */}
+                    {checkOutDate && (
+                      <div className="flex items-center space-x-3">
+                        <Calendar className="h-5 w-5 text-teal-600" />
+                        <div>
+                          <p className="text-sm text-gray-500">Check-out Date</p>
+                          <p className="font-semibold text-gray-900">{checkOutDate}</p>
+                        </div>
+                      </div>
+                    )}
                   </>
                 )}
               </div>

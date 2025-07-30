@@ -27,6 +27,39 @@ const PackageDetail = () => {
     fetchPackage();
   }, [id]);
 
+  const checkBoatAvailability = async () => {
+    const response = await axios.post('http://localhost:3000/package/check-availability', {
+      date: selectedDate,
+      seatNumber: pkg.seatNumber,
+    });
+    return response.data.available;
+  };
+
+  const checkRoomAvailability = async () => {
+    if (!pkg.roomtype || !selectedDate || !pkg.days) {
+      console.warn('Missing room type or package days');
+      return false;
+    }
+
+    const checkInDate = new Date(selectedDate);
+    const checkOutDate = new Date(checkInDate);
+    checkOutDate.setDate(checkOutDate.getDate() + pkg.days);
+
+    try {
+      const response = await axios.post('http://localhost:3000/bookings/checkRoomTypeAvailability', {
+        roomTitle: pkg.roomtype,
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+        quantity: 1,
+      });
+
+      return response.data.available;
+    } catch (err) {
+      console.error('Room availability check failed:', err.response?.data || err.message);
+      return false;
+    }
+  };
+
   const handlePackageBooking = async () => {
     if (!pkg || !selectedDate) {
       alert('Please select a date before checking availability.');
@@ -35,40 +68,11 @@ const PackageDetail = () => {
 
     setAvailabilityStatus(null);
 
-    const checkBoatAvailability = async () => {
-      const response = await axios.post('http://localhost:3000/package/check-availability', {
-        date: selectedDate,
-        seatNumber: pkg.seatNumber,
-      });
-      return response.data.available;
-    };
-
-    const checkRoomAvailability = async () => {
-      if (!pkg.roomtype) {
-        console.warn('Missing room type for package');
-        return false;
-      }
-
-      // Log the request data before sending it to the backend
-      console.log('Requesting room availability:', {
-        roomTitle: pkg.roomtype,
-        checkIn: selectedDate,
-        quantity: 1
-      });
-
-      const response = await axios.post('http://localhost:3000/bookings/checkRoomTypeAvailability', {
-        roomTitle: pkg.roomtype,
-        checkIn: selectedDate,
-        quantity: 1,
-      });
-
-      if (response.status === 200) {
-        return response.data.available;
-      } else {
-        console.error('Error from backend:', response.data);
-        return false;
-      }
-    };
+    // Calculate checkout date here once
+    const checkInDate = new Date(selectedDate);
+    const checkOutDate = new Date(checkInDate);
+    checkOutDate.setDate(checkOutDate.getDate() + pkg.days);
+    const checkOutString = checkOutDate.toISOString().split('T')[0];
 
     try {
       let seatAvailable = true;
@@ -83,13 +87,8 @@ const PackageDetail = () => {
               state: {
                 type: 'package',
                 date: selectedDate,
-                package: {
-                  id: pkg._id,
-                  name: pkg.title,
-                  price: pkg.price,
-                  roomtype: pkg.roomtype,
-                  seatNumber: pkg.seatNumber,
-                }
+                checkOut: checkOutString,
+                package: pkg
               }
             });
           }, 1000);
@@ -105,13 +104,8 @@ const PackageDetail = () => {
               state: {
                 type: 'package',
                 date: selectedDate,
-                package: {
-                  id: pkg._id,
-                  name: pkg.title,
-                  price: pkg.price,
-                  roomtype: pkg.roomtype,
-                  seatNumber: pkg.seatNumber,
-                }
+                checkOut: checkOutString,
+                package: pkg
               }
             });
           }, 1000);
@@ -119,11 +113,6 @@ const PackageDetail = () => {
           setAvailabilityStatus('roomUnavailable');
         }
       } else if (pkg.type === 'Both') {
-        if (!pkg.roomtype) {
-          alert('Room type is missing for this package.');
-          return;
-        }
-
         [seatAvailable, roomAvailable] = await Promise.all([
           checkBoatAvailability(),
           checkRoomAvailability()
@@ -136,13 +125,8 @@ const PackageDetail = () => {
               state: {
                 type: 'package',
                 date: selectedDate,
-                package: {
-                  id: pkg._id,
-                  name: pkg.title,
-                  price: pkg.price,
-                  roomtype: pkg.roomtype,
-                  seatNumber: pkg.seatNumber,
-                }
+                checkOut: checkOutString,
+                package: pkg
               }
             });
           }, 1000);
@@ -178,7 +162,6 @@ const PackageDetail = () => {
       <Navbar />
       <div className="py-16 px-6 md:px-12 lg:px-24 flex justify-center items-start mt-10">
         <div className="w-full max-w-6xl bg-white rounded-xl shadow-md p-6 md:flex gap-10">
-          {/* Left Side - Image */}
           <div className="md:w-1/2 h-[470px] bg-gray-100 rounded-lg overflow-hidden">
             {pkg.imageUrl ? (
               <img src={pkg.imageUrl} alt={pkg.title} className="w-full h-full object-cover" />
@@ -189,7 +172,6 @@ const PackageDetail = () => {
             )}
           </div>
 
-          {/* Right Side - Info */}
           <div className="md:w-1/2">
             <h1 className="text-3xl font-bold text-[#023545] mb-3">{pkg.title}</h1>
             <p className="text-gray-700 mb-4">{pkg.description}</p>
@@ -219,7 +201,7 @@ const PackageDetail = () => {
               </div>
             )}
 
-            {/* Availability Alerts */}
+            {/* Alerts */}
             {availabilityStatus === 'seatsAvailable' && (
               <div className="mb-4 text-green-700 bg-green-100 border border-green-400 px-4 py-2 rounded">
                 Seats are available! Redirecting to booking...
@@ -237,17 +219,17 @@ const PackageDetail = () => {
             )}
             {availabilityStatus === 'seatsUnavailable' && (
               <div className="mb-4 text-red-700 bg-red-100 border border-red-400 px-4 py-2 rounded">
-                Sorry, not enough boat seats available for the selected date.
+                Not enough boat seats available.
               </div>
             )}
             {availabilityStatus === 'roomUnavailable' && (
               <div className="mb-4 text-red-700 bg-red-100 border border-red-400 px-4 py-2 rounded">
-                Sorry, not enough rooms available for the selected date.
+                Not enough rooms available.
               </div>
             )}
             {availabilityStatus === 'bothUnavailable' && (
               <div className="mb-4 text-red-700 bg-red-100 border border-red-400 px-4 py-2 rounded">
-                Sorry, neither rooms nor boat seats are available for the selected date.
+                Neither rooms nor boat seats available.
               </div>
             )}
 
