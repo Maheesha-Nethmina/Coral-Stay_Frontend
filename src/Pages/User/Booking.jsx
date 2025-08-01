@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
-  Calendar, MapPin, DollarSign, User, Mail, Phone, CreditCard,
+  Calendar, MapPin, User, Mail, Phone, CreditCard,
   CheckCircle, Package, Bed, Users
 } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
@@ -12,13 +12,20 @@ const Booking = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const bookingData = location.state;
+  const formattedDate = bookingData.date?.value || bookingData.date;
+
+const checkOutDate =
+  (bookingData.package?.type === 'hotel' || bookingData.package?.type === 'both') && bookingData.package?.days
+    ? new Date(new Date(formattedDate).setDate(new Date(formattedDate).getDate() + bookingData.package.days)).toLocaleDateString()
+    : null;
+
 
   if (!bookingData) {
     navigate('/');
     return null;
   }
 
-  const type = bookingData.type?.toLowerCase(); // 🔥 Normalize type for comparison
+  const type = bookingData.type?.toLowerCase();
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -91,23 +98,15 @@ const Booking = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full name is required';
-    }
+    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
     if (!formData.email.trim()) {
       newErrors.email = 'Email address is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
-    if (!formData.contactNumber.trim()) {
-      newErrors.contactNumber = 'Contact number is required';
-    }
-    if (!formData.nicNumber.trim()) {
-      newErrors.nicNumber = 'NIC number is required';
-    }
-    if (!formData.termsAccepted) {
-      newErrors.termsAccepted = 'You must accept the terms and conditions';
-    }
+    if (!formData.contactNumber.trim()) newErrors.contactNumber = 'Contact number is required';
+    if (!formData.nicNumber.trim()) newErrors.nicNumber = 'NIC number is required';
+    if (!formData.termsAccepted) newErrors.termsAccepted = 'You must accept the terms and conditions';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -115,57 +114,79 @@ const Booking = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
     setIsSubmitting(true);
 
     try {
-      const formattedDate = bookingData.date?.value;
+      const formattedDate = bookingData.date?.value || bookingData.date;
+      const checkOutDate =
+        (bookingData.package?.type === 'hotel' || bookingData.package?.type === 'both') && bookingData.package?.days
+          ? new Date(new Date(formattedDate).setDate(new Date(formattedDate).getDate() + bookingData.package.days))
+          : null;
 
-      const bookingPayload = {
+      const payload = {
         userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
         googleId: bookingData.googleId || '',
-        date: formattedDate,
-        timeSlot: bookingData.time?.time,
-        seats: type === 'seat' ? bookingData.seats : [],
         user: {
           fullName: formData.fullName,
           email: formData.email,
           contactNumber: formData.contactNumber,
-          nicNumber: formData.nicNumber,
+          nicNumber: formData.nicNumber
         },
+        packageType: bookingData.package?.type?.toLowerCase() || 'boattour',
+        bookedDate: formattedDate,
+        checkOutDate: checkOutDate,
         totalAmount: fullAmount,
-        packageDetails: type === 'package' ? {
-          id: bookingData.package.id,
-          name: bookingData.package.name,
-          roomtype: bookingData.package.roomtype,
-          seatNumber: bookingData.package.seatNumber
+        packageDetails: {
+          id: bookingData.package?.id,
+          name: bookingData.package?.title,
+          roomtype: bookingData.package?.roomtype,
+          seatNumber: bookingData.package?.seatNumber,
+        },
+        roomBooking: (bookingData.package?.type === 'hotel' || bookingData.package?.type === 'both') ? {
+          roomId: bookingData.package.roomId,
+          roomTitle: bookingData.package.roomtype,
+          packageType: bookingData.package.type,
+          checkIn: formattedDate,
+          checkOut: checkOutDate,
+          quantity: bookingData.package.quantity || 1,
+          guestName: formData.fullName,
+          guestEmail: formData.email,
+          nicNumber: formData.nicNumber,
+          contactNumber: formData.contactNumber,
+          totalAmount: fullAmount
+        } : undefined,
+        seatBooking: (bookingData.package?.type === 'boattour' || bookingData.package?.type === 'both') ? {
+          userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
+          googleId: bookingData.googleId || '',
+          date: formattedDate,
+          timeSlot: bookingData.time?.time,
+          seats: bookingData.package?.seats || [],
+          user: {
+            fullName: formData.fullName,
+            email: formData.email,
+            contactNumber: formData.contactNumber,
+            nicNumber: formData.nicNumber,
+          },
+          totalAmount: fullAmount
         } : undefined
       };
 
-      const response = await axios.post('http://localhost:3000/reeftour/bookSeats', bookingPayload);
+      const res = await axios.post('http://localhost:3000/package/book-package', payload);
 
-      if (response.status === 201) {
-        alert('Booking confirmed successfully!');
+      if (res.status === 201) {
+        alert('Package booking successful!');
         navigate('/profile');
       } else {
         alert('Booking failed. Please try again.');
       }
-    } catch (error) {
-      console.error('Error during booking:', error);
-      alert('An error occurred. Please try again.');
+    } catch (err) {
+      console.error('Booking error:', err);
+      alert('An error occurred during booking.');
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  const checkOutDate = (type === 'hotel' || type === 'both') && bookingData.date && bookingData.package?.days
-    ? (() => {
-        const checkOut = new Date(bookingData.date);
-        checkOut.setDate(checkOut.getDate() + bookingData.package.days);
-        return checkOut.toLocaleDateString();
-      })()
-    : null;
 
   return (
     <div>
@@ -242,7 +263,7 @@ const Booking = () => {
                       </div>
                     </div>
 
-                    {/* ✅ Show only for hotel or both */}
+                    {/*Show only for hotel or both */}
                     {checkOutDate && (
                       <div className="flex items-center space-x-3">
                         <Calendar className="h-5 w-5 text-teal-600" />
