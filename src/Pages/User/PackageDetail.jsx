@@ -1,4 +1,3 @@
-// src/pages/PackageDetail/PackageDetail.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -13,6 +12,7 @@ const PackageDetail = () => {
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [availabilityStatus, setAvailabilityStatus] = useState(null);
+  const [availableRoomId, setAvailableRoomId] = useState(null);
 
   useEffect(() => {
     const fetchPackage = async () => {
@@ -53,6 +53,10 @@ const PackageDetail = () => {
         quantity: 1,
       });
 
+      if (response.data.available && response.data.roomId) {
+        setAvailableRoomId(response.data.roomId);
+      }
+
       return response.data.available;
     } catch (err) {
       console.error('Room availability check failed:', err.response?.data || err.message);
@@ -68,7 +72,6 @@ const PackageDetail = () => {
 
     setAvailabilityStatus(null);
 
-    // Calculate checkout date here once
     const checkInDate = new Date(selectedDate);
     const checkOutDate = new Date(checkInDate);
     checkOutDate.setDate(checkOutDate.getDate() + pkg.days);
@@ -88,8 +91,11 @@ const PackageDetail = () => {
                 type: 'package',
                 date: selectedDate,
                 checkOut: checkOutString,
-                package: pkg
-              }
+                package: {
+                  ...pkg,
+                  roomId: pkg.roomId || pkg._id, // fallback if needed
+                },
+              },
             });
           }, 1000);
         } else {
@@ -105,8 +111,11 @@ const PackageDetail = () => {
                 type: 'package',
                 date: selectedDate,
                 checkOut: checkOutString,
-                package: pkg
-              }
+                package: {
+                  ...pkg,
+                  roomId: availableRoomId || pkg.roomId, // Use the correct roomId
+                },
+              },
             });
           }, 1000);
         } else {
@@ -115,7 +124,7 @@ const PackageDetail = () => {
       } else if (pkg.type === 'Both') {
         [seatAvailable, roomAvailable] = await Promise.all([
           checkBoatAvailability(),
-          checkRoomAvailability()
+          checkRoomAvailability(),
         ]);
 
         if (seatAvailable && roomAvailable) {
@@ -126,8 +135,11 @@ const PackageDetail = () => {
                 type: 'package',
                 date: selectedDate,
                 checkOut: checkOutString,
-                package: pkg
-              }
+                package: {
+                  ...pkg,
+                  roomId: availableRoomId || pkg.roomId,
+                },
+              },
             });
           }, 1000);
         } else if (!seatAvailable && !roomAvailable) {
