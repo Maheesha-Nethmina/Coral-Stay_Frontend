@@ -183,7 +183,7 @@ const handleSubmit = async (e) => {
         },
         roomBooking: bookingData.package.roomtype
           ? {
-              roomId: bookingData.package.roomId || bookingData.package._id || bookingData.package.id,
+              roomId: Number(bookingData.package.roomId ?? bookingData.package._id ?? bookingData.package.id),
               roomTitle: bookingData.package.roomtype,
               packageType: bookingData.package.type,
               checkIn: checkIn.toISOString(),
@@ -196,22 +196,33 @@ const handleSubmit = async (e) => {
               totalAmount: fullAmount,
             }
           : null,
-        seatBooking: bookingData.package.seatNumber
-          ? {
-              userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
-              googleId: bookingData.googleId || '',
-              date: checkIn.toISOString().split('T')[0],
-              timeSlot: bookingData.time?.time || '9:00–10:00 AM',
-              seats: Array.from({ length: bookingData.package.seatNumber }, (_, i) => `P${i + 1}`),
-              user: {
-                fullName: formData.fullName,
-                email: formData.email,
-                contactNumber: formData.contactNumber,
-                nicNumber: formData.nicNumber,
-              },
-              totalAmount: fullAmount,
-            }
-          : null
+       seatBooking: bookingData.package.seatNumber
+        ? {
+            userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
+            googleId: bookingData.googleId || '',
+            date: checkIn.toISOString().split('T')[0],
+            timeSlot: bookingData.time?.time || '09.00 am to 10.00 am',
+
+            // ✅ Updated to select random seat numbers (1–24)
+            seats: (() => {
+              const totalAvailableSeats = 24;
+              const seatCount = bookingData.package.seatNumber || 0;
+              const allSeats = Array.from({ length: totalAvailableSeats }, (_, i) => i + 1);
+              const shuffled = allSeats.sort(() => 0.5 - Math.random());
+              return shuffled.slice(0, seatCount);
+            })(),
+
+            user: {
+              fullName: formData.fullName,
+              email: formData.email,
+              contactNumber: formData.contactNumber,
+              nicNumber: formData.nicNumber,
+            },
+            totalAmount: fullAmount,
+          }
+        : null,
+
+
       };
 
       const response = await axios.post('http://localhost:3000/package/book-package', packageBookingPayload);
