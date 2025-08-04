@@ -10,6 +10,10 @@ import ourGoalImg from '../../assets/about03.jpeg';
 import whyChooseImg from '../../assets/about04.jpeg';
 import getToKnowImg from '../../assets/image03.jpg';
 
+import { useState } from 'react';
+import axios from 'axios';
+
+
 // FadeInSection component for reuse
 const FadeInSection = ({ children }) => {
   const controls = useAnimation();
@@ -36,32 +40,55 @@ const FadeInSection = ({ children }) => {
 const About = () => {
   const navigate = useNavigate();
 
-  const reviews = [
-    {
-      id: 1,
-      name: 'Sarah & Mark',
-      location: 'London, UK',
-      rating: 5,
-      content: 'The perfect combination of relaxation and adventure! The coral reef tour was breathtaking, and our room was so comfortable. The family running CoralStay made us feel like old friends.',
-      date: 'March 2023',
-    },
-    {
-      id: 2,
-      name: 'Rajiv',
-      location: 'Mumbai, India',
-      rating: 5,
-      content: 'As a solo traveler, I felt completely safe and welcomed. The glass-bottom boat tour was incredible - saw so many colorful fish without even getting wet! Will definitely return.',
-      date: 'January 2023',
-    },
-    {
-      id: 3,
-      name: 'The Johnson Family',
-      location: 'Sydney, Australia',
-      rating: 4,
-      content: 'Our kids (8 & 10) loved snorkeling for the first time here. The crew was so patient and knowledgeable. Hotel was clean and breakfast was delicious. Only wish we could have stayed longer!',
-      date: 'December 2022',
-    },
-  ];
+  // const reviews = [
+  //   {
+  //     id: 1,
+  //     name: 'Sarah & Mark',
+  //     location: 'London, UK',
+  //     rating: 5,
+  //     content: 'The perfect combination of relaxation and adventure! The coral reef tour was breathtaking, and our room was so comfortable. The family running CoralStay made us feel like old friends.',
+  //     date: 'March 2023',
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Rajiv',
+  //     location: 'Mumbai, India',
+  //     rating: 5,
+  //     content: 'As a solo traveler, I felt completely safe and welcomed. The glass-bottom boat tour was incredible - saw so many colorful fish without even getting wet! Will definitely return.',
+  //     date: 'January 2023',
+  //   },
+  //   {
+  //     id: 3,
+  //     name: 'The Johnson Family',
+  //     location: 'Sydney, Australia',
+  //     rating: 4,
+  //     content: 'Our kids (8 & 10) loved snorkeling for the first time here. The crew was so patient and knowledgeable. Hotel was clean and breakfast was delicious. Only wish we could have stayed longer!',
+  //     date: 'December 2022',
+  //   },
+  // ];
+
+
+  const [reviews, setReviews] = useState([]);
+
+useEffect(() => {
+  const fetchReviews = async () => {
+    try {
+      const res = await axios.get('http://localhost:3000/api/reviews'); // Use your correct backend URL
+      setReviews(res.data.reviews); // because the backend sends { reviews: [...] }
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  fetchReviews();
+}, []);
+
+
+
+
+
+
+
 
   const renderStars = (rating) => {
     return Array(5).fill(0).map((_, i) => (
@@ -208,11 +235,11 @@ const About = () => {
       </FadeInSection>
 
       {/* Section 6: Guest Reviews */}
-      <FadeInSection>
+      {/* <FadeInSection>
         <div className="mt-24 mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-teal-800 font-serif mb-12 text-center">What Our Guests Say</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-teal-800 font-serif mb-12 text-center">What Our Guests Say</h2> */}
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {reviews.map((review) => (
               <div key={review.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div className="flex justify-between items-start mb-4">
@@ -228,18 +255,43 @@ const About = () => {
                 <p className="text-gray-500 text-sm">{review.date}</p>
               </div>
             ))}
-          </div>
+          </div> */}
 
-          <div className="mt-12 text-center">
-            <button
-              className="bg-teal-700 hover:bg-teal-800 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300"
-              onClick={() => navigate('/reviews/new')}
-            >
-              Leave Your Review
-            </button>
+   {/* Section 6: Guest Reviews */}
+<FadeInSection>
+  <div className="mt-24 mb-16">
+    <h2 className="text-3xl md:text-4xl font-bold text-teal-800 font-serif mb-12 text-center">What Our Guests Say</h2>
+
+    {/* Horizontal scrollable reviews container */}
+    <div className="flex space-x-6 overflow-x-auto pb-4 scrollbar-hide">
+      {reviews.map((review) => (
+        <div key={review._id} className="min-w-[400px] max-w-sm bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 flex-shrink-0">
+         <div className="flex justify-between items-start mb-4 h-[40px] md:h-[60px]">
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 ">{review.name}</h3>
+              <p className="text-gray-600 text-sm">{review.location}</p>
+            </div>
+            <div className="flex items-center">
+              {renderStars(review.rating)}
+            </div>
           </div>
+          <p className="text-gray-700 mb-4 italic">"{review.content}"</p>
+          <p className="text-gray-500 text-sm">{review.date}</p>
         </div>
-      </FadeInSection>
+      ))}
+    </div>
+
+    <div className="mt-12 text-center">
+      <button
+        className="bg-teal-700 hover:bg-teal-800 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300"
+        onClick={() => navigate('/reviews/new')}
+      >
+        Leave Your Review
+      </button>
+    </div>
+  </div>
+</FadeInSection>
+
     </div>
   );
 };
