@@ -17,10 +17,20 @@ import ForgotPassword from "../Auth/ForgotPassword";
 import { useAuth } from "../../contexts/AuthContext";
 import navLogo from "../../assets/navLogo.png";
 
+// ADD THIS IMPORT AT THE TOP
+import Chatbot from "react-chatbot-kit";
+import "react-chatbot-kit/build/main.css";
+import config from "../ChatBot/config";
+import MessageParser from "../ChatBot/MessageParser";
+import ActionProvider from "../ChatBot/ActionProvider";
+import botimage from '../../assets/botimage.png';
+
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [authView, setAuthView] = useState("login");
+  const [showChatbot, setShowChatbot] = useState(false);
 
   const { user, logout, loading } = useAuth();
   const location = useLocation();
@@ -84,6 +94,15 @@ const Navbar = () => {
 
   if (loading) return null;
 
+  const saveMessages = (messages, HTMLString) => {
+    localStorage.setItem('chat_messages', JSON.stringify(messages));
+  };
+
+  const loadMessages = () => {
+    const messages = JSON.parse(localStorage.getItem('chat_messages'));
+    return messages;
+  };
+
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 bg-[#EAF4F6] shadow-md">
@@ -100,11 +119,9 @@ const Navbar = () => {
                   <Link
                     key={link.name}
                     to={link.path}
-                    className={`relative text-[#023545] font-medium transition-all duration-200 ${
-                      isActive ? "text-indigo-600" : ""
-                    } after:content-[''] after:block after:h-[2px] after:bg-indigo-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${
-                      isActive ? "after:scale-x-100" : ""
-                    }`}
+                    className={`relative text-[#023545] font-medium transition-all duration-200 ${isActive ? "text-indigo-600" : ""
+                      } after:content-[''] after:block after:h-[2px] after:bg-indigo-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${isActive ? "after:scale-x-100" : ""
+                      }`}
                   >
                     {link.name}
                   </Link>
@@ -166,9 +183,8 @@ const Navbar = () => {
                   key={link.name}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium hover:bg-white/60 transition text-[#023545] ${
-                    isActive ? "bg-white/60" : ""
-                  }`}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium hover:bg-white/60 transition text-[#023545] ${isActive ? "bg-white/60" : ""
+                    }`}
                 >
                   {link.icon}
                   {link.name}
@@ -210,9 +226,50 @@ const Navbar = () => {
             )}
           </div>
         )}
+
       </nav>
 
       {showModal && renderAuthModal()}
+
+      {/* Chatbot UI fixed below navbar */}
+      {showModal && renderAuthModal()}
+
+      {showChatbot && (
+        <div
+          style={{
+            position: "fixed",
+            top: "170px",
+            right: "150px",
+            zIndex: 999,
+            width: "250px",
+            height: "300px",
+          }}
+        >
+          <Chatbot
+            config={config}
+            messageParser={MessageParser}
+            actionProvider={ActionProvider}
+            messageHistory={loadMessages()}
+            saveMessages={saveMessages}
+          />
+        </div>
+      )}
+
+      <div
+        style={{
+          position: "fixed",
+          top: "620px",
+          right: "50px",
+          zIndex: 999,
+          width: "50px",
+          height: "50px",
+
+        }}
+        onClick={() => setShowChatbot((prev) => !prev)}
+      >
+        <img src={botimage} alt="bot" />
+      </div>
+
     </>
   );
 };
