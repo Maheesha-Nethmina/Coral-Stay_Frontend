@@ -38,6 +38,8 @@ import BlockSheets from './Pages/Admin/BlockSheets';
 import UpdatepriceSettings from './Pages/Admin/UpdatepriceSettings';
 import CancellationRequest from './Pages/Admin/cancellationrequest';
 import WeatherAlertPanel from './Pages/Admin/WeatherAlertPanel';
+import Bookedpackagedetails from './Pages/Admin/bookedpackagedetails';
+
 // Auth Component
 import ResetPassword from './Components/Auth/ResetPassword';
 
@@ -89,6 +91,8 @@ function App() {
           <Route path="/updatepriceSettings"  element={<ProtectedAdminRoute element={<UpdatepriceSettings />} />} />
           <Route path="/cancellationrequest" element={<ProtectedAdminRoute element={<CancellationRequest />} />} />
           <Route path="/weather-alerts" element={<ProtectedAdminRoute element={<WeatherAlertPanel />} />} />
+          <Route path="/bookedpackagedetails" element={<ProtectedAdminRoute element={<Bookedpackagedetails />} />} />
+
           {/* Admin Protected */}
           <Route path="/admin" element={<ProtectedAdminRoute element={<AdminDash />} />} />
 
