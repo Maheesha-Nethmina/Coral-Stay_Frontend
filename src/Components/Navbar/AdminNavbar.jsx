@@ -8,9 +8,10 @@ const Sidebar = () => {
     { name: 'Reef Tours', path: '/reeftourdetails' },
     { name: 'Hotel Bookings', path: '/hotelbookingdetails' },
     { name: 'Events', path: '/eventDetails'},
-    { name: 'Packages', path: '/packageDetails'},
+    // { name: 'Packages', path: '/packageDetails'},
+    { name: 'Packages', path: '/bookedpackagedetails'},
     { name: 'Cancellation Request', path: '/cancellationrequest'},
-    {name:' Weather Alerts', path: '/weather-alerts'},
+    { name:' Weather Alerts', path: '/weather-alerts'},
 
   ];
 

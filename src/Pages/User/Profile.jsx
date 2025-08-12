@@ -11,42 +11,63 @@ function Profile() {
   const { user: currentUser } = useAuth();
   const [userInfo, setUserInfo] = useState({});
   const [bookings, setBookings] = useState([]);
+  const [hotelBookings, setHotelBookings] = useState([]);
+  const [packageBookings, setPackageBookings] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [cancelReason, setCancelReason] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!currentUser?._id) return;
+ useEffect(() => {
+  if (!currentUser || !currentUser._id) return;
 
-      try {
-        const userRes = await axios.get(`http://localhost:3000/authentication/userDetailsToProfile/${currentUser._id}`);
-        setUserInfo(userRes.data);
+  const userId = currentUser._id;
 
-        const bookingRes = await axios.get(`http://localhost:3000/reeftour/displayUserBookings/${currentUser._id}`);
-        setBookings(bookingRes.data);
-      } catch (err) {
-        console.error('Error loading profile data:', err?.response?.data || err.message);
+  const fetchData = async () => {
+    try {
+      // 1. Fetch user profile details
+      const userRes = await axios.get(
+        `http://localhost:3000/authentication/userDetailsToProfile/${userId}`
+      );
+      const userData = userRes.data || {};
+      setUserInfo(userData);
+
+      // 2. Fetch reef tour bookings
+      const reefRes = await axios.get(
+        `http://localhost:3000/reeftour/displayUserBookings/${userId}`
+      );
+      setBookings(reefRes.data || []);
+
+      // 3. Fetch hotel bookings (use userData.name here)
+      if (userData.name) {
+        const hotelRes = await axios.get(
+          `http://localhost:3000/bookings/getHotelBookingsByUser/${encodeURIComponent(userData.name)}`
+        );
+        setHotelBookings(hotelRes.data || []);
       }
-    };
 
-    fetchData();
-  }, [currentUser?._id]);
+      // 4. Fetch package bookings
+      const packageRes = await axios.get(
+        `http://localhost:3000/package/user-packages/${userId}`
+      );
+      setPackageBookings(packageRes.data || []);
+
+    } catch (err) {
+      console.error("Error loading profile data:", err?.response?.data || err.message);
+    }
+  };
+
+  fetchData();
+}, [currentUser]);
+
 
   const getRefundAmount = (bookingDateStr, totalAmount) => {
     const bookingDate = new Date(bookingDateStr);
     const today = new Date();
-    const diffInMs = bookingDate - today;
-    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-    if (diffInDays >= 2) {
-      return totalAmount;
-    } else if (diffInDays > 0) {
-      return totalAmount / 2;
-    } else {
-      return 0;
-    }
+    const diffInDays = (bookingDate - today) / (1000 * 60 * 60 * 24);
+    if (diffInDays >= 2) return totalAmount;
+    if (diffInDays > 0) return totalAmount / 2;
+    return 0;
   };
 
   const handleCancelRequest = async () => {
@@ -65,13 +86,8 @@ function Profile() {
       setCancelReason('');
       setSelectedBooking(null);
 
-      const confirm = window.confirm(
-        `Cancellation request sent successfully!\nYou will receive a confirmation email shortly.`
-      );
-
-      if (confirm) {
-        navigate('/');
-      }
+      const confirm = window.confirm(`Cancellation request sent successfully!\nYou will receive a confirmation email shortly.`);
+      if (confirm) navigate('/');
 
     } catch (err) {
       alert('Failed to send cancellation request.');
@@ -87,20 +103,20 @@ function Profile() {
           {/* PROFILE HEADER */}
           <div className="flex items-center space-x-6">
             <img
-              src={currentUser?.profileImage || userprofile}
+              src={userInfo?.profileImage || currentUser?.profileImage || userprofile}
               alt="User"
               className="w-28 h-28 object-cover rounded-xl"
             />
             <div>
-              <h2 className="text-2xl font-semibold">{userInfo?.name}</h2>
+              <h2 className="text-2xl font-semibold">{userInfo?.name || userInfo?.fullName || 'Unnamed User'}</h2>
               <div className="flex items-center text-gray-600 mt-1">
                 <Mail className="w-4 h-4 mr-2" />
-                {userInfo?.email}
+                {userInfo?.email || 'No email available'}
               </div>
             </div>
           </div>
 
-          {/* BOOKINGS TABLE */}
+          {/* REEF TOUR BOOKINGS */}
           <div className="mt-10">
             <h3 className="text-xl font-semibold mb-4">Reef Tour Bookings</h3>
             <div className="overflow-x-auto">
@@ -111,7 +127,6 @@ function Profile() {
                     <th className="p-3 border">Time Slot</th>
                     <th className="p-3 border">Seat Numbers</th>
                     <th className="p-3 border">Full Amount</th>
-                    {/* <th className="p-3 border">Booked Date</th> */}
                     <th className="p-3 border">Action</th>
                   </tr>
                 </thead>
@@ -119,14 +134,12 @@ function Profile() {
                   {bookings.length > 0 ? (
                     bookings.map((booking, idx) => {
                       const refundAmount = getRefundAmount(booking.date, booking.totalAmount);
-
                       return (
                         <tr key={idx} className="hover:bg-gray-100">
                           <td className="p-3 border">{booking.date}</td>
                           <td className="p-3 border">{booking.timeSlot}</td>
                           <td className="p-3 border">{booking.seats?.join(', ')}</td>
                           <td className="p-3 border">Rs. {booking.totalAmount}.00</td>
-                          {/* <td className="p-3 border">{new Date(booking.createdAt).toLocaleDateString()}</td> */}
                           <td className="p-3 border">
                             {refundAmount > 0 ? (
                               <button
@@ -147,8 +160,80 @@ function Profile() {
                     })
                   ) : (
                     <tr>
-                      <td className="p-3 border text-center" colSpan="6">
-                        No bookings found.
+                      <td className="p-3 border text-center" colSpan="5">
+                        No reef tour bookings found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* HOTEL BOOKINGS */}
+          <div className="mt-10">
+            <h3 className="text-xl font-semibold mb-4">Hotel Bookings</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border border-gray-300 text-left">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="p-3 border">Room Title</th>
+                    <th className="p-3 border">Check-In</th>
+                    <th className="p-3 border">Check-Out</th>
+                    <th className="p-3 border">Quantity</th>
+                    <th className="p-3 border">Total Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {hotelBookings.length > 0 ? (
+                    hotelBookings.map((booking, idx) => (
+                      <tr key={idx} className="hover:bg-gray-100">
+                        <td className="p-3 border">{booking.roomTitle}</td>
+                        <td className="p-3 border">{new Date(booking.checkIn).toLocaleDateString()}</td>
+                        <td className="p-3 border">{new Date(booking.checkOut).toLocaleDateString()}</td>
+                        <td className="p-3 border">{booking.quantity}</td>
+                        <td className="p-3 border">Rs. {booking.totalAmount}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td className="p-3 border text-center" colSpan="5">
+                        No hotel bookings found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* PACKAGE BOOKINGS */}
+          <div className="mt-10">
+            <h3 className="text-xl font-semibold mb-4">Package Bookings</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border border-gray-300 text-left">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="p-3 border">Package Name</th>
+                    <th className="p-3 border">Booking Date</th>
+                    <th className="p-3 border">Status</th>
+                    <th className="p-3 border">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {packageBookings.length > 0 ? (
+                    packageBookings.map((pkg, idx) => (
+                      <tr key={idx} className="hover:bg-gray-100">
+                        <td className="p-3 border">{pkg.packageName}</td>
+                        <td className="p-3 border">{new Date(pkg.bookingDate).toLocaleDateString()}</td>
+                        <td className="p-3 border">{pkg.status}</td>
+                        <td className="p-3 border">Rs. {pkg.amount}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td className="p-3 border text-center" colSpan="4">
+                        No package bookings found.
                       </td>
                     </tr>
                   )}
@@ -178,7 +263,7 @@ function Profile() {
               </button>
             </div>
 
-            <p><strong>Full Name:</strong> {userInfo?.name}</p>
+            <p><strong>Full Name:</strong> {userInfo?.name || userInfo?.fullName}</p>
             <p><strong>Date:</strong> {selectedBooking?.date}</p>
             <p><strong>Time Slot:</strong> {selectedBooking?.timeSlot}</p>
             <p><strong>Seats:</strong> {selectedBooking?.seats.join(', ')}</p>

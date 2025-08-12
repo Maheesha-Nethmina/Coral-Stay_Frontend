@@ -71,11 +71,13 @@ const Booking = () => {
   const { pricePerSeat, serviceFee, discount } = priceSettings;
   let fullAmount = 0;
 
+    // Replace the price calculation block with:
   if (type === 'seat') {
-    fullAmount = (bookingData.seats.length * pricePerSeat) + serviceFee - discount;
+    fullAmount = (bookingData.seats.length * (pricePerSeat || 0)) + (serviceFee || 0) - (discount || 0);
   } else if (type === 'package') {
-    fullAmount = bookingData.package.price + serviceFee - discount;
+    fullAmount = (bookingData.package.price || 0) + (serviceFee || 0) - (discount || 0);
   }
+  
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -117,21 +119,23 @@ const Booking = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!validateForm()) return;
-    setIsSubmitting(true);
+  if (!validateForm()) return;
+  setIsSubmitting(true);
 
-    try {
-      const formattedDate = bookingData.date?.value;
+  try {
+    const formattedDate = bookingData.date?.value || bookingData.date;
 
+    // 👉 If type is 'seat', use existing logic (unchanged)
+    if (type === 'seat') {
       const bookingPayload = {
         userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
         googleId: bookingData.googleId || '',
         date: formattedDate,
         timeSlot: bookingData.time?.time,
-        seats: type === 'seat' ? bookingData.seats : [],
+        seats: bookingData.seats,
         user: {
           fullName: formData.fullName,
           email: formData.email,
@@ -139,12 +143,7 @@ const Booking = () => {
           nicNumber: formData.nicNumber,
         },
         totalAmount: fullAmount,
-        packageDetails: type === 'package' ? {
-          id: bookingData.package.id,
-          name: bookingData.package.name,
-          roomtype: bookingData.package.roomtype,
-          seatNumber: bookingData.package.seatNumber
-        } : undefined
+        packageDetails: undefined,
       };
 
       const response = await axios.post('http://localhost:3000/reeftour/bookSeats', bookingPayload);
@@ -155,13 +154,95 @@ const Booking = () => {
       } else {
         alert('Booking failed. Please try again.');
       }
-    } catch (error) {
-      console.error('Error during booking:', error);
-      alert('An error occurred. Please try again.');
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+
+    // 🚀 NEW: If type is 'package', call /package/bookPackage
+    else if (type === 'package') {
+      const checkIn = new Date(formattedDate);
+      const checkOut = new Date(checkIn);
+      checkOut.setDate(checkIn.getDate() + bookingData.package.days);
+
+      const packageBookingPayload = {
+        userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
+        googleId: bookingData.googleId || '',
+        user: {
+          fullName: formData.fullName,
+          email: formData.email,
+          contactNumber: formData.contactNumber,
+          nicNumber: formData.nicNumber,
+        },
+        packageType: bookingData.package.type,
+        bookedDate: checkIn.toISOString(),
+        checkOutDate: checkOut.toISOString(),
+        totalAmount: fullAmount,
+        packageDetails: {
+          id: bookingData.package.id,
+          name: bookingData.package.title,
+          roomtype: bookingData.package.roomtype,
+          seatNumber: bookingData.package.seatNumber
+        },
+        roomBooking: bookingData.package.roomtype
+          ? {
+              roomId: Number(bookingData.package.roomId ?? bookingData.package._id ?? bookingData.package.id),
+              roomTitle: bookingData.package.roomtype,
+              packageType: bookingData.package.type,
+              checkIn: checkIn.toISOString(),
+              checkOut: checkOut.toISOString(),
+              quantity: 1,
+              guestName: formData.fullName,
+              guestEmail: formData.email,
+              nicNumber: formData.nicNumber,
+              contactNumber: formData.contactNumber,
+              totalAmount: fullAmount,
+            }
+          : null,
+       seatBooking: bookingData.package.seatNumber
+        ? {
+            userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
+            googleId: bookingData.googleId || '',
+            date: checkIn.toISOString().split('T')[0],
+            timeSlot: bookingData.time?.time || '09.00 am to 10.00 am',
+
+            // ✅ Updated to select random seat numbers (1–24)
+            seats: (() => {
+              const totalAvailableSeats = 24;
+              const seatCount = bookingData.package.seatNumber || 0;
+              const allSeats = Array.from({ length: totalAvailableSeats }, (_, i) => i + 1);
+              const shuffled = allSeats.sort(() => 0.5 - Math.random());
+              return shuffled.slice(0, seatCount);
+            })(),
+
+            user: {
+              fullName: formData.fullName,
+              email: formData.email,
+              contactNumber: formData.contactNumber,
+              nicNumber: formData.nicNumber,
+            },
+            totalAmount: fullAmount,
+          }
+        : null,
+
+
+      };
+
+      const response = await axios.post('http://localhost:3000/package/book-package', packageBookingPayload);
+
+      if (response.status === 201) {
+        alert('Package booking successful!');
+        navigate('/profile');
+      } else {
+        alert('Package booking failed. Please try again.');
+      }
+    }
+
+  } catch (error) {
+    console.error('Error during booking:', error);
+    alert('An error occurred. Please try again.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <div>
@@ -204,7 +285,7 @@ const Booking = () => {
                       <Package className="h-5 w-5 text-teal-600" />
                       <div>
                         <p className="text-sm text-gray-500">Package</p>
-                        <p className="font-semibold text-gray-900">{bookingData.package.name}</p>
+                        <p className="font-semibold text-gray-900">{bookingData.package.title}</p>
                       </div>
                     </div>
 
