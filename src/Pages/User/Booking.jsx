@@ -177,7 +177,7 @@ const handleSubmit = async (e) => {
         totalAmount: fullAmount,
         packageDetails: {
           id: bookingData.package.id,
-          name: bookingData.package.name,
+          name: bookingData.package.title,
           roomtype: bookingData.package.roomtype,
           seatNumber: bookingData.package.seatNumber
         },
