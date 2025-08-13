@@ -18,10 +18,10 @@ function Profile() {
   const [cancelReason, setCancelReason] = useState('');
   const navigate = useNavigate();
 
- useEffect(() => {
-  if (!currentUser || !currentUser._id) return;
+useEffect(() => {
+  if (!currentUser || (!currentUser._id && !currentUser.googleId)) return;
 
-  const userId = currentUser._id;
+  const userId = currentUser._id || currentUser.googleId;
 
   const fetchData = async () => {
     try {
@@ -38,15 +38,16 @@ function Profile() {
       );
       setBookings(reefRes.data || []);
 
-      // 3. Fetch hotel bookings (use userData.name here)
-      if (userData.name) {
+      // 3. Fetch hotel bookings (match backend: use guestName)
+      if (userData.name || userData.fullName) {
+        const guestName = userData.name || userData.fullName;
         const hotelRes = await axios.get(
-          `http://localhost:3000/bookings/getHotelBookingsByUser/${encodeURIComponent(userData.name)}`
+          `http://localhost:3000/bookings/getHotelBookingsByUser/${encodeURIComponent(guestName)}`
         );
         setHotelBookings(hotelRes.data || []);
       }
 
-      // 4. Fetch package bookings
+      // 4. Fetch package bookings (works for both _id and googleId now)
       const packageRes = await axios.get(
         `http://localhost:3000/package/user-packages/${userId}`
       );
@@ -182,6 +183,8 @@ function Profile() {
                     <th className="p-3 border">Check-Out</th>
                     <th className="p-3 border">Quantity</th>
                     <th className="p-3 border">Total Amount</th>
+                    <th className="p-3 border">Action</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -193,6 +196,7 @@ function Profile() {
                         <td className="p-3 border">{new Date(booking.checkOut).toLocaleDateString()}</td>
                         <td className="p-3 border">{booking.quantity}</td>
                         <td className="p-3 border">Rs. {booking.totalAmount}</td>
+                        
                       </tr>
                     ))
                   ) : (
@@ -308,6 +312,7 @@ function Profile() {
       )}
     </>
   );
+  
 }
 
 export default Profile;
