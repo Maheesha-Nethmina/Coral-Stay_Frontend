@@ -17,11 +17,13 @@ function Profile() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [cancelReason, setCancelReason] = useState('');
   const navigate = useNavigate();
+  const [selectedBookingType, setSelectedBookingType] = useState(null);
 
- useEffect(() => {
-  if (!currentUser || !currentUser._id) return;
 
-  const userId = currentUser._id;
+useEffect(() => {
+  if (!currentUser || (!currentUser._id && !currentUser.googleId)) return;
+
+  const userId = currentUser._id || currentUser.googleId;
 
   const fetchData = async () => {
     try {
@@ -38,15 +40,16 @@ function Profile() {
       );
       setBookings(reefRes.data || []);
 
-      // 3. Fetch hotel bookings (use userData.name here)
-      if (userData.name) {
+      // 3. Fetch hotel bookings (match backend: use guestName)
+      if (userData.name || userData.fullName) {
+        const guestName = userData.name || userData.fullName;
         const hotelRes = await axios.get(
-          `http://localhost:3000/bookings/getHotelBookingsByUser/${encodeURIComponent(userData.name)}`
+          `http://localhost:3000/bookings/getHotelBookingsByUser/${encodeURIComponent(guestName)}`
         );
         setHotelBookings(hotelRes.data || []);
       }
 
-      // 4. Fetch package bookings
+      // 4. Fetch package bookings (works for both _id and googleId now)
       const packageRes = await axios.get(
         `http://localhost:3000/package/user-packages/${userId}`
       );
@@ -182,6 +185,8 @@ function Profile() {
                     <th className="p-3 border">Check-Out</th>
                     <th className="p-3 border">Quantity</th>
                     <th className="p-3 border">Total Amount</th>
+                    <th className="p-3 border">Action</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -193,6 +198,25 @@ function Profile() {
                         <td className="p-3 border">{new Date(booking.checkOut).toLocaleDateString()}</td>
                         <td className="p-3 border">{booking.quantity}</td>
                         <td className="p-3 border">Rs. {booking.totalAmount}</td>
+                        < td className="p-3 border">
+                        {(() => {
+                          const refundAmount = getRefundAmount(booking.checkIn, booking.totalAmount);
+                          return refundAmount > 0 ? (
+                            <button
+                              className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                              onClick={() => {
+                                setSelectedBooking(booking);
+                                setSelectedBookingType('hotel');
+                                setShowModal(true);
+                              }}
+                            >
+                              <Ban className="w-4 h-4 mr-2" /> Cancel
+                            </button>
+                          ) : (
+                            <span className="text-gray-400">Not Allowed</span>
+                          );
+                        })()}
+                      </td>
                       </tr>
                     ))
                   ) : (
@@ -215,9 +239,11 @@ function Profile() {
                 <thead className="bg-gray-200">
                   <tr>
                     <th className="p-3 border">Package Name</th>
-                    <th className="p-3 border">Booking Date</th>
-                    <th className="p-3 border">Status</th>
+                    <th className="p-3 border">Check-In Date</th>
+                    {/* <th className="p-3 border">Status</th> */}
                     <th className="p-3 border">Amount</th>
+                    <th className="p-3 border">Action</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -226,8 +252,27 @@ function Profile() {
                       <tr key={idx} className="hover:bg-gray-100">
                         <td className="p-3 border">{pkg.packageName}</td>
                         <td className="p-3 border">{new Date(pkg.bookingDate).toLocaleDateString()}</td>
-                        <td className="p-3 border">{pkg.status}</td>
-                        <td className="p-3 border">Rs. {pkg.amount}</td>
+                        {/* <td className="p-3 border">{pkg.status}</td> */}
+                        <td className="p-3 border">Rs. {pkg.amount}.00</td>
+                        <td className="p-3 border">
+                        {(() => {
+                        const refundAmount = getRefundAmount(pkg.bookingDate, pkg.amount);
+                        return refundAmount > 0 ? (
+                          <button
+                            className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                            onClick={() => {
+                              setSelectedBooking(pkg);
+                              setSelectedBookingType('package');
+                              setShowModal(true);
+                            }}
+                          >
+                            <Ban className="w-4 h-4 mr-2" /> Cancel
+                          </button>
+                        ) : (
+                          <span className="text-gray-400">Not Allowed</span>
+                        );
+                      })()}
+                       </td>
                       </tr>
                     ))
                   ) : (
@@ -308,6 +353,7 @@ function Profile() {
       )}
     </>
   );
+  
 }
 
 export default Profile;
