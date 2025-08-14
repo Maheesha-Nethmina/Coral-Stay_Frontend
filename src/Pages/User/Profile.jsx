@@ -17,6 +17,8 @@ function Profile() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [cancelReason, setCancelReason] = useState('');
   const navigate = useNavigate();
+  const [selectedBookingType, setSelectedBookingType] = useState(null);
+
 
 useEffect(() => {
   if (!currentUser || (!currentUser._id && !currentUser.googleId)) return;
@@ -196,7 +198,25 @@ useEffect(() => {
                         <td className="p-3 border">{new Date(booking.checkOut).toLocaleDateString()}</td>
                         <td className="p-3 border">{booking.quantity}</td>
                         <td className="p-3 border">Rs. {booking.totalAmount}</td>
-                        
+                        < td className="p-3 border">
+                        {(() => {
+                          const refundAmount = getRefundAmount(booking.checkIn, booking.totalAmount);
+                          return refundAmount > 0 ? (
+                            <button
+                              className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                              onClick={() => {
+                                setSelectedBooking(booking);
+                                setSelectedBookingType('hotel');
+                                setShowModal(true);
+                              }}
+                            >
+                              <Ban className="w-4 h-4 mr-2" /> Cancel
+                            </button>
+                          ) : (
+                            <span className="text-gray-400">Not Allowed</span>
+                          );
+                        })()}
+                      </td>
                       </tr>
                     ))
                   ) : (
@@ -219,9 +239,11 @@ useEffect(() => {
                 <thead className="bg-gray-200">
                   <tr>
                     <th className="p-3 border">Package Name</th>
-                    <th className="p-3 border">Booking Date</th>
-                    <th className="p-3 border">Status</th>
+                    <th className="p-3 border">Check-In Date</th>
+                    {/* <th className="p-3 border">Status</th> */}
                     <th className="p-3 border">Amount</th>
+                    <th className="p-3 border">Action</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -230,8 +252,27 @@ useEffect(() => {
                       <tr key={idx} className="hover:bg-gray-100">
                         <td className="p-3 border">{pkg.packageName}</td>
                         <td className="p-3 border">{new Date(pkg.bookingDate).toLocaleDateString()}</td>
-                        <td className="p-3 border">{pkg.status}</td>
-                        <td className="p-3 border">Rs. {pkg.amount}</td>
+                        {/* <td className="p-3 border">{pkg.status}</td> */}
+                        <td className="p-3 border">Rs. {pkg.amount}.00</td>
+                        <td className="p-3 border">
+                        {(() => {
+                        const refundAmount = getRefundAmount(pkg.bookingDate, pkg.amount);
+                        return refundAmount > 0 ? (
+                          <button
+                            className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                            onClick={() => {
+                              setSelectedBooking(pkg);
+                              setSelectedBookingType('package');
+                              setShowModal(true);
+                            }}
+                          >
+                            <Ban className="w-4 h-4 mr-2" /> Cancel
+                          </button>
+                        ) : (
+                          <span className="text-gray-400">Not Allowed</span>
+                        );
+                      })()}
+                       </td>
                       </tr>
                     ))
                   ) : (
