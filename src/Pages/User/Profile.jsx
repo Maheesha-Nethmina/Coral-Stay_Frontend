@@ -1,3 +1,4 @@
+// src/pages/Profile/Profile.jsx
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
@@ -16,53 +17,46 @@ function Profile() {
   const [showModal, setShowModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [cancelReason, setCancelReason] = useState('');
-  const navigate = useNavigate();
   const [selectedBookingType, setSelectedBookingType] = useState(null);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!currentUser || (!currentUser._id && !currentUser.googleId)) return;
 
-useEffect(() => {
-  if (!currentUser || (!currentUser._id && !currentUser.googleId)) return;
+    const userId = currentUser._id || currentUser.googleId;
 
-  const userId = currentUser._id || currentUser.googleId;
-
-  const fetchData = async () => {
-    try {
-      // 1. Fetch user profile details
-      const userRes = await axios.get(
-        `http://localhost:3000/authentication/userDetailsToProfile/${userId}`
-      );
-      const userData = userRes.data || {};
-      setUserInfo(userData);
-
-      // 2. Fetch reef tour bookings
-      const reefRes = await axios.get(
-        `http://localhost:3000/reeftour/displayUserBookings/${userId}`
-      );
-      setBookings(reefRes.data || []);
-
-      // 3. Fetch hotel bookings (match backend: use guestName)
-      if (userData.name || userData.fullName) {
-        const guestName = userData.name || userData.fullName;
-        const hotelRes = await axios.get(
-          `http://localhost:3000/bookings/getHotelBookingsByUser/${encodeURIComponent(guestName)}`
+    const fetchData = async () => {
+      try {
+        const userRes = await axios.get(
+          `http://localhost:3000/authentication/userDetailsToProfile/${userId}`
         );
-        setHotelBookings(hotelRes.data || []);
+        const userData = userRes.data || {};
+        setUserInfo(userData);
+
+        const reefRes = await axios.get(
+          `http://localhost:3000/reeftour/displayUserBookings/${userId}`
+        );
+        setBookings(reefRes.data || []);
+
+        if (userData.name || userData.fullName) {
+          const guestName = userData.name || userData.fullName;
+          const hotelRes = await axios.get(
+            `http://localhost:3000/bookings/getHotelBookingsByUser/${encodeURIComponent(guestName)}`
+          );
+          setHotelBookings(hotelRes.data || []);
+        }
+
+        const packageRes = await axios.get(
+          `http://localhost:3000/package/user-packages/${userId}`
+        );
+        setPackageBookings(packageRes.data || []);
+      } catch (err) {
+        console.error("Error loading profile data:", err?.response?.data || err.message);
       }
+    };
 
-      // 4. Fetch package bookings (works for both _id and googleId now)
-      const packageRes = await axios.get(
-        `http://localhost:3000/package/user-packages/${userId}`
-      );
-      setPackageBookings(packageRes.data || []);
-
-    } catch (err) {
-      console.error("Error loading profile data:", err?.response?.data || err.message);
-    }
-  };
-
-  fetchData();
-}, [currentUser]);
-
+    fetchData();
+  }, [currentUser]);
 
   const getRefundAmount = (bookingDateStr, totalAmount) => {
     const bookingDate = new Date(bookingDateStr);
@@ -75,14 +69,28 @@ useEffect(() => {
 
   const handleCancelRequest = async () => {
     try {
-      const refundAmount = getRefundAmount(selectedBooking.date, selectedBooking.totalAmount);
+      let bookingDate;
+      let amount;
+
+      if (selectedBookingType === 'reefTour') {
+        bookingDate = selectedBooking.date;
+        amount = selectedBooking.totalAmount;
+      } else if (selectedBookingType === 'hotel') {
+        bookingDate = selectedBooking.checkIn;
+        amount = selectedBooking.totalAmount;
+      } else if (selectedBookingType === 'package') {
+        bookingDate = selectedBooking.bookingDate;
+        amount = selectedBooking.amount;
+      }
+
+      const refundAmount = getRefundAmount(bookingDate, amount);
 
       await axios.post('http://localhost:3000/admin/requestCancellation', {
         bookingId: selectedBooking._id,
-        userId: currentUser._id,
+        userId: currentUser._id || currentUser.googleId,
         reason: cancelReason,
         refundAmount,
-        type: 'reefTour',
+        type: selectedBookingType,
       });
 
       setShowModal(false);
@@ -91,7 +99,6 @@ useEffect(() => {
 
       const confirm = window.confirm(`Cancellation request sent successfully!\nYou will receive a confirmation email shortly.`);
       if (confirm) navigate('/');
-
     } catch (err) {
       alert('Failed to send cancellation request.');
       console.error(err);
@@ -149,6 +156,7 @@ useEffect(() => {
                                 className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                                 onClick={() => {
                                   setSelectedBooking(booking);
+                                  setSelectedBookingType('reefTour');
                                   setShowModal(true);
                                 }}
                               >
@@ -186,7 +194,6 @@ useEffect(() => {
                     <th className="p-3 border">Quantity</th>
                     <th className="p-3 border">Total Amount</th>
                     <th className="p-3 border">Action</th>
-
                   </tr>
                 </thead>
                 <tbody>
@@ -198,30 +205,30 @@ useEffect(() => {
                         <td className="p-3 border">{new Date(booking.checkOut).toLocaleDateString()}</td>
                         <td className="p-3 border">{booking.quantity}</td>
                         <td className="p-3 border">Rs. {booking.totalAmount}</td>
-                        < td className="p-3 border">
-                        {(() => {
-                          const refundAmount = getRefundAmount(booking.checkIn, booking.totalAmount);
-                          return refundAmount > 0 ? (
-                            <button
-                              className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                              onClick={() => {
-                                setSelectedBooking(booking);
-                                setSelectedBookingType('hotel');
-                                setShowModal(true);
-                              }}
-                            >
-                              <Ban className="w-4 h-4 mr-2" /> Cancel
-                            </button>
-                          ) : (
-                            <span className="text-gray-400">Not Allowed</span>
-                          );
-                        })()}
-                      </td>
+                        <td className="p-3 border">
+                          {(() => {
+                            const refundAmount = getRefundAmount(booking.checkIn, booking.totalAmount);
+                            return refundAmount > 0 ? (
+                              <button
+                                className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                                onClick={() => {
+                                  setSelectedBooking(booking);
+                                  setSelectedBookingType('hotel');
+                                  setShowModal(true);
+                                }}
+                              >
+                                <Ban className="w-4 h-4 mr-2" /> Cancel
+                              </button>
+                            ) : (
+                              <span className="text-gray-400">Not Allowed</span>
+                            );
+                          })()}
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td className="p-3 border text-center" colSpan="5">
+                      <td className="p-3 border text-center" colSpan="6">
                         No hotel bookings found.
                       </td>
                     </tr>
@@ -240,10 +247,8 @@ useEffect(() => {
                   <tr>
                     <th className="p-3 border">Package Name</th>
                     <th className="p-3 border">Check-In Date</th>
-                    {/* <th className="p-3 border">Status</th> */}
                     <th className="p-3 border">Amount</th>
                     <th className="p-3 border">Action</th>
-
                   </tr>
                 </thead>
                 <tbody>
@@ -252,27 +257,26 @@ useEffect(() => {
                       <tr key={idx} className="hover:bg-gray-100">
                         <td className="p-3 border">{pkg.packageName}</td>
                         <td className="p-3 border">{new Date(pkg.bookingDate).toLocaleDateString()}</td>
-                        {/* <td className="p-3 border">{pkg.status}</td> */}
                         <td className="p-3 border">Rs. {pkg.amount}.00</td>
                         <td className="p-3 border">
-                        {(() => {
-                        const refundAmount = getRefundAmount(pkg.bookingDate, pkg.amount);
-                        return refundAmount > 0 ? (
-                          <button
-                            className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                            onClick={() => {
-                              setSelectedBooking(pkg);
-                              setSelectedBookingType('package');
-                              setShowModal(true);
-                            }}
-                          >
-                            <Ban className="w-4 h-4 mr-2" /> Cancel
-                          </button>
-                        ) : (
-                          <span className="text-gray-400">Not Allowed</span>
-                        );
-                      })()}
-                       </td>
+                          {(() => {
+                            const refundAmount = getRefundAmount(pkg.bookingDate, pkg.amount);
+                            return refundAmount > 0 ? (
+                              <button
+                                className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                                onClick={() => {
+                                  setSelectedBooking(pkg);
+                                  setSelectedBookingType('package');
+                                  setShowModal(true);
+                                }}
+                              >
+                                <Ban className="w-4 h-4 mr-2" /> Cancel
+                              </button>
+                            ) : (
+                              <span className="text-gray-400">Not Allowed</span>
+                            );
+                          })()}
+                        </td>
                       </tr>
                     ))
                   ) : (
@@ -295,7 +299,9 @@ useEffect(() => {
         <div className="fixed inset-0 bg-transparent bg-opacity-90 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="w-[700px] bg-[#eaf4f6] border border-gray-300 p-6 rounded-2xl shadow-2xl">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Cancel Reef Tour Booking</h2>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Cancel {selectedBookingType === 'reefTour' ? 'Reef Tour' : selectedBookingType === 'hotel' ? 'Hotel' : 'Package'} Booking
+              </h2>
               <button
                 onClick={() => {
                   setShowModal(false);
@@ -309,13 +315,43 @@ useEffect(() => {
             </div>
 
             <p><strong>Full Name:</strong> {userInfo?.name || userInfo?.fullName}</p>
-            <p><strong>Date:</strong> {selectedBooking?.date}</p>
-            <p><strong>Time Slot:</strong> {selectedBooking?.timeSlot}</p>
-            <p><strong>Seats:</strong> {selectedBooking?.seats.join(', ')}</p>
-            <p><strong>Amount:</strong> Rs. {selectedBooking?.totalAmount}</p>
-            <p className="mt-2 text-md text-green-600">
-              <strong>Refund Amount:</strong> Rs. {getRefundAmount(selectedBooking?.date, selectedBooking?.totalAmount)}
-            </p>
+
+            {selectedBookingType === 'reefTour' && (
+              <>
+                <p><strong>Date:</strong> {selectedBooking?.date}</p>
+                <p><strong>Time Slot:</strong> {selectedBooking?.timeSlot}</p>
+                {selectedBooking?.seats?.length > 0 && (
+                  <p><strong>Seats:</strong> {selectedBooking.seats.join(', ')}</p>
+                )}
+                <p><strong>Amount:</strong> Rs. {selectedBooking?.totalAmount}</p>
+                <p className="mt-2 text-md text-green-600">
+                  <strong>Refund Amount:</strong> Rs. {getRefundAmount(selectedBooking?.date, selectedBooking?.totalAmount)}
+                </p>
+              </>
+            )}
+
+            {selectedBookingType === 'hotel' && (
+              <>
+                <p><strong>Room:</strong> {selectedBooking?.roomTitle}</p>
+                <p><strong>Check-In:</strong> {new Date(selectedBooking?.checkIn).toLocaleDateString()}</p>
+                <p><strong>Check-Out:</strong> {new Date(selectedBooking?.checkOut).toLocaleDateString()}</p>
+                <p><strong>Amount:</strong> Rs. {selectedBooking?.totalAmount}</p>
+                <p className="mt-2 text-md text-green-600">
+                  <strong>Refund Amount:</strong> Rs. {getRefundAmount(selectedBooking?.checkIn, selectedBooking?.totalAmount)}
+                </p>
+              </>
+            )}
+
+            {selectedBookingType === 'package' && (
+              <>
+                <p><strong>Package:</strong> {selectedBooking?.packageName}</p>
+                <p><strong>Date:</strong> {new Date(selectedBooking?.bookingDate).toLocaleDateString()}</p>
+                <p><strong>Amount:</strong> Rs. {selectedBooking?.amount}</p>
+                <p className="mt-2 text-md text-green-600">
+                  <strong>Refund Amount:</strong> Rs. {getRefundAmount(selectedBooking?.bookingDate, selectedBooking?.amount)}
+                </p>
+              </>
+            )}
 
             <textarea
               placeholder="Reason for cancellation"
@@ -353,7 +389,6 @@ useEffect(() => {
       )}
     </>
   );
-  
 }
 
 export default Profile;
