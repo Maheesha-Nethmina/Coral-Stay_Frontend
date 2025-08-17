@@ -42,6 +42,7 @@ import Bookedpackagedetails from './Pages/Admin/bookedpackagedetails';
 
 // Auth Component
 import ResetPassword from './Components/Auth/ResetPassword';
+import AddReview from './Pages/User/AddReview';
 
 function App() {
   const { user, loading } = useAuth();
@@ -74,6 +75,8 @@ function App() {
           <Route path="/packagedetail/:id" element={<PackageDetail />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/packages" element={<Packages />} />
+          <Route path="/reviews/new" element={<AddReview />} />
+
 
           {/* Admin Routes */}
           <Route path="/addevents" element={<ProtectedAdminRoute element={<AddEvents />} />} />

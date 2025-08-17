@@ -204,26 +204,26 @@ function Profile() {
                         <td className="p-3 border">{new Date(booking.checkIn).toLocaleDateString()}</td>
                         <td className="p-3 border">{new Date(booking.checkOut).toLocaleDateString()}</td>
                         <td className="p-3 border">{booking.quantity}</td>
-                        <td className="p-3 border">Rs. {booking.totalAmount}</td>
-                        <td className="p-3 border">
-                          {(() => {
-                            const refundAmount = getRefundAmount(booking.checkIn, booking.totalAmount);
-                            return refundAmount > 0 ? (
-                              <button
-                                className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                                onClick={() => {
-                                  setSelectedBooking(booking);
-                                  setSelectedBookingType('hotel');
-                                  setShowModal(true);
-                                }}
-                              >
-                                <Ban className="w-4 h-4 mr-2" /> Cancel
-                              </button>
-                            ) : (
-                              <span className="text-gray-400">Not Allowed</span>
-                            );
-                          })()}
-                        </td>
+                        <td className="p-3 border">Rs. {booking.totalAmount}.00</td>
+                        < td className="p-3 border">
+                        {(() => {
+                          const refundAmount = getRefundAmount(booking.checkIn, booking.totalAmount);
+                          return refundAmount > 0 ? (
+                            <button
+                              className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                              onClick={() => {
+                                setSelectedBooking(booking);
+                                setSelectedBookingType('hotel');
+                                setShowModal(true);
+                              }}
+                            >
+                              <Ban className="w-4 h-4 mr-2" /> Cancel
+                            </button>
+                          ) : (
+                            <span className="text-gray-400">Not Allowed</span>
+                          );
+                        })()}
+                      </td>
                       </tr>
                     ))
                   ) : (
