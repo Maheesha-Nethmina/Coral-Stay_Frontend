@@ -181,62 +181,79 @@ function Profile() {
             </div>
           </div>
 
-          {/* HOTEL BOOKINGS */}
-          <div className="mt-10">
-            <h3 className="text-xl font-semibold mb-4">Hotel Bookings</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full border border-gray-300 text-left">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="p-3 border">Room Title</th>
-                    <th className="p-3 border">Check-In</th>
-                    <th className="p-3 border">Check-Out</th>
-                    <th className="p-3 border">Quantity</th>
-                    <th className="p-3 border">Total Amount</th>
-                    <th className="p-3 border">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {hotelBookings.length > 0 ? (
-                    hotelBookings.map((booking, idx) => (
-                      <tr key={idx} className="hover:bg-gray-100">
-                        <td className="p-3 border">{booking.roomTitle}</td>
-                        <td className="p-3 border">{new Date(booking.checkIn).toLocaleDateString()}</td>
-                        <td className="p-3 border">{new Date(booking.checkOut).toLocaleDateString()}</td>
-                        <td className="p-3 border">{booking.quantity}</td>
-                        <td className="p-3 border">Rs. {booking.totalAmount}.00</td>
-                        < td className="p-3 border">
-                        {(() => {
-                          const refundAmount = getRefundAmount(booking.checkIn, booking.totalAmount);
-                          return refundAmount > 0 ? (
-                            <button
-                              className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                              onClick={() => {
-                                setSelectedBooking(booking);
-                                setSelectedBookingType('hotel');
-                                setShowModal(true);
-                              }}
-                            >
-                              <Ban className="w-4 h-4 mr-2" /> Cancel
-                            </button>
-                          ) : (
-                            <span className="text-gray-400">Not Allowed</span>
-                          );
-                        })()}
-                      </td>
-                      </tr>
-                    ))
+         <div className="mt-10">
+  <h3 className="text-xl font-semibold mb-4">Hotel Bookings</h3>
+  <div className="overflow-x-auto">
+    <table className="min-w-full border border-gray-300 text-left">
+      <thead className="bg-gray-200">
+        <tr>
+          <th className="p-3 border">Room Title</th>
+          <th className="p-3 border">Check-In</th>
+          <th className="p-3 border">Check-Out</th>
+          <th className="p-3 border">Quantity</th>
+          <th className="p-3 border">Total Amount</th>
+          <th className="p-3 border">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {hotelBookings.length > 0 ? (
+          hotelBookings.map((booking, idx) => {
+            const today = new Date();
+            const checkInDate = new Date(booking.checkIn);
+            const checkOutDate = new Date(booking.checkOut);
+            const refundAmount = getRefundAmount(booking.checkIn, booking.totalAmount);
+
+            const isUpcoming = checkOutDate >= today; // ✅ only future or ongoing bookings
+
+            return (
+              <tr key={idx} className="hover:bg-gray-100">
+                <td className="p-3 border">{booking.roomTitle}</td>
+                <td className="p-3 border">{checkInDate.toLocaleDateString()}</td>
+                <td className="p-3 border">{checkOutDate.toLocaleDateString()}</td>
+                <td className="p-3 border">{booking.quantity}</td>
+                <td className="p-3 border">Rs. {booking.totalAmount}.00</td>
+                <td className="p-3 border space-y-2">
+                  {/* Cancel Button */}
+                  {refundAmount > 0 ? (
+                    <button
+                      className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded w-full"
+                      onClick={() => {
+                        setSelectedBooking(booking);
+                        setSelectedBookingType("hotel");
+                        setShowModal(true);
+                      }}
+                    >
+                      <Ban className="w-4 h-4 mr-2" /> Cancel
+                    </button>
                   ) : (
-                    <tr>
-                      <td className="p-3 border text-center" colSpan="6">
-                        No hotel bookings found.
-                      </td>
-                    </tr>
+                    <span className="text-gray-400 block">Not Allowed</span>
                   )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+
+                  {/* Suggestions Button only for upcoming bookings */}
+                  {isUpcoming && (
+                    <button
+                      className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded w-full"
+                      onClick={() => navigate(`/suggestions/${booking._id}`)}
+                    >
+                      💡 Suggestions
+                    </button>
+                  )}
+                </td>
+              </tr>
+            );
+          })
+        ) : (
+          <tr>
+            <td className="p-3 border text-center" colSpan="6">
+              No hotel bookings found.
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+</div>
+
 
           {/* PACKAGE BOOKINGS */}
           <div className="mt-10">
