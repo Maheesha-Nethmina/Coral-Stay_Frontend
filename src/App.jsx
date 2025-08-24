@@ -21,6 +21,10 @@ import PremierOceanRoom from './Pages/User/PremierOceanRoom';
 import PresidentialSuiteRoom from './Pages/User/PresidentialSuiteRoom';
 import PackageDetail from './Pages/User/PackageDetail';
 import SuggestionsPage  from './Pages/User/SuggestionsPage';
+
+
+
+
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
 import EventDetails from './Pages/Admin/EventDetails';
