@@ -29,10 +29,10 @@ const Footer = () => {
     <div>
       <h3 className="text-lg font-semibold mb-4">Services</h3>
       <ul className="space-y-2">
-        <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">Home</a></li>
-        <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">Reef Ride</a></li>
-        <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">Snorkel</a></li>
-        <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">Stays</a></li>
+        <li><a href="/" className="text-gray-300 hover:text-white transition duration-300">Home</a></li>
+        <li><a href="/reef_ride" className="text-gray-300 hover:text-white transition duration-300">Reef Ride</a></li>
+        <li><a href="/packages" className="text-gray-300 hover:text-white transition duration-300">Packages</a></li>
+        <li><a href="/stays" className="text-gray-300 hover:text-white transition duration-300">Stays</a></li>
       </ul>
     </div>
 
@@ -40,8 +40,8 @@ const Footer = () => {
     <div>
       <h3 className="text-lg font-semibold mb-4">Useful Links</h3>
       <ul className="space-y-2">
-        <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">Contact Us</a></li>
-        <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">About Us</a></li>
+        <li><a href="/contact" className="text-gray-300 hover:text-white transition duration-300">Contact Us</a></li>
+        <li><a href="/about" className="text-gray-300 hover:text-white transition duration-300">About Us</a></li>
         <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">Conditions</a></li>
       </ul>
     </div>

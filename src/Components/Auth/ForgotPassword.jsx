@@ -44,7 +44,7 @@ const ForgotPassword = ({ onClose, onLogin }) => {
       <div className="bg-white/40 backdrop-blur-2xl border border-white/50 shadow-lg rounded-3xl w-full max-w-md p-5 mx-4 relative text-gray-900">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-700 hover:text-red-500"
+          className="absolute top-3 right-3 text-gray-700 hover:text-red-500 "
         >
           <X size={24} />
         </button>
@@ -64,7 +64,7 @@ const ForgotPassword = ({ onClose, onLogin }) => {
           </div>
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 rounded-xl hover:from-indigo-600 hover:to-purple-700 transition shadow-md"
+            className="w-full bg-[#023545] text-white py-2 rounded-xl hover:from-indigo-600 hover:to-purple-700 transition shadow-md"
           >
             Send Reset Link
           </button>
@@ -74,7 +74,7 @@ const ForgotPassword = ({ onClose, onLogin }) => {
           Remembered your password?{" "}
           <button
             onClick={onLogin}
-            className="text-indigo-600 font-medium hover:underline"
+            className="text-[#023545] font-medium hover:underline"
           >
             Back to Login
           </button>

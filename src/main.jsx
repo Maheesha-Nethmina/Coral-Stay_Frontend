@@ -1,13 +1,18 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
 import './index.css';
-import App from './App.jsx';
-import { AuthProvider } from './contexts/AuthContext.jsx'; // 👈 Import AuthProvider
+import { AuthProvider } from './contexts/AuthContext';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <AuthProvider> {/* 👈 Wrap App in AuthProvider */}
-      <App />
-    </AuthProvider>
-  </StrictMode>
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
+  <React.StrictMode>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </GoogleOAuthProvider>
+  </React.StrictMode>
 );

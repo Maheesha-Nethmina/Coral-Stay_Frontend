@@ -9,6 +9,8 @@ function Event({ event, onDelete }) {
   const { _id, title, description, date, mapUrl, imageUrl } = event;
 
   const deleteHandler = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this event?");
+    if (!confirmDelete) return;
     try {
       await axios.delete(`http://localhost:3000/events/${_id}`);
       if (onDelete) onDelete(_id);
@@ -30,7 +32,6 @@ function Event({ event, onDelete }) {
             <span className="text-gray-400 italic">No Image</span>
           )}
         </div>
-        <div className="break-words text-gray-600">{_id}</div>
         <div className="break-words font-medium">{title}</div>
         <div className="break-words ">{description}</div>
         <div className="break-words text-gray-500">{date ? date.slice(0, 10) : ''}</div>

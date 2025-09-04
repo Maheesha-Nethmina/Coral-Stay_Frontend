@@ -1,39 +1,65 @@
 /**
- * Get an array of the next seven days starting from tomorrow
- * @returns {Array} Array of date objects with display format and value
+ * Get an array of the next seven days starting from day after tomorrow,
+ * or two days after tomorrow if current time is after 11:30 AM.
+ * Tomorrow is always excluded.
+ * @returns {Array} Array of date objects with "Mon DD" display and YYYY-MM-DD value
  */
 export const getNextSevenDays = () => {
   const dates = [];
-  const today = new Date();
-  
-  // Set to Sri Lankan time (UTC+5:30)
-  const sriLankaOffset = 5.5 * 60 * 60 * 1000;
-  const sriLankaTime = new Date(today.getTime() + sriLankaOffset);
-  
-  // Start from tomorrow since today's slots are past
-  for (let i = 1; i < 8; i++) {
-    const date = new Date(sriLankaTime);
-    date.setDate(sriLankaTime.getDate() + i);
-    
-    // Format as MM/DD
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    
+  const now = new Date();
+
+  // Adjust for Sri Lanka timezone (UTC+5:30)
+  const sriLankaOffsetMinutes = 5.5 * 60;
+  const sriLankaTime = new Date(now.getTime() + sriLankaOffsetMinutes * 60000);
+
+  const hour = sriLankaTime.getHours();
+  const minute = sriLankaTime.getMinutes();
+  const isAfter1130 = hour > 11 || (hour === 11 && minute >= 30);
+
+  // Skip today and tomorrow
+  const startDate = new Date(sriLankaTime);
+  const startFrom = isAfter1130 ? 2 : 1; 
+  startDate.setDate(startDate.getDate() + startFrom);
+
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + i);
+
+    const formattedValue = date.toISOString().split('T')[0];
+    const display = `${monthNames[date.getMonth()]} ${date.getDate()}`;
+
     dates.push({
-      display: `${month}/${day}`,
-      value: `${month}/${day}`,
-      date: date,
+      display,
+      value: formattedValue,
+      date,
       isToday: false
     });
   }
-  
+
   return dates;
 };
 
+/**
+ * Get time slots for a given date
+ * The 3rd date in the list gets only one time slot that ends by 11:30 AM.
+ * @param {string} selectedDate - The selected date in YYYY-MM-DD format
+ * @returns {Array} Array of time slot objects
+ */
 export const getTimeSlots = (selectedDate) => {
-  // Always show both time slots since we're only showing future dates
+  const allDates = getNextSevenDays();
+  const limitedSlotDate = allDates[2]?.value; // 3rd future date (index 2)
+
+  if (selectedDate === limitedSlotDate) {
+    return [
+      { id: 1, time: "09.00 am to 10.00 am" }
+    ];
+  }
+
   return [
-    { id: 1, time: "9:00 AM - 10:00 AM" },
-    { id: 2, time: "10:30 AM - 11:30 AM" }
+    { id: 1, time: "09.00 am to 10.00 am" },
+    { id: 2, time: "10.30 am to 11.30 am" }
   ];
 };
