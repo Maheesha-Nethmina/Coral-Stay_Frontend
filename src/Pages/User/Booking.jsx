@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
+import { loadStripe } from '@stripe/stripe-js';
 
 const Booking = () => {
   const location = useLocation();
@@ -244,6 +245,81 @@ const handleSubmit = async (e) => {
 };
 
 
+//payment  integration
+
+const makePayment = async () => {
+  const stripe = await loadStripe("pk_test_51RzzoCEzo5x88U62SNchE3SDZSjMQFaTShBDVcPyNs0GJV1H085YABKU3nxRL1Fa6aUAPbsi3TMNdWikf3i5y6xs00t7JwV0qp");
+
+  let body = {};
+  let endpoint = "";
+
+  if (type === "seat") {
+    // Payment for reef ride seat booking
+    body = {
+      seats: bookingData.seats,
+      date: bookingData.date?.value || bookingData.date,
+      timeSlot: bookingData.time?.time,
+      customerName: formData.fullName,
+      customerEmail: formData.email,
+      contactNumber: formData.contactNumber,
+      nicNumber: formData.nicNumber,
+      amount: fullAmount, // in rupees
+    };
+    endpoint = "http://localhost:3000/bookings/create-checkout-seat-session";
+  } else if (type === "package") {
+    // Payment for package booking
+    body = {
+      packageId: bookingData.package.id || bookingData.package._id,
+      packageTitle: bookingData.package.title,
+      packageType: bookingData.package.type,
+      roomType: bookingData.package.roomtype,
+      seatNumber: bookingData.package.seatNumber,
+      checkIn: bookingData.date ? new Date(bookingData.date).toISOString() : undefined,
+      checkOut: bookingData.date
+        ? (() => {
+            const checkIn = new Date(bookingData.date);
+            const checkOut = new Date(checkIn);
+            checkOut.setDate(checkIn.getDate() + (bookingData.package.days || 1));
+            return checkOut.toISOString();
+          })()
+        : undefined,
+      customerName: formData.fullName,
+      customerEmail: formData.email,
+      contactNumber: formData.contactNumber,
+      nicNumber: formData.nicNumber,
+      amount: fullAmount, // in rupees
+    };
+    endpoint = "http://localhost:3000/bookings/create-checkoutpackage-session";
+  } else {
+    alert("Unknown booking type!");
+    return;
+  }
+
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(body),
+  });
+
+  const session = await response.json();
+
+  // Redirect user to Stripe Checkout
+  const result = await stripe.redirectToCheckout({
+    sessionId: session.id,
+  });
+
+  if (result.error) {
+    console.error(result.error.message);
+  }
+};
+
+
+
+
   return (
     <div>
       <Navbar />
@@ -455,7 +531,7 @@ const handleSubmit = async (e) => {
                   checked={formData.termsAccepted}
                   onChange={handleInputChange}
                   className="mt-1 h-4 w-4 text-teal-600 border-gray-300 rounded"
-                />
+                required/>
                 <label className="text-sm text-gray-700">
                   I agree to the{' '}
                   <a href="#" className="text-teal-600 underline font-medium">Terms and Conditions</a>.
@@ -470,8 +546,19 @@ const handleSubmit = async (e) => {
                   disabled={isSubmitting}
                   className={`w-full bg-[#023545] text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
                 >
-                  {isSubmitting ? 'Processing...' : 'Reserve Now'}
+                  {isSubmitting ? 'Processing...' : 'Reserve Booking'}
                 </button>
+                     </div>
+               <div className="pt-4">
+                <button
+                 onClick={makePayment}
+                  type="button"
+                  disabled={isSubmitting}
+                  className={`w-full bg-[#023545] text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
+                >
+                  {isSubmitting ? 'Booking...' : 'Pay Now'}
+                </button>
+
               </div>
             </form>
           </div>

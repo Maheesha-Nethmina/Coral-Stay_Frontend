@@ -24,6 +24,7 @@ import SuggestionsPage  from './Pages/User/SuggestionsPage';
 
 
 
+import PaymentGateway from './Pages/User/PaymentGateway';
 
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
@@ -80,7 +81,11 @@ function App() {
           <Route path="/booking" element={<Booking />} />
           <Route path="/packages" element={<Packages />} />
           <Route path="/reviews/new" element={<AddReview />} />
+
     <Route path="/suggestions/:bookingId" element={<SuggestionsPage />} />
+=======
+          <Route path="/payment" element={<PaymentGateway />} />
+
 
 
           {/* Admin Routes */}
