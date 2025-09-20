@@ -35,23 +35,26 @@ const RoomBookingForm = () => {
     checkIn,
     checkOut,
     price,
-    //quantity,
-
   } = bookingData;
 
-  // Quantity now controlled locally for dynamic updates
   const [quantity, setQuantity] = useState(1);
   const [availableRooms, setAvailableRooms] = useState(null);
 
-// Extract numeric price from string (remove currency formatting but keep decimal)
-const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
+  // Extract numeric price
+  const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
+
+  // --- Nights Calculation ---
+  const checkInDate = new Date(checkIn);
+  const checkOutDate = new Date(checkOut);
+  const diffTime = Math.abs(checkOutDate - checkInDate);
+  const nights = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 
   const serviceFee = 300;
   const discount = 0;
 
-  const roomPackageTotal = priceNum * quantity;
+  // Include nights in total
+  const roomPackageTotal = priceNum * quantity * nights;
   const fullAmount = roomPackageTotal + serviceFee - discount;
-
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -64,7 +67,6 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch availability on mount and when dependencies change
   useEffect(() => {
     const fetchAvailability = async () => {
       try {
@@ -117,7 +119,7 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
     if (!formData.termsAccepted) {
       newErrors.termsAccepted = 'You must accept the terms and conditions';
     }
-    if (quantity < 1 || quantity > availableRooms) {
+    if (quantity < 1 || (availableRooms !== null && quantity > availableRooms)) {
       newErrors.quantity = 'Please select a valid room quantity';
     }
 
@@ -140,6 +142,7 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
         checkIn,
         checkOut,
         quantity,
+        nights,
         guestName: formData.fullName,
         guestEmail: formData.email,
         contactNumber: formData.contactNumber,
@@ -253,7 +256,16 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
                 </div>
               </div>
 
-              {/* Available rooms display */}
+              {/* Duration */}
+              <div className="flex items-center space-x-3">
+                <Calendar className="h-5 w-5 text-teal-600" />
+                <div>
+                  <p className="text-sm text-gray-500">Duration</p>
+                  <p className="font-semibold text-gray-900">{nights} night(s)</p>
+                </div>
+              </div>
+
+              {/* Available rooms */}
               <div className="flex items-center space-x-3">
                 <MapPin className="h-5 w-5 text-teal-600" />
                 <div>
@@ -264,28 +276,30 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
                 </div>
               </div>
 
-               {/* Quantity selector */}
-          {availableRooms !== null && availableRooms > 0 && (
-            <div className="mb-6">
-              <label className="block mb-2 font-semibold text-gray-700">Select Room Quantity</label>
-              <select
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value))}
-                className={`w-full py-3 px-4 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${
-                  errors.quantity ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                }`}
-              >
-                {Array.from({ length: availableRooms }, (_, i) => i + 1).map((num) => (
-                  <option key={num} value={num}>
-                    {num}
-                  </option>
-                ))}
-              </select>
-              {errors.quantity && (
-                <p className="mt-1 text-sm text-red-600">{errors.quantity}</p>
+              {/* Quantity selector */}
+              {availableRooms !== null && availableRooms > 0 && (
+                <div className="mb-6">
+                  <label className="block mb-2 font-semibold text-gray-700">
+                    Select Room Quantity
+                  </label>
+                  <select
+                    value={quantity}
+                    onChange={(e) => setQuantity(parseInt(e.target.value))}
+                    className={`w-full py-3 px-4 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${
+                      errors.quantity ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                    }`}
+                  >
+                    {Array.from({ length: availableRooms }, (_, i) => i + 1).map((num) => (
+                      <option key={num} value={num}>
+                        {num}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.quantity && (
+                    <p className="mt-1 text-sm text-red-600">{errors.quantity}</p>
+                  )}
+                </div>
               )}
-            </div>
-          )}
 
               <div className="border-t pt-4 space-y-3 text-gray-700">
                 <div className="flex justify-between">
@@ -307,8 +321,6 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
               </div>
             </div>
           </div>
-
-         
 
           {/* Booking Form */}
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
