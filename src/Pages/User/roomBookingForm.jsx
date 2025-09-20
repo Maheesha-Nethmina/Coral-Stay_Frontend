@@ -1,4 +1,3 @@
-
 //roomBookingForm.jsx
 
 import React, { useState, useEffect } from 'react';
@@ -16,6 +15,8 @@ import {
 } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
+import {loadStripe} from '@stripe/stripe-js';
+
 
 const RoomBookingForm = () => {
   const location = useLocation();
@@ -163,7 +164,50 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
     } finally {
       setIsSubmitting(false);
     }
+
+    navigate('/payment', { state: { bookingPayload } });
   };
+
+  const makePayment = async()=>{
+         
+      const stripe = await loadStripe("pk_test_51RzzoCEzo5x88U62SNchE3SDZSjMQFaTShBDVcPyNs0GJV1H085YABKU3nxRL1Fa6aUAPbsi3TMNdWikf3i5y6xs00t7JwV0qp");
+
+       const body = {
+    roomId,
+    roomTitle,
+    packageType,
+    checkIn,
+    checkOut,
+    quantity,
+    customerName: formData.fullName,
+    customerEmail: formData.email,
+    contactNumber: formData.contactNumber,
+    nicNumber: formData.nicNumber,
+    amount: fullAmount, // in rupees
+  };
+
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  const response = await fetch("http://localhost:3000/bookings/create-checkout-session", {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(body),
+  });
+
+  const session = await response.json();
+
+  // Redirect user to Stripe Checkout
+  const result = await stripe.redirectToCheckout({
+    sessionId: session.id,
+  });
+
+  if (result.error) {
+    console.error(result.error.message);
+  }
+};
+
 
   return (
     <div>
@@ -379,11 +423,11 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
                   checked={formData.termsAccepted}
                   onChange={handleInputChange}
                   className="mt-1 h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
-                />
+                  required/>
                 <label className="text-sm text-gray-700">
                   I have read and agree to the{' '}
                   <a
-                    href="#"
+                    href="http://localhost:5173/reef_ride"
                     className="text-teal-600 hover:text-teal-500 underline font-medium"
                   >
                     Terms and Conditions
@@ -396,13 +440,27 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
               )}
 
               {/* Submit Button */}
-              <div className="pt-4">
+
+                    <div className="pt-4">
                 <button
                   type="submit"
+                  disabled={isSubmitting}
+                  className={`w-full bg-teal-600 text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
+                >
+                  {isSubmitting ? 'Processing...' : 'Reserve Booking'}
+                </button>
+                     </div>
+                  
+
+
+              <div className="pt-4">
+                <button
+                  onClick={makePayment}
+                  type="button"
                   disabled={isSubmitting || availableRooms === 0}
                   className={`w-full bg-teal-600 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
                 >
-                  {isSubmitting ? 'Booking...' : 'Book Now'}
+                  {isSubmitting ? 'Booking...' : 'Pay Now'}
                 </button>
                 {availableRooms === 0 && (
                   <p className="mt-2 text-red-600 text-center font-semibold">

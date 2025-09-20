@@ -21,6 +21,11 @@ import PremierOceanRoom from './Pages/User/PremierOceanRoom';
 import PresidentialSuiteRoom from './Pages/User/PresidentialSuiteRoom';
 import PackageDetail from './Pages/User/PackageDetail';
 import SuggestionsPage  from './Pages/User/SuggestionsPage';
+
+
+
+import PaymentGateway from './Pages/User/PaymentGateway';
+
 // Admin Pages
 import AddEvents from './Pages/Admin/AddEvents';
 import EventDetails from './Pages/Admin/EventDetails';
@@ -76,7 +81,11 @@ function App() {
           <Route path="/booking" element={<Booking />} />
           <Route path="/packages" element={<Packages />} />
           <Route path="/reviews/new" element={<AddReview />} />
+
     <Route path="/suggestions/:bookingId" element={<SuggestionsPage />} />
+=======
+          <Route path="/payment" element={<PaymentGateway />} />
+
 
 
           {/* Admin Routes */}
