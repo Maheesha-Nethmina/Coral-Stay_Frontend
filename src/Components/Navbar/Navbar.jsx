@@ -9,6 +9,7 @@ import {
   LifeBuoy,
   UserRound,
   Gift,
+  SatelliteIcon,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Login from "../Auth/Login";
@@ -17,14 +18,13 @@ import ForgotPassword from "../Auth/ForgotPassword";
 import { useAuth } from "../../contexts/AuthContext";
 import navLogo from "../../assets/navLogo.png";
 
-// ADD THIS IMPORT AT THE TOP
+// Chatbot imports
 import Chatbot from "react-chatbot-kit";
 import "react-chatbot-kit/build/main.css";
 import config from "../ChatBot/config";
 import MessageParser from "../ChatBot/MessageParser";
 import ActionProvider from "../ChatBot/ActionProvider";
-import botimage from '../../assets/botimage.png';
-
+import botimage from "../../assets/botimage.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +38,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", path: "/", icon: <Home size={18} /> },
+    { name: "Virtual Tour", path: "/virtualTour", icon: <SatelliteIcon size={18} /> },
     { name: "Reef Ride", path: "/reef_ride", icon: <Sailboat size={18} /> },
     { name: "Stays", path: "/Stays", icon: <LifeBuoy size={18} /> },
     { name: "Packages", path: "/packages", icon: <Gift size={18} /> },
@@ -45,7 +46,6 @@ const Navbar = () => {
     { name: "Contact Us", path: "/contact", icon: <Phone size={18} /> },
   ];
 
-  // Log current user ID
   useEffect(() => {
     if (user && user._id) {
       console.log("Current User ID:", user._id);
@@ -94,34 +94,38 @@ const Navbar = () => {
 
   if (loading) return null;
 
-  const saveMessages = (messages, HTMLString) => {
-    localStorage.setItem('chat_messages', JSON.stringify(messages));
+  const saveMessages = (messages) => {
+    localStorage.setItem("chat_messages", JSON.stringify(messages));
   };
 
   const loadMessages = () => {
-    const messages = JSON.parse(localStorage.getItem('chat_messages'));
+    const messages = JSON.parse(localStorage.getItem("chat_messages"));
     return messages;
   };
 
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 bg-[#EAF4F6] shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative flex justify-between items-center h-18">
+        <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative flex justify-between items-center h-18 py-2">
+            {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <img src={navLogo} alt="Coral Stay Logo" className="h-30 w-auto" />
+              <img src={navLogo} alt="Coral Stay Logo" className="h-14 w-auto" />
             </Link>
 
-            <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-10">
+            {/* Center navigation links */}
+            <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 gap-8 whitespace-nowrap items-center">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
                 return (
                   <Link
                     key={link.name}
                     to={link.path}
-                    className={`relative text-[#023545] font-medium transition-all duration-200 ${isActive ? "text-indigo-600" : ""
-                      } after:content-[''] after:block after:h-[2px] after:bg-indigo-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${isActive ? "after:scale-x-100" : ""
-                      }`}
+                    className={`relative text-[#023545] font-medium text-[16px] px-2 transition-all duration-200 whitespace-nowrap hover:text-indigo-600 ${
+                      isActive ? "text-indigo-600" : ""
+                    } after:content-[''] after:block after:h-[2px] after:bg-indigo-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left ${
+                      isActive ? "after:scale-x-100" : ""
+                    }`}
                   >
                     {link.name}
                   </Link>
@@ -129,6 +133,7 @@ const Navbar = () => {
               })}
             </div>
 
+            {/* Right side (Auth) */}
             <div className="hidden md:flex items-center gap-4">
               {user ? (
                 <>
@@ -163,6 +168,7 @@ const Navbar = () => {
               )}
             </div>
 
+            {/* Mobile toggle */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -174,6 +180,7 @@ const Navbar = () => {
           </div>
         </div>
 
+        {/* Mobile menu */}
         {isOpen && (
           <div className="md:hidden mx-4 mt-2 bg-[#EAF4F6] px-6 pt-6 pb-6 space-y-3 shadow-xl rounded-2xl border border-white/30">
             {navLinks.map((link) => {
@@ -183,8 +190,9 @@ const Navbar = () => {
                   key={link.name}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium hover:bg-white/60 transition text-[#023545] ${isActive ? "bg-white/60" : ""
-                    }`}
+                  className={`flex items-center gap-2 px-2 py-2 rounded-lg font-medium hover:bg-white/60 transition text-[#023545] ${
+                    isActive ? "bg-white/60" : ""
+                  }`}
                 >
                   {link.icon}
                   {link.name}
@@ -226,14 +234,11 @@ const Navbar = () => {
             )}
           </div>
         )}
-
       </nav>
 
       {showModal && renderAuthModal()}
 
-      {/* Chatbot UI fixed below navbar */}
-      {showModal && renderAuthModal()}
-
+      {/* Chatbot */}
       {showChatbot && (
         <div
           style={{
@@ -255,6 +260,7 @@ const Navbar = () => {
         </div>
       )}
 
+      {/* Bot icon */}
       <div
         style={{
           position: "fixed",
@@ -263,13 +269,12 @@ const Navbar = () => {
           zIndex: 999,
           width: "50px",
           height: "50px",
-
+          cursor: "pointer",
         }}
         onClick={() => setShowChatbot((prev) => !prev)}
       >
         <img src={botimage} alt="bot" />
       </div>
-
     </>
   );
 };

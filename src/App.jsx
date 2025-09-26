@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 
+
 // User Pages
 import Home from './Pages/User/Home';
 import About from './Pages/User/About';
@@ -21,6 +22,9 @@ import PremierOceanRoom from './Pages/User/PremierOceanRoom';
 import PresidentialSuiteRoom from './Pages/User/PresidentialSuiteRoom';
 import PackageDetail from './Pages/User/PackageDetail';
 import SuggestionsPage  from './Pages/User/SuggestionsPage';
+import VirtualTour from './Pages/User/3D_model/3d_coral_life';
+//import MarineLife from './Pages/User/3D_model/MarineLife';
+//import CoralReefs from './Pages/User/3D_model/CoralReefs';
 
 
 
@@ -66,6 +70,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/virtualTour" element={<VirtualTour/>}/>
           <Route path="/reef_ride" element={<Reef_Ride />} />
           <Route path="/stays" element={<Stays />} />
           <Route path="/events" element={<Events />} />
@@ -85,6 +90,9 @@ function App() {
     <Route path="/suggestions/:bookingId" element={<SuggestionsPage />} />
 =======
           <Route path="/payment" element={<PaymentGateway />} />
+
+         {/* // <Route path="/MarineLife" element={<MarineLife/>}/> */}
+        {/* //  <Route path="/CoralReefs" element={<CoralReefs/>}/> */}
 
 
 
