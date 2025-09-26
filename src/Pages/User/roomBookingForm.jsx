@@ -15,8 +15,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
-import {loadStripe} from '@stripe/stripe-js';
-
+import { loadStripe } from '@stripe/stripe-js';
 
 const RoomBookingForm = () => {
   const location = useLocation();
@@ -35,23 +34,19 @@ const RoomBookingForm = () => {
     checkIn,
     checkOut,
     price,
-    //quantity,
-
   } = bookingData;
 
-  // Quantity now controlled locally for dynamic updates
   const [quantity, setQuantity] = useState(1);
   const [availableRooms, setAvailableRooms] = useState(null);
 
-// Extract numeric price from string (remove currency formatting but keep decimal)
-const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
+  // Extract numeric price from string (remove currency formatting but keep decimal)
+  const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
 
   const serviceFee = 300;
   const discount = 0;
 
   const roomPackageTotal = priceNum * quantity;
   const fullAmount = roomPackageTotal + serviceFee - discount;
-
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -125,11 +120,119 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  // Combined function to handle booking reservation and payment
+  const handlePayNow = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
+    setIsSubmitting(true);
 
+    try {
+      // Step 1: Create the booking reservation in backend
+      const bookingPayload = {
+        roomId,
+        roomTitle,
+        packageType,
+        checkIn,
+        checkOut,
+        quantity,
+        guestName: formData.fullName,
+        guestEmail: formData.email,
+        contactNumber: formData.contactNumber,
+        nicNumber: formData.nicNumber,
+        totalAmount: fullAmount,
+      };
+
+      console.log('Creating booking reservation:', bookingPayload);
+
+      // Create booking in backend
+      const bookingResponse = await axios.post(
+        'http://localhost:3000/bookings/roombookings',
+        bookingPayload
+      );
+
+      if (bookingResponse.status === 201 || bookingResponse.status === 200) {
+        const bookingId = bookingResponse.data._id || bookingResponse.data.bookingId;
+
+        // Step 2: Initialize Stripe payment
+        const stripe = await loadStripe("pk_test_51RzzoCEzo5x88U62SNchE3SDZSjMQFaTShBDVcPyNs0GJV1H085YABKU3nxRL1Fa6aUAPbsi3TMNdWikf3i5y6xs00t7JwV0qp");
+
+        const paymentBody = {
+          roomId,
+          roomTitle,
+          packageType,
+          checkIn,
+          checkOut,
+          quantity,
+          customerName: formData.fullName,
+          customerEmail: formData.email,
+          contactNumber: formData.contactNumber,
+          nicNumber: formData.nicNumber,
+          amount: fullAmount,
+          bookingId: bookingId // Pass booking ID to link payment
+        };
+
+        console.log('Creating payment session:', paymentBody);
+
+        const paymentResponse = await fetch("http://localhost:3000/bookings/create-checkout-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(paymentBody),
+        });
+
+        const session = await paymentResponse.json();
+
+        if (paymentResponse.ok) {
+          // Store booking info for retrieval after payment
+          localStorage.setItem('pendingRoomBooking', JSON.stringify({
+            bookingId: bookingId,
+            bookingData: bookingPayload,
+            userDetails: formData
+          }));
+
+          // Redirect to Stripe Checkout
+          const result = await stripe.redirectToCheckout({
+            sessionId: session.id,
+          });
+
+          if (result.error) {
+            console.error('Stripe redirect error:', result.error);
+            // Update booking status to failed if redirect fails
+            await updateBookingStatus(bookingId, 'failed');
+            alert('Payment initialization failed. Please try again.');
+          }
+        } else {
+          throw new Error('Payment session creation failed');
+        }
+      } else {
+        throw new Error('Booking creation failed');
+      }
+    } catch (error) {
+      console.error('Error during booking or payment:', error);
+      alert('An error occurred while processing your booking.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Function to update booking status
+  const updateBookingStatus = async (bookingId, status) => {
+    try {
+      await axios.put(`http://localhost:3000/bookings/update-booking-status/${bookingId}`, {
+        status: status
+      });
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+    }
+  };
+
+  // Alternative function for direct booking without payment (for testing)
+  const handleDirectBooking = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
     setIsSubmitting(true);
 
     try {
@@ -145,6 +248,7 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
         contactNumber: formData.contactNumber,
         nicNumber: formData.nicNumber,
         totalAmount: fullAmount,
+        status: 'confirmed' // Direct confirmation for testing
       };
 
       const response = await axios.post(
@@ -154,7 +258,7 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
 
       if (response.status === 201 || response.status === 200) {
         alert('Booking confirmed successfully!');
-        navigate('/');
+        navigate('/profile');
       } else {
         alert('Booking failed. Please try again.');
       }
@@ -164,50 +268,7 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
     } finally {
       setIsSubmitting(false);
     }
-
-    navigate('/payment', { state: { bookingPayload } });
   };
-
-  const makePayment = async()=>{
-         
-      const stripe = await loadStripe("pk_test_51RzzoCEzo5x88U62SNchE3SDZSjMQFaTShBDVcPyNs0GJV1H085YABKU3nxRL1Fa6aUAPbsi3TMNdWikf3i5y6xs00t7JwV0qp");
-
-       const body = {
-    roomId,
-    roomTitle,
-    packageType,
-    checkIn,
-    checkOut,
-    quantity,
-    customerName: formData.fullName,
-    customerEmail: formData.email,
-    contactNumber: formData.contactNumber,
-    nicNumber: formData.nicNumber,
-    amount: fullAmount, // in rupees
-  };
-
-  const headers = {
-    "Content-Type": "application/json",
-  };
-
-  const response = await fetch("http://localhost:3000/bookings/create-checkout-session", {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(body),
-  });
-
-  const session = await response.json();
-
-  // Redirect user to Stripe Checkout
-  const result = await stripe.redirectToCheckout({
-    sessionId: session.id,
-  });
-
-  if (result.error) {
-    console.error(result.error.message);
-  }
-};
-
 
   return (
     <div>
@@ -264,28 +325,28 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
                 </div>
               </div>
 
-               {/* Quantity selector */}
-          {availableRooms !== null && availableRooms > 0 && (
-            <div className="mb-6">
-              <label className="block mb-2 font-semibold text-gray-700">Select Room Quantity</label>
-              <select
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value))}
-                className={`w-full py-3 px-4 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${
-                  errors.quantity ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                }`}
-              >
-                {Array.from({ length: availableRooms }, (_, i) => i + 1).map((num) => (
-                  <option key={num} value={num}>
-                    {num}
-                  </option>
-                ))}
-              </select>
-              {errors.quantity && (
-                <p className="mt-1 text-sm text-red-600">{errors.quantity}</p>
+              {/* Quantity selector */}
+              {availableRooms !== null && availableRooms > 0 && (
+                <div className="mb-6">
+                  <label className="block mb-2 font-semibold text-gray-700">Select Room Quantity</label>
+                  <select
+                    value={quantity}
+                    onChange={(e) => setQuantity(parseInt(e.target.value))}
+                    className={`w-full py-3 px-4 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors ${
+                      errors.quantity ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                    }`}
+                  >
+                    {Array.from({ length: availableRooms }, (_, i) => i + 1).map((num) => (
+                      <option key={num} value={num}>
+                        {num}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.quantity && (
+                    <p className="mt-1 text-sm text-red-600">{errors.quantity}</p>
+                  )}
+                </div>
               )}
-            </div>
-          )}
 
               <div className="border-t pt-4 space-y-3 text-gray-700">
                 <div className="flex justify-between">
@@ -308,8 +369,6 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
             </div>
           </div>
 
-         
-
           {/* Booking Form */}
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
@@ -317,7 +376,7 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
               Enter Guest Details
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handlePayNow} className="space-y-6">
               {/* Full Name */}
               <div>
                 <label htmlFor="fullName" className="sr-only">
@@ -423,7 +482,8 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
                   checked={formData.termsAccepted}
                   onChange={handleInputChange}
                   className="mt-1 h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
-                  required/>
+                  required
+                />
                 <label className="text-sm text-gray-700">
                   I have read and agree to the{' '}
                   <a
@@ -439,35 +499,39 @@ const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
                 <p className="text-sm text-red-600 -mt-2">{errors.termsAccepted}</p>
               )}
 
-              {/* Submit Button */}
-
-                    <div className="pt-4">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full bg-teal-600 text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
-                >
-                  {isSubmitting ? 'Processing...' : 'Reserve Booking'}
-                </button>
-                     </div>
-                  
-
-
+              {/* Single Pay Now Button */}
               <div className="pt-4">
                 <button
-                  onClick={makePayment}
-                  type="button"
+                  type="submit"
                   disabled={isSubmitting || availableRooms === 0}
-                  className={`w-full bg-teal-600 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
+                  className={`w-full bg-teal-600 text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg flex items-center justify-center gap-2 ${
+                    isSubmitting || availableRooms === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'
+                  }`}
                 >
-                  {isSubmitting ? 'Booking...' : 'Pay Now'}
+                  <CreditCard className="h-5 w-5" />
+                  {isSubmitting ? 'Processing...' : 'Pay Now'}
                 </button>
+                
                 {availableRooms === 0 && (
                   <p className="mt-2 text-red-600 text-center font-semibold">
                     Sorry, no rooms available for the selected dates.
                   </p>
                 )}
               </div>
+
+              {/* Test Booking Button (without payment) */}
+              {/* <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleDirectBooking}
+                  disabled={isSubmitting || availableRooms === 0}
+                  className={`w-full bg-green-600 text-white py-3 px-6 rounded-lg text-md font-semibold shadow-lg ${
+                    isSubmitting || availableRooms === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'
+                  }`}
+                >
+                  {isSubmitting ? 'Processing...' : 'Book Now (Test - No Payment)'}
+                </button>
+              </div> */}
             </form>
           </div>
         </div>
