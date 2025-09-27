@@ -17,28 +17,38 @@ function CancellationRequest() {
   };
 
   const handleAccept = async (id) => {
-    const confirm = window.confirm("Are you sure you want to accept this cancellation request?");
-    if (!confirm) return;
+    const confirmAction = window.confirm("Are you sure you want to accept this cancellation request?");
+    if (!confirmAction) return;
 
     try {
       await axios.put(`http://localhost:3000/admin/acceptCancellationRequest/${id}`);
       fetchRequests();
+
+      // Redirect after short delay
+      setTimeout(() => {
+        window.location.href = "https://dashboard.stripe.com/acct_1RzzoCEzo5x88U62/test/payments";
+      }, 500);
+
     } catch (err) {
       console.error('Error accepting request:', err);
       alert('Failed to accept cancellation request');
+
+ setTimeout(() => {
+        window.location.href = "https://dashboard.stripe.com/acct_1RzzoCEzo5x88U62/test/payments";
+      }, 500);
+
     }
   };
 
   const formatDate = (date) => {
     if (!date) return '';
-    return new Date(date).toISOString().split('T')[0]; // yyyy-mm-dd
+    return new Date(date).toISOString().split('T')[0];
   };
 
   useEffect(() => {
     fetchRequests();
   }, []);
 
-  // Split requests by type
   const reefRequests = requests.filter((r) => r.type === 'reefTour');
   const hotelRequests = requests.filter((r) => r.type === 'hotelRoom');
   const packageRequests = requests.filter((r) => r.type === 'specialPackage');
@@ -96,7 +106,6 @@ function CancellationRequest() {
         </div>
         <div className="flex-1 p-4 mt-10 mr-10">
           <h2 className="text-2xl font-bold mb-6">Cancellation Requests</h2>
-
           {renderTable("Reef Tour Requests", reefRequests)}
           {renderTable("Hotel Room Requests", hotelRequests)}
           {renderTable("Package Requests", packageRequests)}

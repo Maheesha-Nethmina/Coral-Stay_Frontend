@@ -37,6 +37,7 @@ const Booking = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [priceSettings, setPriceSettings] = useState(null);
   const [loadingPrices, setLoadingPrices] = useState(true);
+  const [bookingId, setBookingId] = useState(null);
 
   useEffect(() => {
     const fetchPriceSettings = async () => {
@@ -72,13 +73,11 @@ const Booking = () => {
   const { pricePerSeat, serviceFee, discount } = priceSettings;
   let fullAmount = 0;
 
-    // Replace the price calculation block with:
   if (type === 'seat') {
     fullAmount = (bookingData.seats.length * (pricePerSeat || 0)) + (serviceFee || 0) - (discount || 0);
   } else if (type === 'package') {
     fullAmount = (bookingData.package.price || 0) + (serviceFee || 0) - (discount || 0);
   }
-  
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -120,16 +119,10 @@ const Booking = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  if (!validateForm()) return;
-  setIsSubmitting(true);
-
-  try {
+  // Function to create booking in backend
+  const createBooking = async () => {
     const formattedDate = bookingData.date?.value || bookingData.date;
 
-    // 👉 If type is 'seat', use existing logic (unchanged)
     if (type === 'seat') {
       const bookingPayload = {
         userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
@@ -148,16 +141,8 @@ const handleSubmit = async (e) => {
       };
 
       const response = await axios.post('http://localhost:3000/reeftour/bookSeats', bookingPayload);
-
-      if (response.status === 201) {
-        alert('Booking confirmed successfully!');
-        navigate('/profile');
-      } else {
-        alert('Booking failed. Please try again.');
-      }
-    }
-
-    // 🚀 NEW: If type is 'package', call /package/bookPackage
+      return response.data;
+    } 
     else if (type === 'package') {
       const checkIn = new Date(formattedDate);
       const checkOut = new Date(checkIn);
@@ -197,128 +182,184 @@ const handleSubmit = async (e) => {
               totalAmount: fullAmount,
             }
           : null,
-       seatBooking: bookingData.package.seatNumber
-        ? {
-            userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
-            googleId: bookingData.googleId || '',
-            date: checkIn.toISOString().split('T')[0],
-            timeSlot: bookingData.time?.time || '09.00 am to 10.00 am',
-
-            // ✅ Updated to select random seat numbers (1–24)
-            seats: (() => {
-              const totalAvailableSeats = 24;
-              const seatCount = bookingData.package.seatNumber || 0;
-              const allSeats = Array.from({ length: totalAvailableSeats }, (_, i) => i + 1);
-              const shuffled = allSeats.sort(() => 0.5 - Math.random());
-              return shuffled.slice(0, seatCount);
-            })(),
-
-            user: {
-              fullName: formData.fullName,
-              email: formData.email,
-              contactNumber: formData.contactNumber,
-              nicNumber: formData.nicNumber,
-            },
-            totalAmount: fullAmount,
-          }
-        : null,
-
-
+        seatBooking: bookingData.package.seatNumber
+          ? {
+              userId: bookingData.userId || '663e2d9f7b456d070df83aa4',
+              googleId: bookingData.googleId || '',
+              date: checkIn.toISOString().split('T')[0],
+              timeSlot: bookingData.time?.time || '09.00 am to 10.00 am',
+              seats: (() => {
+                const totalAvailableSeats = 24;
+                const seatCount = bookingData.package.seatNumber || 0;
+                const allSeats = Array.from({ length: totalAvailableSeats }, (_, i) => i + 1);
+                const shuffled = allSeats.sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, seatCount);
+              })(),
+              user: {
+                fullName: formData.fullName,
+                email: formData.email,
+                contactNumber: formData.contactNumber,
+                nicNumber: formData.nicNumber,
+              },
+              totalAmount: fullAmount,
+            }
+          : null,
       };
 
       const response = await axios.post('http://localhost:3000/package/book-package', packageBookingPayload);
-
-      if (response.status === 201) {
-        alert('Package booking successful!');
-        navigate('/profile');
-      } else {
-        alert('Package booking failed. Please try again.');
-      }
+      return response.data;
     }
-
-  } catch (error) {
-    console.error('Error during booking:', error);
-    alert('An error occurred. Please try again.');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
-
-//payment  integration
-
-const makePayment = async () => {
-  const stripe = await loadStripe("pk_test_51RzzoCEzo5x88U62SNchE3SDZSjMQFaTShBDVcPyNs0GJV1H085YABKU3nxRL1Fa6aUAPbsi3TMNdWikf3i5y6xs00t7JwV0qp");
-
-  let body = {};
-  let endpoint = "";
-
-  if (type === "seat") {
-    // Payment for reef ride seat booking
-    body = {
-      seats: bookingData.seats,
-      date: bookingData.date?.value || bookingData.date,
-      timeSlot: bookingData.time?.time,
-      customerName: formData.fullName,
-      customerEmail: formData.email,
-      contactNumber: formData.contactNumber,
-      nicNumber: formData.nicNumber,
-      amount: fullAmount, // in rupees
-    };
-    endpoint = "http://localhost:3000/bookings/create-checkout-seat-session";
-  } else if (type === "package") {
-    // Payment for package booking
-    body = {
-      packageId: bookingData.package.id || bookingData.package._id,
-      packageTitle: bookingData.package.title,
-      packageType: bookingData.package.type,
-      roomType: bookingData.package.roomtype,
-      seatNumber: bookingData.package.seatNumber,
-      checkIn: bookingData.date ? new Date(bookingData.date).toISOString() : undefined,
-      checkOut: bookingData.date
-        ? (() => {
-            const checkIn = new Date(bookingData.date);
-            const checkOut = new Date(checkIn);
-            checkOut.setDate(checkIn.getDate() + (bookingData.package.days || 1));
-            return checkOut.toISOString();
-          })()
-        : undefined,
-      customerName: formData.fullName,
-      customerEmail: formData.email,
-      contactNumber: formData.contactNumber,
-      nicNumber: formData.nicNumber,
-      amount: fullAmount, // in rupees
-    };
-    endpoint = "http://localhost:3000/bookings/create-checkoutpackage-session";
-  } else {
-    alert("Unknown booking type!");
-    return;
-  }
-
-  const headers = {
-    "Content-Type": "application/json",
   };
 
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(body),
-  });
+  // Function to update booking status after successful payment
+  const updateBookingStatus = async (bookingId, status) => {
+    try {
+      if (type === 'seat') {
+        await axios.put(`http://localhost:3000/reeftour/updateBookingStatus/${bookingId}`, {
+          status: status
+        });
+      } else if (type === 'package') {
+        await axios.put(`http://localhost:3000/package/update-booking-status/${bookingId}`, {
+          status: status
+        });
+      }
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+    }
+  };
 
-  const session = await response.json();
+  // Combined function to handle booking and payment
+  const handlePayNow = async (e) => {
+    e.preventDefault();
 
-  // Redirect user to Stripe Checkout
-  const result = await stripe.redirectToCheckout({
-    sessionId: session.id,
-  });
+    if (!validateForm()) return;
+    setIsSubmitting(true);
 
-  if (result.error) {
-    console.error(result.error.message);
-  }
-};
+    try {
+      // First, create the booking in backend with 'pending' status
+      const bookingResponse = await createBooking();
+      
+      if (bookingResponse) {
+        const newBookingId = bookingResponse._id || bookingResponse.id;
+        setBookingId(newBookingId);
 
+        // Initialize Stripe
+        const stripe = await loadStripe("pk_test_51RzzoCEzo5x88U62SNchE3SDZSjMQFaTShBDVcPyNs0GJV1H085YABKU3nxRL1Fa6aUAPbsi3TMNdWikf3i5y6xs00t7JwV0qp");
 
+        let body = {};
+        let endpoint = "";
 
+        if (type === "seat") {
+          body = {
+            seats: bookingData.seats,
+            date: bookingData.date?.value || bookingData.date,
+            timeSlot: bookingData.time?.time,
+            customerName: formData.fullName,
+            customerEmail: formData.email,
+            contactNumber: formData.contactNumber,
+            nicNumber: formData.nicNumber,
+            amount: fullAmount,
+            bookingId: newBookingId
+          };
+          endpoint = "http://localhost:3000/bookings/create-checkout-seat-session";
+        } else if (type === "package") {
+          const checkIn = bookingData.date ? new Date(bookingData.date) : new Date();
+          const checkOut = new Date(checkIn);
+          checkOut.setDate(checkIn.getDate() + (bookingData.package.days || 1));
+
+          body = {
+            packageId: bookingData.package.id || bookingData.package._id,
+            packageTitle: bookingData.package.title,
+            packageType: bookingData.package.type,
+            roomType: bookingData.package.roomtype,
+            seatNumber: bookingData.package.seatNumber,
+            checkIn: checkIn.toISOString(),
+            checkOut: checkOut.toISOString(),
+            customerName: formData.fullName,
+            customerEmail: formData.email,
+            contactNumber: formData.contactNumber,
+            nicNumber: formData.nicNumber,
+            amount: fullAmount,
+            bookingId: newBookingId
+          };
+          endpoint = "http://localhost:3000/bookings/create-checkoutpackage-session";
+        }
+
+        const headers = {
+          "Content-Type": "application/json",
+        };
+
+        const paymentResponse = await fetch(endpoint, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(body),
+        });
+
+        const session = await paymentResponse.json();
+
+        if (paymentResponse.ok) {
+          // Store booking info in localStorage for retrieval after payment
+          localStorage.setItem('pendingBooking', JSON.stringify({
+            type: type,
+            bookingId: newBookingId,
+            formData: formData,
+            bookingData: bookingData,
+            amount: fullAmount
+          }));
+
+          // Redirect to Stripe Checkout
+          const result = await stripe.redirectToCheckout({
+            sessionId: session.id,
+          });
+
+          if (result.error) {
+            console.error(result.error.message);
+            // If Stripe redirect fails, update booking status to failed
+            await updateBookingStatus(newBookingId, 'failed');
+            alert('Payment initialization failed. Please try again.');
+          }
+        } else {
+          throw new Error('Payment session creation failed');
+        }
+      } else {
+        alert('Booking creation failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during booking or payment:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Function to handle direct booking without payment (if needed)
+  const handleDirectBooking = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+    setIsSubmitting(true);
+
+    try {
+      const bookingResponse = await createBooking();
+      
+      if (bookingResponse) {
+        const newBookingId = bookingResponse._id || bookingResponse.id;
+        
+        // Update booking status to confirmed for direct booking
+        await updateBookingStatus(newBookingId, 'confirmed');
+        
+        alert('Booking confirmed successfully!');
+        navigate('/profile');
+      } else {
+        alert('Booking failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during booking:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div>
@@ -453,7 +494,7 @@ const makePayment = async () => {
               Confirm and Complete Booking
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handlePayNow} className="space-y-6">
               <div>
                 <p className="text-lg font-semibold text-gray-900 mb-4">Add Your Details:</p>
               </div>
@@ -539,27 +580,28 @@ const makePayment = async () => {
               </div>
               {errors.termsAccepted && <p className="text-sm text-red-600 -mt-2">{errors.termsAccepted}</p>}
 
-              {/* Submit Button */}
+              {/* Single Pay Now Button */}
               <div className="pt-4">
                 <button
                   type="submit"
                   disabled={isSubmitting}
                   className={`w-full bg-[#023545] text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
                 >
-                  {isSubmitting ? 'Processing...' : 'Reserve Booking'}
+                  {isSubmitting ? 'Processing...' : 'Pay Now'}
                 </button>
-                     </div>
-               <div className="pt-4">
-                <button
-                 onClick={makePayment}
-                  type="button"
-                  disabled={isSubmitting}
-                  className={`w-full bg-[#023545] text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
-                >
-                  {isSubmitting ? 'Booking...' : 'Pay Now'}
-                </button>
-
               </div>
+
+              {/* Alternative: Direct booking without payment (for testing) */}
+              {/* <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleDirectBooking}
+                  disabled={isSubmitting}
+                  className={`w-full bg-green-600 text-white py-3 px-6 rounded-xl font-semibold text-md shadow-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
+                >
+                  {isSubmitting ? 'Processing...' : 'Book Without Payment (Test)'}
+                </button>
+              </div> */}
             </form>
           </div>
         </div>
@@ -567,6 +609,6 @@ const makePayment = async () => {
       <Footer />
     </div>
   );
-};
+}
 
 export default Booking;

@@ -5,6 +5,7 @@ const Sidebar = () => {
 
   const navItems = [
     { name: 'Users', path: '/userDetails' },
+    {name: "Virtual Reef Ride", path: "/", icon: <SatelliteIcon size={18} />},
     { name: 'Reef Tours', path: '/reeftourdetails' },
     { name: 'Hotel Bookings', path: '/hotelbookingdetails' },
     { name: 'Events', path: '/eventDetails'},
