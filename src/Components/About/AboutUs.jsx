@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { StarIcon } from '@heroicons/react/24/solid';
@@ -36,40 +36,43 @@ const FadeInSection = ({ children }) => {
 const About = () => {
   const navigate = useNavigate();
 
-  const reviews = [
-    {
-      id: 1,
-      name: 'Sarah & Mark',
-      location: 'London, UK',
-      rating: 5,
-      content: 'The perfect combination of relaxation and adventure! The coral reef tour was breathtaking, and our room was so comfortable. The family running CoralStay made us feel like old friends.',
-      date: 'March 2023',
-    },
-    {
-      id: 2,
-      name: 'Rajiv',
-      location: 'Mumbai, India',
-      rating: 5,
-      content: 'As a solo traveler, I felt completely safe and welcomed. The glass-bottom boat tour was incredible - saw so many colorful fish without even getting wet! Will definitely return.',
-      date: 'January 2023',
-    },
-    {
-      id: 3,
-      name: 'The Johnson Family',
-      location: 'Sydney, Australia',
-      rating: 4,
-      content: 'Our kids (8 & 10) loved snorkeling for the first time here. The crew was so patient and knowledgeable. Hotel was clean and breakfast was delicious. Only wish we could have stayed longer!',
-      date: 'December 2022',
-    },
-  ];
+  // State for reviews
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch latest 3 reviews from backend
+  useEffect(() => {
+    const fetchReviews = async () => {
+        try {
+          const res = await fetch('http://localhost:3000/api/reviews/');
+          const data = await res.json();
+
+          // Sort reviews by createdAt descending and get latest 3
+          const latestReviews = (data.reviews || [])
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .slice(0, 3);
+
+          setReviews(latestReviews);
+        } catch (error) {
+          console.error('Error fetching reviews:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+
+    fetchReviews();
+  }, []);
 
   const renderStars = (rating) => {
-    return Array(5).fill(0).map((_, i) => (
-      <StarIcon 
-        key={i} 
-        className={`w-5 h-5 ${i < rating ? 'text-yellow-500' : 'text-gray-300'}`}
-      />
-    ));
+    return Array(5)
+      .fill(0)
+      .map((_, i) => (
+        <StarIcon
+          key={i}
+          className={`w-5 h-5 ${i < rating ? 'text-yellow-500' : 'text-gray-300'}`}
+        />
+      ));
   };
 
   return (
@@ -211,24 +214,28 @@ const About = () => {
       <FadeInSection>
         <div className="mt-24 mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-teal-800 font-serif mb-12 text-center">What Our Guests Say</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {reviews.map((review) => (
-              <div key={review.id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-800">{review.name}</h3>
-                    <p className="text-gray-600 text-sm">{review.location}</p>
+
+          {loading ? (
+            <p className="text-center text-gray-500">Loading reviews...</p>
+          ) : reviews.length === 0 ? (
+            <p className="text-center text-gray-500">No reviews yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {reviews.map((review) => (
+                <div key={review._id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-800">{review.name}</h3>
+                      <p className="text-gray-600 text-sm">{review.location}</p>
+                    </div>
+                    <div className="flex items-center">{renderStars(review.rating)}</div>
                   </div>
-                  <div className="flex items-center">
-                    {renderStars(review.rating)}
-                  </div>
+                  <p className="text-gray-700 mb-4 italic">"{review.content}"</p>
+                  <p className="text-gray-500 text-sm">{new Date(review.date).toLocaleDateString()}</p>
                 </div>
-                <p className="text-gray-700 mb-4 italic">"{review.content}"</p>
-                <p className="text-gray-500 text-sm">{review.date}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div className="mt-12 text-center">
             <button

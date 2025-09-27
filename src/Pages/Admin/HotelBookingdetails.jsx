@@ -26,7 +26,7 @@ function HotelBookingdetails() {
 
     try {
       await axios.delete(`http://localhost:3000/admin/deleteBooking/${id}`);
-      alert('Booking cancelled and email sent.');
+      alert('Booking cancelled successfully. A confirmation email has been sent to the user.');
       fetchBookings();
     } catch (error) {
       console.error('Error deleting booking:', error);

@@ -39,6 +39,16 @@ const RoomBookingForm = () => {
   const [quantity, setQuantity] = useState(1);
   const [availableRooms, setAvailableRooms] = useState(null);
 
+  const nights =
+    checkIn && checkOut
+      ? Math.ceil(
+          (new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24)
+        )
+      : 0;
+
+
+
+
   // Extract numeric price from string (remove currency formatting but keep decimal)
   const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
 

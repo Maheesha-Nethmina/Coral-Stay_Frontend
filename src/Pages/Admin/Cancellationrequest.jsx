@@ -7,39 +7,45 @@ import Footer from '../../Components/Footer/Footer';
 function CancellationRequest() {
   const [requests, setRequests] = useState([]);
 
+  // Fetch all cancellation requests
   const fetchRequests = async () => {
     try {
       const res = await axios.get('http://localhost:3000/admin/getallcancellationRequests');
       setRequests(res.data);
     } catch (err) {
       console.error('Error fetching requests:', err);
+      alert('Failed to fetch cancellation requests.');
     }
   };
 
+  // Accept cancellation request
   const handleAccept = async (id) => {
-    const confirmAction = window.confirm("Are you sure you want to accept this cancellation request?");
+    const request = requests.find(r => r._id === id);
+    if (!request) return alert('Request not found.');
+
+    const confirmMessage = `Are you sure you want to accept this cancellation request?\nType: ${request.type}\nRefund Amount: Rs.${request.refundAmount}.00`;
+    const confirmAction = window.confirm(confirmMessage);
     if (!confirmAction) return;
 
     try {
-      await axios.put(`http://localhost:3000/admin/acceptCancellationRequest/${id}`);
-      fetchRequests();
+      const response = await axios.put(`http://localhost:3000/admin/acceptCancellationRequest/${id}`);
+      alert(response.data.message); // Show backend message
 
-      // Redirect after short delay
-      setTimeout(() => {
-        window.location.href = "https://dashboard.stripe.com/acct_1RzzoCEzo5x88U62/test/payments";
-      }, 500);
+      if (response.status === 200) {
+        fetchRequests(); // Refresh the table
 
+        // Redirect to Stripe dashboard after short delay
+        setTimeout(() => {
+          window.location.href = "https://dashboard.stripe.com/acct_1RzzoCEzo5x88U62/test/payments";
+        }, 500);
+      }
     } catch (err) {
       console.error('Error accepting request:', err);
-      alert('Failed to accept cancellation request');
-
- setTimeout(() => {
-        window.location.href = "https://dashboard.stripe.com/acct_1RzzoCEzo5x88U62/test/payments";
-      }, 500);
-
+      alert(err.response?.data?.message || 'Failed to accept cancellation request.');
     }
   };
 
+  // Format date to YYYY-MM-DD
   const formatDate = (date) => {
     if (!date) return '';
     return new Date(date).toISOString().split('T')[0];
@@ -49,10 +55,12 @@ function CancellationRequest() {
     fetchRequests();
   }, []);
 
+  // Filter requests by type
   const reefRequests = requests.filter((r) => r.type === 'reefTour');
   const hotelRequests = requests.filter((r) => r.type === 'hotelRoom');
   const packageRequests = requests.filter((r) => r.type === 'specialPackage');
 
+  // Render table for a specific request type
   const renderTable = (title, data) => (
     <div className="mb-10">
       <h3 className="text-xl font-semibold mb-3">{title}</h3>
@@ -60,7 +68,8 @@ function CancellationRequest() {
         <thead>
           <tr className="bg-gray-200 text-left">
             <th className="px-4 py-2">Date</th>
-            <th className="px-4 py-2">Type</th>
+            <th className="px-4 py-2">User Name</th>
+            <th className="px-4 py-2">User Email</th>
             <th className="px-4 py-2">Reason</th>
             <th className="px-4 py-2">Amount</th>
             <th className="px-4 py-2">Refund</th>
@@ -71,7 +80,8 @@ function CancellationRequest() {
           {data.map((req) => (
             <tr key={req._id} className="border-t">
               <td className="px-4 py-2">{formatDate(req.date)}</td>
-              <td className="px-4 py-2">{req.type}</td>
+              <td className="px-4 py-2">{req.userId?.name || 'N/A'}</td>
+              <td className="px-4 py-2">{req.userId?.email || 'N/A'}</td>
               <td className="px-4 py-2">{req.reason}</td>
               <td className="px-4 py-2">Rs.{req.amount}.00</td>
               <td className="px-4 py-2">Rs.{req.refundAmount}.00</td>
@@ -87,7 +97,7 @@ function CancellationRequest() {
           ))}
           {data.length === 0 && (
             <tr>
-              <td colSpan="6" className="text-center py-4 text-gray-500">
+              <td colSpan="7" className="text-center py-4 text-gray-500">
                 No cancellation requests found.
               </td>
             </tr>

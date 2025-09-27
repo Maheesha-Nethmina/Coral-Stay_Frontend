@@ -1,15 +1,14 @@
 import { useLocation, Link } from 'react-router-dom';
 
+
 const Sidebar = () => {
   const location = useLocation();
 
   const navItems = [
     { name: 'Users', path: '/userDetails' },
-    {name: "Virtual Reef Ride", path: "/", icon: <SatelliteIcon size={18} />},
     { name: 'Reef Tours', path: '/reeftourdetails' },
     { name: 'Hotel Bookings', path: '/hotelbookingdetails' },
     { name: 'Events', path: '/eventDetails'},
-    // { name: 'Packages', path: '/packageDetails'},
     { name: 'Packages', path: '/bookedpackagedetails'},
     { name: 'Cancellation Request', path: '/cancellationrequest'},
     { name:' Weather Alerts', path: '/weather-alerts'},

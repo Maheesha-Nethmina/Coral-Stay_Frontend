@@ -44,7 +44,7 @@ function ReefTourdetails() {
   };
 
   const handleDelete = async (bookingId, date) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this booking?');
+    const confirmDelete = window.confirm('Are you sure you want to delete this booking? Deletion details will be sent to the user automatically.');
     if (!confirmDelete) return;
 
     try {

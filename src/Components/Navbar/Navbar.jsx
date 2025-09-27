@@ -110,7 +110,7 @@ const Navbar = () => {
           <div className="relative flex justify-between items-center h-18 py-2">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <img src={navLogo} alt="Coral Stay Logo" className="h-14 w-auto" />
+              <img src={navLogo} alt="Coral Stay Logo" className="h-25 w-auto" />
             </Link>
 
             {/* Center navigation links */}
@@ -270,6 +270,8 @@ const Navbar = () => {
           width: "50px",
           height: "50px",
           cursor: "pointer",
+          borderRadius: "15px", // Added radius
+          overflow: "hidden",   // ensures image doesn't overflow the border radius
         }}
         onClick={() => setShowChatbot((prev) => !prev)}
       >
