@@ -22,9 +22,10 @@ import PremierOceanRoom from './Pages/User/PremierOceanRoom';
 import PresidentialSuiteRoom from './Pages/User/PresidentialSuiteRoom';
 import PackageDetail from './Pages/User/PackageDetail';
 import SuggestionsPage  from './Pages/User/SuggestionsPage';
+
 import VirtualTour from './Pages/User/3D_model/3d_coral_life';
-//import MarineLife from './Pages/User/3D_model/MarineLife';
-//import CoralReefs from './Pages/User/3D_model/CoralReefs';
+import MarineLife from './Pages/User/3D_model/MarineLife';
+import CoralReefs from './Pages/User/3D_model/CoralReefs';
 
 
 
@@ -87,12 +88,13 @@ function App() {
           <Route path="/packages" element={<Packages />} />
           <Route path="/reviews/new" element={<AddReview />} />
 
-    <Route path="/suggestions/:bookingId" element={<SuggestionsPage />} />
-=======
+          <Route path="/suggestions/:bookingId" element={<SuggestionsPage />} />
+
           <Route path="/payment" element={<PaymentGateway />} />
 
-         {/* // <Route path="/MarineLife" element={<MarineLife/>}/> */}
-        {/* //  <Route path="/CoralReefs" element={<CoralReefs/>}/> */}
+          <Route path="/MarineLife" element={<MarineLife/>}/>
+          <Route path="/CoralReefs" element={<CoralReefs/>}/>
+          <Route path="/VirtualTour" element={<VirtualTour/>}/>
 
 
 

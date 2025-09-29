@@ -160,7 +160,7 @@ const ContactForm = () => {
                       className="text-gray-700 hover:text-blue-600 underline transition-colors duration-200"
                       title="View on Google Maps"
                     >
-                      No 123/A Hikkaduwa
+                      No 123/A, CoralStay, Hikkaduwa
                     </a>
                   </div>
                 </div>
@@ -198,7 +198,7 @@ const ContactForm = () => {
                       className="text-gray-700 hover:text-blue-600 underline transition-colors duration-200"
                       title="Call Mobile"
                     >
-                      072917345
+                      0712917345
                     </a>
                   </div>
                 </div>
@@ -218,7 +218,7 @@ const ContactForm = () => {
                       className="text-gray-700 hover:text-green-600 underline transition-colors duration-200"
                       title="Chat on WhatsApp"
                     >
-                      072918348
+                      0712918348
                     </a>
                   </div>
                 </div>

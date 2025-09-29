@@ -3,10 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
+import { useAuth } from "../../contexts/AuthContext"; //Auth Context
 
 const PackageDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth(); //  Logged-in user
 
   const [pkg, setPkg] = useState(null);
   const [error, setError] = useState(null);
@@ -65,6 +67,12 @@ const PackageDetail = () => {
   };
 
   const handlePackageBooking = async () => {
+    // ✅ Check if user is logged in
+    if (!user || !user._id) {
+      alert("You must be logged in to book a package.");
+      return;
+    }
+
     if (!pkg || !selectedDate) {
       alert('Please select a date before checking availability.');
       return;
@@ -91,9 +99,10 @@ const PackageDetail = () => {
                 type: 'package',
                 date: selectedDate,
                 checkOut: checkOutString,
+                userId: user._id, //  Pass userId
                 package: {
                   ...pkg,
-                  roomId: pkg.roomId || pkg._id, // fallback if needed
+                  roomId: pkg.roomId || pkg._id,
                 },
               },
             });
@@ -111,9 +120,10 @@ const PackageDetail = () => {
                 type: 'package',
                 date: selectedDate,
                 checkOut: checkOutString,
+                userId: user._id, //  Pass userId
                 package: {
                   ...pkg,
-                  roomId: availableRoomId || pkg.roomId, // Use the correct roomId
+                  roomId: availableRoomId || pkg.roomId,
                 },
               },
             });
@@ -135,6 +145,7 @@ const PackageDetail = () => {
                 type: 'package',
                 date: selectedDate,
                 checkOut: checkOutString,
+                userId: user._id, // Pass userId
                 package: {
                   ...pkg,
                   roomId: availableRoomId || pkg.roomId,

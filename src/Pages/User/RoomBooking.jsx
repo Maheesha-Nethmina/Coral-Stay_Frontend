@@ -21,7 +21,7 @@ const roomsData = [
   {
     id: 1,
     title: 'Deluxe Room',
-    size: '46 sqm',
+    size: 'One Twin Bed For 2 Adults',
     features: ['Bathrobe', 'Free wifi', 'Minibar', 'Slippers', 'Safety locker', 'Room service', 'Shower/WC'],
     packages: [
       { type: 'Full Board Package', price: 'LKR 20,000.00' },
@@ -33,7 +33,7 @@ const roomsData = [
   {
     id: 2,
     title: 'Premier Room',
-    size: '46 sqm',
+    size: 'One King Bed with Sofa Bed For 3 Adults',
     features: ['Bathrobe', 'Free wifi', 'Minibar', 'Room service', 'Tea Maker', 'Umbrella', 'Safety Locker'],
     packages: [
       { type: 'Full Board Package', price: 'LKR 30,000.00' },
@@ -45,7 +45,7 @@ const roomsData = [
   {
     id: 3,
     title: 'Royal Suite',
-    size: '60 sqm',
+    size: 'One King Bed  For 2 Adults',
     features: ['Safety Locker', 'Bathrobe', 'Free wifi', 'Minibar', 'Umbrella', 'Tea Maker', 'Room service'],
     packages: [
       { type: 'Full Board Package', price: 'LKR 35,000.00' },
@@ -57,7 +57,7 @@ const roomsData = [
   {
     id: 4,
     title: 'Premier Ocean Room',
-    size: '50 sqm',
+    size: 'One King Bed with Sofa Bed For 3 Adults',
     features: ['Bathrobe', 'Free wifi', 'Minibar', 'Tea Maker', 'Room service', 'Shower Cubicle', 'Safety Locker', 'Ceiling Fan'],
     packages: [
       { type: 'Full Board Package', price: 'LKR 40,000.00' },
@@ -69,7 +69,7 @@ const roomsData = [
   {
     id: 5,
     title: 'Presidential Suite',
-    size: '80 sqm',
+    size: 'One King Bed For 2 Adults',
     features: ['Bathrobe', 'Iron', 'Free wifi', 'Minibar', 'Tea Maker', 'Room service', 'Shower Cubicle', 'Ceiling Fan', 'Safety Locker'],
     packages: [
       { type: 'Full Board Package', price: 'LKR 55,000.00' },
@@ -230,7 +230,7 @@ function RoomBooking() {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-2xl font-semibold text-gray-800 mb-2">{room.title}</h3>
-                      <p className="text-gray-600 mb-4">Room size: {room.size}</p>
+                      <p className="text-gray-600 mb-4">Room Type: {room.size}</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2 mb-6">

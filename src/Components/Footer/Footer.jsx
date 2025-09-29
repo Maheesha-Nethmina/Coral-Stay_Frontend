@@ -42,16 +42,16 @@ const Footer = () => {
       <ul className="space-y-2">
         <li><a href="/contact" className="text-gray-300 hover:text-white transition duration-300">Contact Us</a></li>
         <li><a href="/about" className="text-gray-300 hover:text-white transition duration-300">About Us</a></li>
-        <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">Conditions</a></li>
+        {/* <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">Conditions</a></li> */}
       </ul>
     </div>
 
     {/* Company column */}
     <div>
-      <h3 className="text-lg font-semibold mb-4">Company</h3>
+      <h3 className="text-lg font-semibold mb-4">More..</h3>
       <ul className="space-y-2">
-        <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">Log In</a></li>
-        <li><a href="#" className="text-gray-300 hover:text-white transition duration-300">More...</a></li>
+        <li><a href="/events" className="text-gray-300 hover:text-white transition duration-300">Events</a></li>
+        <li><a href="/reviews/new" className="text-gray-300 hover:text-white transition duration-300">Reviews</a></li>
       </ul>
     </div>
 

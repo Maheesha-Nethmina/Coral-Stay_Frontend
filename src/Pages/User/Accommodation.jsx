@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import Navbar from '../../Components/Navbar/Navbar';
 import Hero from '../../Components/Common/Hero';
 import Footer from '../../Components/Footer/Footer';
@@ -20,41 +18,44 @@ import service from '../../assets/room-service 1.png';
 
 import dining from '../../assets/Dining.png';
 
-import { Link } from 'react-router-dom';
-
+// ✅ Auth Context
+import { useAuth } from "../../contexts/AuthContext";
 
 function Accommodation() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth(); // Logged-in user
+
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [dateError, setDateError] = useState('');
 
-  const location = useLocation();
-
-useEffect(() => {
-  const hash = location.hash;
-  if (hash) {
-    const el = document.querySelector(hash);
-    if (el) {
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }, 100); // slight delay to ensure DOM is rendered
+  // Smooth scroll if URL has hash
+  useEffect(() => {
+    const hash = location.hash;
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
     }
-  }
-}, [location]);
+  }, [location]);
 
+  // Room Data
   const rooms = [
-    { title: 'Deluxe Room', img: room1, desc: 'Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast.',link: '/DeluxeRoom' },
-    { title: 'Premier Room', img: room2, desc: 'The perfect rest stop in-between adventures out in Sri Lanka’s beautiful South Coast.',link:'/PremierRoom' },
-    { title: 'Royal Suite', img: room3, desc: 'Seaside accommodation that comes with a touch of exclusivity!',link: '/RoyalSuiteRoom' },
-    { title: 'Premier Ocean Room', img: room4, desc: 'Wake up to ocean vistas in a room that echoes nature, with soft hues and native design details.',link: '/premieroceanroom' },
-    { title: 'Presidential Suite', img: room5, desc: 'Luxurious comforts, space and gorgeous views are all part of the Presidential Suite.' ,link: '/PresidentialSuiteRoom'}
+    { title: 'Deluxe Room', img: room1, desc: 'Enjoy sublime comforts at our Deluxe Rooms during your stay in the South Coast.', link: '/DeluxeRoom' },
+    { title: 'Premier Room', img: room2, desc: 'The perfect rest stop in-between adventures out in Sri Lanka’s beautiful South Coast.', link: '/PremierRoom' },
+    { title: 'Royal Suite', img: room3, desc: 'Seaside accommodation that comes with a touch of exclusivity!', link: '/RoyalSuiteRoom' },
+    { title: 'Premier Ocean Room', img: room4, desc: 'Wake up to ocean vistas in a room that echoes nature, with soft hues and native design details.', link: '/premieroceanroom' },
+    { title: 'Presidential Suite', img: room5, desc: 'Luxurious comforts, space and gorgeous views are all part of the Presidential Suite.', link: '/PresidentialSuiteRoom' }
   ];
 
+  // Check-in/out handlers
   const handleCheckInChange = (e) => {
     const value = e.target.value;
     setCheckIn(value);
-    // Reset checkOut if it's before new checkIn
     if (checkOut && value && checkOut <= value) {
       setCheckOut('');
       setDateError('Check-out date must be after check-in date.');
@@ -73,6 +74,7 @@ useEffect(() => {
     }
   };
 
+  // Book Now handler
   const handleBookNow = () => {
     if (!checkIn || !checkOut) {
       setDateError('Please select both check-in and check-out dates.');
@@ -82,8 +84,15 @@ useEffect(() => {
       setDateError('Check-out date must be after check-in date.');
       return;
     }
+
+    if (!user || !user._id) {
+      alert("You must be logged in to book a room."); // ✅ Alert if not logged in
+      return;
+    }
+
     setDateError('');
-    navigate('/room-booking', { state: { checkIn, checkOut } });
+    // Pass all required data to room-booking page
+    navigate('/room-booking', { state: { checkIn, checkOut, userId: user._id } });
   };
 
   return (
@@ -144,7 +153,7 @@ useEffect(() => {
         <h2 className="text-3xl font-semibold mb-4 text-center">Coral Stay Beach Resort</h2>
         <p className="text-teal-800 font-medium mb-4 text-lg text-center">Where you meet the sea</p>
         <p className="text-gray-700 leading-relaxed">
-          Nestled along the sun-kissed shores of Hikkaduwa, Coral Stay Beach Resort & Spa offers a captivating blend of pristine beaches, swaying coconut palms, and panoramic ocean views from every corner. As a standout among Hikkaduwa’s beachfront escapes, this premier resort boasts a refined collection of luxurious accommodations, vibrant bars, gourmet restaurants, boutique shops, and lively entertainment venues. Coral Stay is your perfect sanctuary to immerse yourself in the true essence of tropical paradise!
+          Nestled along the sun-kissed shores of Hikkaduwa, Coral Stay Beach Resort & Spa offers a captivating blend...
         </p>
       </section>
 
@@ -166,26 +175,26 @@ useEffect(() => {
         <div className="max-w-7xl mx-auto px-4 py-16 text-left">
           <h2 className="text-2xl font-semibold text-center mb-6">Recommended Room Types</h2>
           <p className="text-gray-600 mb-10 text-left">
-            Whether you prefer to gaze out at lush coastal greenery and vibrant tropical gardens or fall asleep to the soothing rhythm of the Indian Ocean, you'll find sanctuary in every one of our rooms and suites at Coral Stay Hikkaduwa—each thoughtfully designed to reflect the charm and vibrant spirit of Sri Lanka’s southern coast.
+            Whether you prefer to gaze out at lush coastal greenery...
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {rooms.map((room, index) => (
-               <Link to={room.link} key={index}>
-              <div key={index} className="relative rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-transform duration-300 hover:scale-105">
-                <img src={room.img} alt={room.title} className="w-full h-72 object-cover opacity-95" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent flex flex-col justify-end p-4 text-white">
-                  <h3 className="text-lg font-semibold">{room.title}</h3>
-                  <p className="text-sm">{room.desc}</p>
+              <Link to={room.link} key={index}>
+                <div className="relative rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-transform duration-300 hover:scale-105">
+                  <img src={room.img} alt={room.title} className="w-full h-72 object-cover opacity-95" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent flex flex-col justify-end p-4 text-white">
+                    <h3 className="text-lg font-semibold">{room.title}</h3>
+                    <p className="text-sm">{room.desc}</p>
+                  </div>
                 </div>
-              </div>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Dining Image with Hover Effect */}
+      {/* Dining Image */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
           <img

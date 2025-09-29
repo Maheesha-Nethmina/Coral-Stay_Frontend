@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '@google/model-viewer/dist/model-viewer';
+// import '@google/model-viewer/dist/model-viewer';
 
 // ✅ Add CSS styles inside the same file
 const styles = `

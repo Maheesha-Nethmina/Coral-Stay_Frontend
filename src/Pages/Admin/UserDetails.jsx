@@ -151,7 +151,7 @@ function UserDetails() {
                           >
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
-                            <option value="deactivated">Deactivated</option>
+                            <option value="deactivated">Deactivate</option>
                           </select>
                         </td>
                         <td className="p-3 flex gap-3">

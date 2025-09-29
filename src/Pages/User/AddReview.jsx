@@ -42,7 +42,7 @@ const AddReview = () => {
     <>
       <Navbar />
 
-      <div className="max-w-2xl mx-auto px-6 py-12 min-h-screen">
+      <div className="max-w-2xl mx-auto px-6 py-25 min-h-screen">
         <button
           onClick={() => navigate(-1)}
           className="mb-6 inline-flex items-center text-teal-700 hover:text-teal-900 font-semibold"

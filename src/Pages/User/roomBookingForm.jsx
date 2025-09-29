@@ -393,7 +393,7 @@ const RoomBookingForm = () => {
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
               <CheckCircle className="h-6 w-6 text-teal-600 mr-3" />
-              Enter Guest Details
+              Confirm and Complete Booking
             </h2>
 
             <form onSubmit={handlePayNow} className="space-y-6">

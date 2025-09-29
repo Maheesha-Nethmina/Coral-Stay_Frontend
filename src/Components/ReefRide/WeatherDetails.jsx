@@ -39,7 +39,7 @@ const WeatherDetails = () => {
     if (d.includes('clear')) return clearBg;
     return defaultBg;
   };
-
+  // animation icon based on weather description
   const getWeatherIcon = desc => {
     const d = desc.toLowerCase();
     let anim = unknownAnim;
