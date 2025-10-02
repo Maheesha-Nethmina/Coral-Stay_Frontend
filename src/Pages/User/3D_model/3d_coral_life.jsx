@@ -1,34 +1,58 @@
 import React, { useEffect, useRef, useState } from 'react';
-// import '@google/model-viewer/dist/model-viewer';
 
 // ✅ Add CSS styles inside the same file
 const styles = `
   body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: #f0f0f0;
   }
 
+  /* ✅ Enhanced Navbar Styling */
   nav {
-    background: linear-gradient(to right, #013A63, #026873);
+    background: linear-gradient(90deg, #013A63, #026873, #03A696);
     color: white;
-    padding: 1rem;
+    padding: 1rem 2rem;
     display: flex;
-    gap: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    backdrop-filter: blur(10px);
   }
 
   nav a {
     color: white;
     text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    cursor: pointer;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
   }
 
   nav a:hover {
-    background-color: rgba(255,255,255,0.2);
+    background-color: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: width 0.3s ease;
+  }
+
+  nav a:hover::after {
+    width: 60%;
   }
 
   #fish-tooltip {
@@ -58,42 +82,6 @@ const styles = `
     color: white;
     font-size: 18px;
   }
-
-  .marine-life-section {
-    padding: 20px;
-    display: block;
-  }
-
-  .fish-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-  }
-
-  @media (min-width: 1024px) {
-    .fish-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .fish-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    padding: 16px;
-    text-align: center;
-  }
-
-  .fish-card h3 {
-    margin: 10px 0 5px;
-    color: #013A63;
-  }
-
-  .fish-card p {
-    font-size: 14px;
-    color: #555;
-  }
 `;
 
 const ModelViewer = () => {
@@ -102,17 +90,18 @@ const ModelViewer = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   // ✅ Function to show tooltip
-  const showTooltip = (name, x, y) => {
-    const tooltip = tooltipRef.current;
-    tooltip.textContent = name;
-    tooltip.style.display = 'block';
-    tooltip.style.left = `${x}px`;
-    tooltip.style.top = `${y}px`;
+ // ✅ Function to show tooltip
+const showTooltip = (name, x, y) => {
+  const tooltip = tooltipRef.current;
+  tooltip.textContent = name;
+  tooltip.style.display = 'block';
+  tooltip.style.left = `${x}px`;   // ✅ fixed
+  tooltip.style.top = `${y}px`;    // ✅ fixed
 
-    setTimeout(() => {
-      tooltip.style.display = 'none';
-    }, 3000);
-  };
+  setTimeout(() => {
+    tooltip.style.display = 'none';
+  }, 3000);
+};
 
   // ✅ Hit test logic
   useEffect(() => {
@@ -176,25 +165,6 @@ const ModelViewer = () => {
         />
         <div id="fish-tooltip" ref={tooltipRef}></div>
       </div>
-
-      {/* ✅ Optional section below model */}
-      {/* <section className="marine-life-section">
-        <h2>Explore Marine Life</h2>
-        <div className="fish-grid">
-          <div className="fish-card">
-            <h3>Clownfish</h3>
-            <p>Lives among sea anemones in warm ocean waters.</p>
-          </div>
-          <div className="fish-card">
-            <h3>Blue Tang</h3>
-            <p>Popular reef fish with vibrant blue coloring.</p>
-          </div>
-          <div className="fish-card">
-            <h3>Butterfly Fish</h3>
-            <p>Recognized by their striking colors and patterns.</p>
-          </div>
-        </div>
-      </section> */}
     </>
   );
 };
