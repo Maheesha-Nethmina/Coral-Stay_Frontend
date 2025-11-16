@@ -66,7 +66,7 @@ To get a local copy up and running, follow these steps.
 
 1.  Clone the backend repository:
     ```sh
-    git clone (https://github.com/Maheesha-Nethmina/Coral-Stay_Backend)
+    git clone https://github.com/Maheesha-Nethmina/Coral-Stay_Backend
     cd Coral-Stay_Backend
     ```
 2.  Install NPM packages:
@@ -89,7 +89,7 @@ To get a local copy up and running, follow these steps.
 
 1.  If you haven't cloned this repository yet, do so. Then, navigate into the directory.
     ```sh
-    git clone (https://github.com/Maheesha-Nethmina/Coral-Stay_Frontend)
+    git clone https://github.com/Maheesha-Nethmina/Coral-Stay_Frontend
     cd Coral-Stay_Frontend
     ```
 2.  Install NPM packages:
